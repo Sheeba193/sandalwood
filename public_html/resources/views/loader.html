@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sandalwood Loading...</title>
+    <style>
+        /* --- 1. PAGE SETUP --- */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            overflow: hidden; /* Prevents scrolling while loading */
+        }
+
+        /* --- 2. PRELOADER CONTAINER --- */
+        /* This covers the whole screen */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            z-index: 9999; /* Ensures it sits on top of everything */
+            display: flex;
+            flex-direction: column; /* Stack logo and loading bar */
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease-out, visibility 0.8s;
+        }
+
+        /* Class to hide the loader */
+        #preloader.hide-loader {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* --- 3. LOGO STYLES (Reused from previous design) --- */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px; /* Space for the loading bar */
+        }
+
+        .icon-svg {
+            width: 90px;
+            height: 90px;
+            overflow: visible;
+        }
+
+        .hill {
+            fill: none;
+            stroke: #000;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+            animation: drawHill 1.5s ease-out forwards;
+        }
+
+        .tree {
+            fill: #000;
+            transform-origin: bottom center;
+            transform: scaleY(0);
+            opacity: 0;
+        }
+
+        .tree-1 { animation: growTree 0.8s ease-out 0.5s forwards; }
+        .tree-2 { animation: growTree 0.8s ease-out 0.7s forwards; }
+        .tree-3 { animation: growTree 0.8s ease-out 0.9s forwards; }
+
+        .text-logo {
+            font-size: 28px;
+            font-weight: 500;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #000;
+            opacity: 0;
+            transform: translateX(20px);
+            animation: fadeSlideIn 1s ease-out 1.2s forwards;
+        }
+
+        /* --- 4. LOADING PROGRESS BAR --- */
+        .loading-bar-container {
+            width: 200px;
+            height: 2px;
+            background-color: #f0f0f0; /* Light grey background */
+            border-radius: 2px;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out 0.2s forwards;
+        }
+
+        .loading-bar {
+            width: 0%;
+            height: 100%;
+            background-color: #000; /* Black progress fill */
+            animation: loadProgress 3s ease-in-out forwards;
+        }
+
+        .loading-text {
+            margin-top: 10px;
+            font-size: 12px;
+            letter-spacing: 2px;
+            color: #888;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out 0.2s forwards;
+        }
+
+        /* --- 5. ANIMATIONS --- */
+        @keyframes drawHill { to { stroke-dashoffset: 0; } }
+        @keyframes growTree {
+            0% { transform: scaleY(0); opacity: 0; }
+            70% { transform: scaleY(1.1); opacity: 1; }
+            100% { transform: scaleY(1); opacity: 1; }
+        }
+        @keyframes fadeSlideIn { to { opacity: 1; transform: translateX(0); } }
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        /* The loading bar fills up */
+        @keyframes loadProgress {
+            0% { width: 0%; }
+            50% { width: 40%; } /* Simulates a pause */
+            80% { width: 80%; }
+            100% { width: 100%; }
+        }
+
+        /* --- 6. DUMMY CONTENT (For Demo) --- */
+        .main-content {
+            padding: 50px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div id="preloader">
+    <div class="logo-container">
+        <svg class="icon-svg" viewBox="0 0 100 100">
+            <path class="hill" d="M10,90 Q50,75 90,85" />
+            <path class="tree tree-1" d="M25,84 Q20,60 25,45 Q30,60 25,84" />
+            <path class="tree tree-2" d="M50,80 Q42,40 50,15 Q58,40 50,80" />
+            <path class="tree tree-3" d="M75,83 Q68,60 75,35 Q82,60 75,83" />
+        </svg>
+        <div class="text-logo">SANDALWOOD</div>
+    </div>
+
+    <div class="loading-bar-container">
+        <div class="loading-bar"></div>
+    </div>
+    <div class="loading-text">Loading</div>
+</div>
+
+<div class="main-content">
+    <h1>Welcome to Sandalwood</h1>
+    <p>The content is now loaded.</p>
+</div>
+
+<script>
+    // --- JAVASCRIPT LOGIC ---
+
+    // Method 1: Remove loader when the page is fully loaded (Real World Use)
+    window.addEventListener('load', function() {
+        // We add a small delay so the animation has time to look good
+        // even if the site loads instantly.
+        setTimeout(function() {
+            const preloader = document.getElementById('preloader');
+            preloader.classList.add('hide-loader');
+
+            // Re-enable scrolling on the body
+            document.body.style.overflow = 'auto';
+        }, 3000); // 3000ms = 3 seconds. Adjust this number to control min wait time.
+    });
+
+</script>
+
+</body>
+</html>

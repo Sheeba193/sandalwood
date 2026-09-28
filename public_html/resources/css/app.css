@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Cormorant:ital,wght@0,300..700;1,300..700&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import 'tailwindcss';
+
+:root {
+    --color-primary: #091b36;
+}
+
+.bg-primary {
+    background-color: var(--color-primary);
+}
+
+.font-cinzel {
+    font-family: 'Cinzel', 'Times New Roman', serif;
+}
+
+.font-cormorant {
+    font-family: 'Cormorant Garamond', 'Georgia', serif;
+}
+
+.font-montserrat {
+    font-family: "Montserrat", sans-serif;
+}
+
+
+@font-face {
+    font-family: 'Optima';
+    src: url('/fonts/Optima.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Adobe Garamond Pro';
+    src: url('/fonts/AdobeGaramondPro.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+/* Your custom animations */
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+h1 {
+    font-family: 'Optima', sans-serif;
+    letter-spacing: 0.04em
+}
+
+body {
+    font-family: 'Adobe Garamond Pro', serif;
+    letter-spacing: 0.04em
+}
+
+.animate-fade-in-up {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 0.8s ease forwards;
+}
+
+.delay-200 {
+    animation-delay: 0.2s;
+}
+
+.delay-400 {
+    animation-delay: 0.4s;
+}
+
+/* Ensure smooth transitions for dark mode */
+* {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+input{
+    color: #1a1a1a;
+}
+/* Toast notifications - ensure they appear above modals */
+.v-toast {
+    z-index: 99999 !important;
+}
+
+.v-toast__item {
+    z-index: 99999 !important;
+}
+
+/* If using vue-toast-notification with different class names */
+.toast-container {
+    z-index: 99999 !important;
+}
+
+.toast {
+    z-index: 99999 !important;
+}
