@@ -9,6 +9,7 @@ use App\Models\Amenities;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 
 class AdminProjectController extends Controller
@@ -109,6 +110,8 @@ class AdminProjectController extends Controller
             return $project;
         });
 
+        Cache::forget('all_projects_list_v2');
+
         return redirect()
             ->route('admin.projects.index')
             ->with('success', 'Project created successfully.');
@@ -121,18 +124,102 @@ class AdminProjectController extends Controller
 
     public function edit(Project $project)
     {
+        $project->load('media');
+
         return Inertia::render('Admin/Projects/Edit', [
-            'project' => new AdminProjectResource($project),
+            'project' => [
+                'id' => $project->id,
+                'title' => $project->title,
+                'subtitle' => $project->subtitle,
+                'tagline' => $project->tagline,
+                'location' => $project->location,
+                'specifications' => $project->specifications,
+                'location_url' => $project->location_url,
+                'status' => $project->status,
+                'is_featured' => $project->is_featured,
+                'description' => $project->description,
+                'setting_title' => $project->ideal_title,
+                'setting_description' => $project->ideal_description,
+                'retreat_title' => $project->tranquil_title,
+                'retreat_description' => $project->tranquil_description,
+                'featured_image_url' => $project->getFirstMediaUrl('cover'),
+                'setting_image_url' => $project->getFirstMediaUrl('ideal'),
+                'retreat_image_url' => $project->getFirstMediaUrl('tranquil'),
+                'gallery' => $project->getMedia('gallery')->map(fn ($media) => [
+                    'id' => $media->id,
+                    'url' => $media->getUrl(),
+                ])->values(),
+            ],
         ]);
     }
 
     public function update(Request $request, Project $project)
     {
+        $previousSlug = $project->slug;
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'subtitle' => ['nullable', 'string', 'max:255'],
+            'tagline' => ['nullable', 'string', 'max:255'],
+            'location' => ['required', 'string', 'max:255'],
+            'specifications' => ['nullable', 'string', 'max:500'],
+            'location_url' => ['nullable', 'url', 'max:2048'],
+            'status' => ['required', 'in:ongoing,completed,planned,sold_out'],
+            'is_featured' => ['nullable', 'boolean'],
+            'description' => ['nullable', 'string'],
+            'setting_title' => ['nullable', 'string', 'max:255'],
+            'setting_description' => ['nullable', 'string'],
+            'retreat_title' => ['nullable', 'string', 'max:255'],
+            'retreat_description' => ['nullable', 'string'],
+            'featured_image' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:5120'],
+            'setting_image' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:5120'],
+            'retreat_image' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:5120'],
+            'gallery' => ['nullable', 'array', 'max:30'],
+            'gallery.*' => ['image', 'mimes:jpeg,jpg,png,webp', 'max:5120'],
+        ]);
 
+        $project->update([
+            'title' => $validated['title'],
+            'subtitle' => $validated['subtitle'] ?? null,
+            'tagline' => $validated['tagline'] ?? null,
+            'location' => $validated['location'],
+            'specifications' => $validated['specifications'] ?? null,
+            'location_url' => $validated['location_url'] ?? null,
+            'status' => $validated['status'],
+            'is_featured' => $request->boolean('is_featured'),
+            'description' => $validated['description'] ?? null,
+            'ideal_title' => $validated['setting_title'] ?? null,
+            'ideal_description' => $validated['setting_description'] ?? null,
+            'tranquil_title' => $validated['retreat_title'] ?? null,
+            'tranquil_description' => $validated['retreat_description'] ?? null,
+        ]);
+
+        foreach ([
+            'featured_image' => 'cover',
+            'setting_image' => 'ideal',
+            'retreat_image' => 'tranquil',
+        ] as $input => $collection) {
+            if ($request->hasFile($input)) {
+                $project->addMediaFromRequest($input)->toMediaCollection($collection);
+            }
+        }
+
+        foreach ($request->file('gallery', []) as $image) {
+            $project->addMedia($image)->toMediaCollection('gallery');
+        }
+
+        Cache::forget('all_projects_list_v2');
+        Cache::forget("project_{$previousSlug}");
+        Cache::forget("project_{$project->slug}");
+
+        return redirect()
+            ->route('admin.projects.index')
+            ->with('success', 'Project updated successfully.');
     }
 
     public function destroy(Project $project)
     {
+        Cache::forget('all_projects_list_v2');
+        Cache::forget("project_{$project->slug}");
         // Deletes the project and all associated Spatie media
         $project->clearMediaCollection('cover');
         $project->clearMediaCollection('ideal');
