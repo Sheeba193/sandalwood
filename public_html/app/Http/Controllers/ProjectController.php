@@ -13,7 +13,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Cache::remember('all_projects_list', 3600, function () {
+        $projects = Cache::remember('all_projects_list_v2', 3600, function () {
             return Project::with('media')
                 ->orderBy('is_featured', 'desc')
                 ->orderBy('created_at', 'desc')
@@ -22,6 +22,18 @@ class ProjectController extends Controller
 
                     $coverImage = $project->getFirstMediaUrl('cover');
                     $idealImage = $project->getFirstMediaUrl('ideal');
+                    $projectImage = $project->getFirstMediaUrl('project_images');
+                    $cardImage = $idealImage ?: $coverImage ?: $projectImage ?: '/images/sandalwood_kyuna.jpg';
+                    $images = collect(['gallery', 'project_images', 'cover', 'ideal'])
+                        ->flatMap(fn ($collection) => $project->getMedia($collection)->map(fn ($media) => $media->getUrl()))
+                        ->filter()
+                        ->unique()
+                        ->take(5)
+                        ->values();
+
+                    if ($images->isEmpty()) {
+                        $images->push($cardImage);
+                    }
 
                     return [
                         'id' => $project->id,
@@ -39,17 +51,20 @@ class ProjectController extends Controller
                         'is_featured' => $project->is_featured,
 
                         // Cover image
-                        'image' => $idealImage
-                            ?: '/images/default-project.jpg',
+                        'image' => $cardImage,
+                        'images' => $images,
 
                         'cover_image' => $coverImage
-                            ?: '/images/default-project.jpg',
+                            ?: $projectImage
+                            ?: $cardImage,
 
 
                         'ideal_description' => $project->ideal_description,
 
                         'ideal_image' => $idealImage
-                            ?: '/images/default-project.jpg',
+                            ?: $coverImage
+                            ?: $projectImage
+                            ?: $cardImage,
 
                         'description' => $project->description
                             ?: 'A distinguished residential development recognized for its excellence in design and project delivery.',
@@ -75,6 +90,43 @@ class ProjectController extends Controller
      */
     public function show($slug)
     {
+        if (!Project::where('slug', $slug)->exists()) {
+            $referenceProject = collect($this->referenceProjects())->firstWhere('slug', $slug);
+            abort_if(!$referenceProject, 404);
+
+            $gallery = collect($referenceProject['images'])
+                ->map(fn ($url, $index) => ['id' => $index + 1, 'url' => $url, 'name' => $referenceProject['title']])
+                ->all();
+
+            return Inertia::render('Projects/Show', [
+                'project' => [
+                    'id' => $referenceProject['id'],
+                    'title' => $referenceProject['title'],
+                    'slug' => $referenceProject['slug'],
+                    'subtitle' => null,
+                    'tagline' => null,
+                    'location' => '',
+                    'location_url' => null,
+                    'specifications' => null,
+                    'status' => $referenceProject['status'],
+                    'is_featured' => false,
+                    'description' => 'Project information will be updated soon.',
+                    'image' => $referenceProject['images'][0],
+                    'cover_image' => $referenceProject['images'][0],
+                    'ideal_title' => 'THE IDEAL SETTING',
+                    'ideal_description' => null,
+                    'ideal_image' => $referenceProject['images'][0],
+                    'tranquil_title' => 'A TRANQUIL RETREAT',
+                    'tranquil_description' => null,
+                    'tranquil_image' => $referenceProject['images'][0],
+                    'gallery' => $gallery,
+                    'amenities' => [],
+                    'created_at' => now()->toISOString(),
+                    'updated_at' => now()->toISOString(),
+                ],
+            ]);
+        }
+
         $project = Cache::remember("project_{$slug}", 3600, function () use ($slug) {
 
             $project = Project::with(['media', 'amenities'])
@@ -88,6 +140,7 @@ class ProjectController extends Controller
             */
 
             $coverImage = $project->getFirstMediaUrl('cover');
+            $projectImage = $project->getFirstMediaUrl('project_images');
 
             /*
             |--------------------------------------------------------------------------
@@ -167,7 +220,8 @@ class ProjectController extends Controller
                 */
 
                 'cover_image' => $coverImage
-                    ?: '/images/default-project.jpg',
+                    ?: $projectImage
+                    ?: '/images/sandalwood_kyuna.jpg',
 
 
                 /*
@@ -182,7 +236,9 @@ class ProjectController extends Controller
                 'ideal_description' => $project->ideal_description,
 
                 'ideal_image' => $idealImage
-                    ?: '/images/default-project.jpg',
+                    ?: $coverImage
+                    ?: $projectImage
+                    ?: '/images/sandalwood_kyuna.jpg',
 
 
                 /*
@@ -234,5 +290,25 @@ class ProjectController extends Controller
         return Inertia::render('Projects/Show', [
             'project' => $project,
         ]);
+    }
+
+    private function referenceProjects(): array
+    {
+        return [
+            ['id' => 1, 'title' => 'Sandalwood Loresho', 'slug' => 'sandalwood-loresho', 'status' => 'ongoing', 'images' => ['/images/loresho.jpg', '/images/loresho1.jpeg', '/images/loresho2.jpg', '/images/loresho3.jpg', '/images/loresho4.jpg']],
+            ['id' => 2, 'title' => 'Oak and Ivy', 'slug' => 'oak-and-ivy', 'status' => 'completed', 'images' => ['/images/IMG-20251113-WA0016.jpg']],
+            ['id' => 3, 'title' => 'The Colosseum Residences', 'slug' => 'the-colosseum-residences', 'status' => 'completed', 'images' => ['/images/IMG-20251113-WA0015.jpg']],
+            ['id' => 4, 'title' => 'The Haven', 'slug' => 'the-haven', 'status' => 'completed', 'images' => ['/images/IMG-20251113-WA0018.jpg']],
+            ['id' => 5, 'title' => 'Sandalwood Waterfront', 'slug' => 'sandalwood-waterfront', 'status' => 'completed', 'images' => ['/images/IMG-20251113-WA0025.jpg']],
+            ['id' => 6, 'title' => 'Sandalwood Kitisuru', 'slug' => 'sandalwood-kitisuru', 'status' => 'completed', 'images' => ['/images/IMG-20251113-WA0027.jpg']],
+            ['id' => 7, 'title' => 'Sandalwood Clyde Gardens', 'slug' => 'sandalwood-clyde-gardens', 'status' => 'completed', 'images' => ['/images/IMG-20251113-WA0012.jpg']],
+            ['id' => 8, 'title' => 'Sandalwood Lenana Road', 'slug' => 'sandalwood-lenana-road', 'status' => 'completed', 'images' => ['/images/IMG-20251113-WA0024.jpg']],
+            ['id' => 9, 'title' => 'Sandalwood Riverside', 'slug' => 'sandalwood-riverside', 'status' => 'completed', 'images' => ['/images/IMG-20251113-WA0019.jpg']],
+            ['id' => 10, 'title' => 'Sandalwood Brookside', 'slug' => 'sandalwood-brookside', 'status' => 'completed', 'images' => ['/images/IMG-20251113-WA0026.jpg']],
+            ['id' => 11, 'title' => 'Sandalwood Othaya', 'slug' => 'sandalwood-othaya', 'status' => 'completed', 'images' => ['/images/IMG-20251113-WA0017.jpg']],
+            ['id' => 12, 'title' => 'The Convex', 'slug' => 'the-convex', 'status' => 'completed', 'images' => ['/images/IMG-20251113-WA0022.jpg']],
+            ['id' => 13, 'title' => 'Chilly Breezes', 'slug' => 'chilly-breezes', 'status' => 'completed', 'images' => ['/images/IMG-20251113-WA0020.jpg']],
+            ['id' => 14, 'title' => 'Silver Terraces', 'slug' => 'silver-terraces', 'status' => 'completed', 'images' => ['/images/IMG-20251113-WA0014.jpg']],
+        ];
     }
 }
