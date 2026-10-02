@@ -148,6 +148,7 @@ const referenceProjects: Project[] = [
     { id: 12, title: 'The Convex', status: 'completed', slug: 'the-convex', image: '/images/IMG-20251113-WA0022.jpg' },
     { id: 13, title: 'Chilly Breezes', status: 'completed', slug: 'chilly-breezes', image: '/images/IMG-20251113-WA0020.jpg' },
     { id: 14, title: 'Silver Terraces', status: 'completed', slug: 'silver-terraces', image: '/images/IMG-20251113-WA0014.jpg' },
+    { id: 15, title: 'Ivory Terraces', status: 'completed', slug: 'ivory-terraces', image: '/images/projects/ivory-terraces/3I9A0277.JPG' },
 ];
 
 const projectImageSets: Record<string, string[]> = {
@@ -177,8 +178,8 @@ const projectImageSets: Record<string, string[]> = {
         '/images/projects/oak%26ivy/3I9A7162-2.JPG',
     ],
     'ivory-terraces': [
-        '/images/projects/ivory-terraces/3I9A0189.JPG',
         '/images/projects/ivory-terraces/3I9A0277.JPG',
+        '/images/projects/ivory-terraces/3I9A0189.JPG',
         '/images/projects/ivory-terraces/3I9A0207.JPG',
         '/images/projects/ivory-terraces/3I9A0258.JPG',
         '/images/projects/ivory-terraces/3I9A9866.JPG',
@@ -304,15 +305,24 @@ const projectImageSets: Record<string, string[]> = {
 };
 
 const withProjectImages = (project: Project): Project => {
-    const images = project.images?.length ? project.images : projectImageSets[project.slug];
+    const images = project.slug === 'sandalwood-loresho'
+        ? projectImageSets[project.slug]
+        : project.images?.length ? project.images : projectImageSets[project.slug];
     return images?.length ? { ...project, image: images[0], images } : project;
 };
 
-const projectsToDisplay = computed(() =>
-    (props.projects.length > 0 ? props.projects : referenceProjects)
+const projectsToDisplay = computed(() => {
+    const projects = props.projects.length > 0 ? [...props.projects] : [...referenceProjects];
+    const ivoryTerraces = referenceProjects.find((project) => project.slug === 'ivory-terraces');
+
+    if (ivoryTerraces && !projects.some((project) => project.slug === ivoryTerraces.slug)) {
+        projects.push(ivoryTerraces);
+    }
+
+    return projects
         .filter((project) => project.images?.length || projectImageSets[project.slug]?.length)
-        .map(withProjectImages),
-);
+        .map(withProjectImages);
+});
 
 const loading = ref(true);
 
