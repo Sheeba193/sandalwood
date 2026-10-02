@@ -34,7 +34,7 @@
                         </button>
                         <button
                             @click="openContactModal"
-                            class="bg-white text-[#001221] px-5 py-2.5 text-xs font-bold tracking-widest hover:bg-gray-200 transition-colors uppercase"
+                            class="bg-[#001221] text-white px-5 py-2.5 text-xs font-bold tracking-widest hover:bg-[#1a365d] transition-colors uppercase"
                         >
                             Get in Touch
                         </button>

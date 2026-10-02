@@ -96,3 +96,14 @@ input{
 .toast {
     z-index: 99999 !important;
 }
+
+/* Keep interactive button controls consistent with the site navy palette. */
+button {
+    background-color: #001221 !important;
+    color: #fff !important;
+}
+
+button:hover:not(:disabled) {
+    background-color: #1a365d !important;
+}
+

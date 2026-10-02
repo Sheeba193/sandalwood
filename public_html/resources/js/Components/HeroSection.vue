@@ -179,8 +179,8 @@ onMounted(() => {
 
 .cta-button {
     display: inline-block;
-    background-color: #d4af37;
-    color: #000;
+    background-color: #001221;
+    color: #fff;
     padding: 16px 40px;
     font-size: 16px;
     font-weight: 600;
@@ -193,7 +193,7 @@ onMounted(() => {
 }
 
 .cta-button:hover {
-    background-color: #e8c352;
+    background-color: #1a365d;
     transform: translateY(-3px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }

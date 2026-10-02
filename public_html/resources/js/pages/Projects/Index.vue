@@ -16,21 +16,21 @@
                     <nav class="mb-10 flex flex-wrap gap-3">
                         <button
                             @click="activeFilter = 'all'"
-                            :class="activeFilter === 'all' ? 'bg-[#404040] text-white' : 'border border-gray-300 text-gray-600'"
+                            :class="activeFilter === 'all' ? 'bg-[#001221] text-white' : 'border border-gray-300 text-gray-600'"
                             class="font-montserrat rounded-full px-6 py-2 text-[11px] tracking-widest uppercase transition-all"
                         >
                             All Projects
                         </button>
                         <button
                             @click="activeFilter = 'ongoing'"
-                            :class="activeFilter === 'ongoing' ? 'bg-[#404040] text-white' : 'border border-gray-300 text-gray-600'"
+                            :class="activeFilter === 'ongoing' ? 'bg-[#001221] text-white' : 'border border-gray-300 text-gray-600'"
                             class="rounded-full px-6 py-2 text-[11px] tracking-widest uppercase transition-all"
                         >
                             Under Construction
                         </button>
                         <button
                             @click="activeFilter = 'completed'"
-                            :class="activeFilter === 'completed' ? 'bg-[#404040] text-white' : 'border border-gray-300 text-gray-600'"
+                            :class="activeFilter === 'completed' ? 'bg-[#001221] text-white' : 'border border-gray-300 text-gray-600'"
                             class="rounded-full px-6 py-2 text-[11px] tracking-widest uppercase transition-all"
                         >
                             Completed
@@ -45,43 +45,10 @@
                         >
                             <div class="group/card relative aspect-[16/10] overflow-hidden bg-gray-100 sm:aspect-video">
                                 <img
-                                    :src="cardImages(project)[cardSlides[project.id] ?? 0] ?? project.image"
+                                    :src="project.image"
                                     :alt="project.title"
                                     class="h-full w-full object-cover transition-transform duration-700 group-hover/card:scale-[1.02]"
                                 />
-
-                                <template v-if="cardImages(project).length > 1">
-                                    <button
-                                        type="button"
-                                        class="absolute top-1/2 left-3 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-gray-900 shadow transition hover:bg-white sm:h-10 sm:w-10"
-                                        :aria-label="`Previous photo of ${project.title}`"
-                                        @click.stop="changeCardSlide(project, -1)"
-                                    >
-                                        <span aria-hidden="true" class="text-2xl leading-none">‹</span>
-                                    </button>
-                                    <button
-                                        type="button"
-                                        class="absolute top-1/2 right-3 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-gray-900 shadow transition hover:bg-white sm:h-10 sm:w-10"
-                                        :aria-label="`Next photo of ${project.title}`"
-                                        @click.stop="changeCardSlide(project, 1)"
-                                    >
-                                        <span aria-hidden="true" class="text-2xl leading-none">›</span>
-                                    </button>
-                                    <div class="absolute right-0 bottom-3 left-0 flex justify-center gap-1.5">
-                                        <button
-                                            v-for="(_, index) in cardImages(project)"
-                                            :key="`${project.id}-slide-${index}`"
-                                            type="button"
-                                            class="h-2 w-2 rounded-full border border-white shadow-sm"
-                                            :class="(cardSlides[project.id] ?? 0) === index ? 'bg-white' : 'bg-black/30'"
-                                            :aria-label="`Show photo ${index + 1} of ${project.title}`"
-                                            @click.stop="setCardSlide(project, index)"
-                                        />
-                                    </div>
-                                    <span class="absolute top-3 right-3 rounded-full bg-black/60 px-2.5 py-1 text-[10px] text-white">
-                                        {{ (cardSlides[project.id] ?? 0) + 1 }} / {{ cardImages(project).length }}
-                                    </span>
-                                </template>
                             </div>
 
                             <div class="flex flex-col items-start gap-4 sm:gap-6">
@@ -90,7 +57,7 @@
                                 </h2>
                                 <Link
                                     :href="`/projects/${project.slug}`"
-                                    class="font-montserrat inline-flex min-h-10 items-center bg-black px-5 py-2 text-[10px] tracking-[0.15em] text-white uppercase transition-colors hover:bg-gray-800"
+                                    class="font-montserrat inline-flex min-h-10 items-center bg-[#001221] px-5 py-2 text-[10px] tracking-[0.15em] text-white uppercase transition-colors hover:bg-[#1a365d]"
                                 >
                                     Get More Details
                                 </Link>
@@ -327,23 +294,6 @@ const projectsToDisplay = computed(() => {
 const loading = ref(true);
 
 const activeFilter = ref<'all' | 'ongoing' | 'completed'>('all');
-const cardSlides = ref<Record<number, number>>({});
-
-const cardImages = (project: Project): string[] => {
-    const images = project.images?.filter(Boolean).slice(0, 10) ?? [];
-    return images.length > 0 ? images : [project.image];
-};
-
-const setCardSlide = (project: Project, index: number) => {
-    cardSlides.value[project.id] = index;
-};
-
-const changeCardSlide = (project: Project, direction: number) => {
-    const images = cardImages(project);
-    const current = cardSlides.value[project.id] ?? 0;
-    cardSlides.value[project.id] = (current + direction + images.length) % images.length;
-};
-
 const filteredProjects = computed<Project[]>(() => {
     if (activeFilter.value === 'all') {
         return projectsToDisplay.value;

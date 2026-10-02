@@ -75,7 +75,7 @@
 
                         <Link
                             href="/projects"
-                            class="font-montserrat bg-black px-10 py-3 text-[12px] tracking-[0.3em] text-white uppercase transition-all duration-500 hover:bg-white hover:text-black"
+                            class="font-montserrat bg-[#001221] px-10 py-3 text-[12px] tracking-[0.3em] text-white uppercase transition-all duration-500 hover:bg-[#1a365d] hover:text-white"
                         >
                             LEARN MORE
                         </Link>
@@ -139,7 +139,7 @@
                         <div class="mt-16 text-center">
                             <Link
                                 href="/projects"
-                                class="font-montserrat inline-block bg-black px-12 py-4 text-[10px] tracking-[0.2em] text-white uppercase transition-colors hover:bg-gray-800"
+                                class="font-montserrat inline-block bg-[#001221] px-12 py-4 text-[10px] tracking-[0.2em] text-white uppercase transition-colors hover:bg-[#1a365d]"
                             >
                                 VIEW ALL DEVELOPMENTS
                             </Link>
