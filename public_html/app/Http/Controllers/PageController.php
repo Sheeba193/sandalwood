@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Support\ProjectImageFolders;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 
@@ -13,12 +14,13 @@ class PageController extends Controller
      */
     public function home()
     {
-        $projects = Cache::remember('home_projects', 3600, function () {
+        $projects = Cache::remember('home_projects_with_images', 3600, function () {
 
             return Project::with('media')
                 ->orderBy('is_featured', 'desc')
                 ->orderBy('created_at', 'desc')
                 ->get()
+                ->filter(fn ($project) => ProjectImageFolders::hasImages($project->slug))
                 ->map(function ($project) {
 
                     /*
@@ -354,12 +356,13 @@ class PageController extends Controller
      */
     public function about()
     {
-        $projects = Cache::remember('about_projects', 3600, function () {
+        $projects = Cache::remember('about_projects_with_images', 3600, function () {
 
             return Project::with('media')
                 ->orderBy('is_featured', 'desc')
                 ->orderBy('created_at', 'desc')
                 ->get()
+                ->filter(fn ($project) => ProjectImageFolders::hasImages($project->slug))
                 ->map(function ($project) {
 
                     $idealImage =

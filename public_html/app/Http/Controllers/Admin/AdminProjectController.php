@@ -110,7 +110,7 @@ class AdminProjectController extends Controller
             return $project;
         });
 
-        Cache::forget('all_projects_list_v2');
+        Cache::forget('all_projects_list_v3');
 
         return redirect()
             ->route('admin.projects.index')
@@ -207,7 +207,7 @@ class AdminProjectController extends Controller
             $project->addMedia($image)->toMediaCollection('gallery');
         }
 
-        Cache::forget('all_projects_list_v2');
+        Cache::forget('all_projects_list_v3');
         Cache::forget("project_{$previousSlug}");
         Cache::forget("project_{$project->slug}");
 
@@ -218,7 +218,7 @@ class AdminProjectController extends Controller
 
     public function destroy(Project $project)
     {
-        Cache::forget('all_projects_list_v2');
+        Cache::forget('all_projects_list_v3');
         Cache::forget("project_{$project->slug}");
         // Deletes the project and all associated Spatie media
         $project->clearMediaCollection('cover');

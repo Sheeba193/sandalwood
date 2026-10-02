@@ -133,7 +133,7 @@
                         v-if="gallerySlides.length > 1"
                         type="button"
                         @click="previousGallerySlide"
-                        class="absolute top-1/2 left-4 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-gray-700 opacity-0 shadow-md transition-all duration-300 group-hover:opacity-100 hover:bg-white"
+                        class="absolute top-1/2 left-3 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-gray-700 opacity-100 shadow-md transition-all duration-300 hover:bg-white sm:left-4 md:opacity-0 md:group-hover:opacity-100"
                         aria-label="Previous gallery slide"
                     >
                         <svg
@@ -153,7 +153,7 @@
                         v-if="gallerySlides.length > 1"
                         type="button"
                         @click="nextGallerySlide"
-                        class="absolute top-1/2 right-4 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-gray-700 opacity-0 shadow-md transition-all duration-300 group-hover:opacity-100 hover:bg-white"
+                        class="absolute top-1/2 right-3 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-gray-700 opacity-100 shadow-md transition-all duration-300 hover:bg-white sm:right-4 md:opacity-0 md:group-hover:opacity-100"
                         aria-label="Next gallery slide"
                     >
                         <svg

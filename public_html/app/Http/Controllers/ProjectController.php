@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Support\ProjectImageFolders;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -13,27 +14,32 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Cache::remember('all_projects_list_v2', 3600, function () {
+        $projects = Cache::remember('all_projects_list_v5', 3600, function () {
             return Project::with('media')
                 ->orderBy('is_featured', 'desc')
                 ->orderBy('created_at', 'desc')
                 ->get()
+                // Keep projects without their own image folders off the public site until assets are added.
+                ->filter(fn ($project) => ProjectImageFolders::hasImages($project->slug))
                 ->map(function ($project) {
 
                     $coverImage = $project->getFirstMediaUrl('cover');
                     $idealImage = $project->getFirstMediaUrl('ideal');
                     $projectImage = $project->getFirstMediaUrl('project_images');
                     $cardImage = $idealImage ?: $coverImage ?: $projectImage ?: '/images/sandalwood_kyuna.jpg';
-                    $images = collect(['gallery', 'project_images', 'cover', 'ideal'])
-                        ->flatMap(fn ($collection) => $project->getMedia($collection)->map(fn ($media) => $media->getUrl()))
+                    $folderImages = $this->projectFolderImages($project->slug);
+                    $images = collect($folderImages)
+                        ->merge(collect(['gallery', 'project_images', 'cover', 'ideal', 'tranquil'])
+                            ->flatMap(fn ($collection) => $project->getMedia($collection)->map(fn ($media) => $media->getUrl())))
                         ->filter()
                         ->unique()
-                        ->take(5)
                         ->values();
 
                     if ($images->isEmpty()) {
                         $images->push($cardImage);
                     }
+
+                    $cardImage = $images->first() ?: $cardImage;
 
                     return [
                         'id' => $project->id,
@@ -90,6 +96,9 @@ class ProjectController extends Controller
      */
     public function show($slug)
     {
+        if (Project::where('slug', $slug)->exists()) {
+            abort_unless(ProjectImageFolders::hasImages($slug), 404);
+        }
         if (!Project::where('slug', $slug)->exists()) {
             $referenceProject = collect($this->referenceProjects())->firstWhere('slug', $slug);
             abort_if(!$referenceProject, 404);
@@ -164,16 +173,24 @@ class ProjectController extends Controller
             |--------------------------------------------------------------------------
             */
 
-            $gallery = $project->getMedia('gallery')
-                ->map(function ($media) {
-                    return [
-                        'id' => $media->id,
-                        'url' => $media->getUrl(),
-                        'name' => $media->file_name,
-                    ];
-                })
+            $gallery = collect(['gallery', 'project_images', 'cover', 'ideal', 'tranquil'])
+                ->flatMap(fn ($collection) => $project->getMedia($collection)->map(fn ($media) => [
+                    'id' => $media->id,
+                    'url' => $media->getUrl(),
+                    'name' => $media->file_name,
+                ]))
                 ->values()
                 ->toArray();
+
+            $folderImages = $this->projectFolderImages($project->slug);
+            if ($folderImages) {
+                $gallery = collect($folderImages)
+                    ->merge(collect($gallery)->pluck('url'))
+                    ->unique()
+                    ->values()
+                    ->map(fn ($url, $index) => ['id' => $index + 1, 'url' => $url, 'name' => $project->title])
+                    ->all();
+            }
 
 
             return [
@@ -252,8 +269,7 @@ class ProjectController extends Controller
 
                 'tranquil_description' => $project->tranquil_description,
 
-                'tranquil_image' => $tranquilImage
-                    ?: '/images/default-project.jpg',
+                'tranquil_image' => $folderImages[2] ?? ($tranquilImage ?: '/images/sandalwood_kyuna.jpg'),
 
 
                 /*
@@ -294,7 +310,7 @@ class ProjectController extends Controller
 
     private function referenceProjects(): array
     {
-        return [
+        $projects = [
             ['id' => 1, 'title' => 'Sandalwood Loresho', 'slug' => 'sandalwood-loresho', 'status' => 'ongoing', 'images' => ['/images/loresho.jpg', '/images/loresho1.jpeg', '/images/loresho2.jpg', '/images/loresho3.jpg', '/images/loresho4.jpg']],
             ['id' => 2, 'title' => 'Oak and Ivy', 'slug' => 'oak-and-ivy', 'status' => 'completed', 'images' => ['/images/IMG-20251113-WA0016.jpg']],
             ['id' => 3, 'title' => 'The Colosseum Residences', 'slug' => 'the-colosseum-residences', 'status' => 'completed', 'images' => ['/images/IMG-20251113-WA0015.jpg']],
@@ -310,5 +326,24 @@ class ProjectController extends Controller
             ['id' => 13, 'title' => 'Chilly Breezes', 'slug' => 'chilly-breezes', 'status' => 'completed', 'images' => ['/images/IMG-20251113-WA0020.jpg']],
             ['id' => 14, 'title' => 'Silver Terraces', 'slug' => 'silver-terraces', 'status' => 'completed', 'images' => ['/images/IMG-20251113-WA0014.jpg']],
         ];
+        $projects = array_values(array_filter(
+            $projects,
+            fn ($project) => ProjectImageFolders::hasImages($project['slug']),
+        ));
+
+
+        foreach ($projects as &$project) {
+            $folderImages = $this->projectFolderImages($project['slug']);
+            if ($folderImages) {
+                $project['images'] = $folderImages;
+            }
+        }
+
+        return $projects;
+    }
+
+    private function projectFolderImages(string $slug): array
+    {
+        return ProjectImageFolders::images($slug);
     }
 }

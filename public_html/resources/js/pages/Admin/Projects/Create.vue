@@ -349,7 +349,7 @@
                     <div class="border-b pb-3">
                         <h2 class="text-lg font-medium text-gray-900">Project Gallery</h2>
 
-                        <p class="mt-1 text-sm text-gray-500">Upload multiple images to create the project gallery.</p>
+                        <p class="mt-1 text-sm text-gray-500">Upload at least seven images to fill the project slideshow and gallery.</p>
                     </div>
 
                     <input

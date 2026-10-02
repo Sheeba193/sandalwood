@@ -15,10 +15,10 @@
                             :class="{ 'opacity-100': currentSlide === index, 'opacity-0': currentSlide !== index }"
                         >
                             <img
+                                :class="currentSlide === index ? 'scale-110' : 'scale-100'"
                                 :src="slide.image"
                                 @load="handleImageLoad"
                                 class="h-full w-full transform object-cover opacity-60 transition-transform duration-[10000ms]"
-                                :class="currentSlide === index ? 'scale-110' : 'scale-100'"
                             />
                         </div>
                     </div>

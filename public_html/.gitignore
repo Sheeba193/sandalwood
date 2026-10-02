@@ -1,20 +1,18 @@
-# Laravel
+public/images/projects
+
+# Environment
 .env
-/storage/logs/
-/storage/framework/
-/storage/*.key
-/bootstrap/cache/
+.env.*
+!.env.example
 
 # Dependencies
-/vendor/
-/node_modules/
+/node_modules
+/vendor
 
-# Build files
-/public/build/
+# Laravel generated files
+/storage/framework/*
+/storage/logs/*
+
+# Compiled frontend assets
+/public/build
 /public/hot
-
-# OS / IDE files
-.DS_Store
-Thumbs.db
-.idea/
-.vscode/

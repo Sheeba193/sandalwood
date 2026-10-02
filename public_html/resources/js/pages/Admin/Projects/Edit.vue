@@ -159,7 +159,7 @@
                             </div>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Add More Gallery Images</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Add at least seven Gallery Images for the project slideshow</label>
                             <input type="file" accept="image/*" multiple @change="handleGallerySelect" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100" />
                         </div>
                     </div>
