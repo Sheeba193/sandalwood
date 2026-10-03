@@ -1,1 +1,0 @@
-import{U as a,F as e,X as o}from"./vendor-BrEPe_h7.js";import{_ as r}from"./AdminLayout.vue_vue_type_script_setup_true_lang-DSTTr-nn.js";const m=a({__name:"Dashboard",setup(s){return(t,_)=>(e(),o(r))}});export{m as default};

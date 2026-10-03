@@ -14,7 +14,7 @@ class PageController extends Controller
      */
     public function home()
     {
-        $projects = Cache::remember('home_projects_with_images', 3600, function () {
+        $projects = Cache::remember('home_projects_with_images_v4', 3600, function () {
 
             return Project::with('media')
                 ->orderBy('is_featured', 'desc')
@@ -34,6 +34,13 @@ class PageController extends Controller
                     $coverImage = $project->getFirstMediaUrl('cover');
 
                     $tranquilImage = $project->getFirstMediaUrl('tranquil');
+                    $folderImages = ProjectImageFolders::images($project->slug);
+                    $folderImage = $folderImages[0] ?? '/images/default-project.jpg';
+
+                    // The supplied exterior photo is the preferred homepage image for Colosseum.
+                    $colosseumImage = $project->slug === 'the-colosseum-residences'
+                        ? '/images/projects/the-colosseum-residences/1.png'
+                        : null;
 
                     /*
                     |--------------------------------------------------------------------------
@@ -41,14 +48,20 @@ class PageController extends Controller
                     |--------------------------------------------------------------------------
                     */
 
-                    $gallery = $project->getMedia('gallery')
+                    $gallery = collect($folderImages)
+                        ->map(fn ($url, $index) => [
+                            'id' => 'folder-' . $index,
+                            'url' => $url,
+                            'name' => basename(parse_url($url, PHP_URL_PATH) ?: $url),
+                        ])
+                        ->merge($project->getMedia('gallery')
                         ->map(function ($media) {
                             return [
                                 'id' => $media->id,
                                 'url' => $media->getUrl(),
                                 'name' => $media->file_name,
                             ];
-                        })
+                        }))
                         ->values()
                         ->toArray();
 
@@ -81,14 +94,17 @@ class PageController extends Controller
                         |--------------------------------------------------------------------------
                         */
 
-                        'cover_image' => $coverImage
-                            ?: '/images/default-project.jpg',
+                        'cover_image' => $colosseumImage
+                            ?: $coverImage
+                            ?: $folderImage,
 
-                        'ideal_image' => $idealImage
-                            ?: '/images/default-project.jpg',
+                        'ideal_image' => $colosseumImage
+                            ?: $idealImage
+                            ?: $coverImage
+                            ?: $folderImage,
 
                         'tranquil_image' => $tranquilImage
-                            ?: '/images/default-project.jpg',
+                            ?: ($folderImages[1] ?? $folderImage),
 
                         /*
                         |--------------------------------------------------------------------------
@@ -103,6 +119,36 @@ class PageController extends Controller
                     ];
                 });
         });
+
+        // The public project detail routes already use this real project catalog
+        // when the database has not been seeded. Keep the homepage consistent.
+        if ($projects->isEmpty()) {
+            $projects = collect(app(ProjectController::class)->referenceProjects())
+                ->map(fn ($project) => [
+                    'id' => $project['id'],
+                    'title' => $project['title'],
+                    'subtitle' => null,
+                    'tagline' => null,
+                    'location' => null,
+                    'specifications' => null,
+                    'status' => $project['status'],
+                    'slug' => $project['slug'],
+                    'is_featured' => false,
+                    'description' => null,
+                    'cover_image' => $project['images'][0],
+                    'ideal_image' => $project['images'][0],
+                    'tranquil_image' => $project['images'][1] ?? $project['images'][0],
+                    'gallery' => collect($project['images'])
+                        ->map(fn ($url, $index) => [
+                            'id' => 'folder-' . $index,
+                            'url' => $url,
+                            'name' => basename(parse_url($url, PHP_URL_PATH) ?: $url),
+                        ])
+                        ->all(),
+                    'created_at' => null,
+                    'updated_at' => null,
+                ]);
+        }
 
 
         /*
@@ -142,36 +188,13 @@ class PageController extends Controller
         | Homepage Slider
         |--------------------------------------------------------------------------
         |
-        | Use the IDEAL image for the main homepage slider.
+        | Use every project with an available image in the homepage slider.
         |
-        | Featured projects come first, followed by ongoing projects.
+        | Projects are ordered with featured projects first, then newest projects.
         |
         */
 
-        $slides = $projects
-            ->filter(function ($project) {
-                return $project['is_featured']
-                    || $project['status'] === 'ongoing';
-            })
-            ->take(8)
-            ->values();
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Fill Slider With Completed Projects
-        |--------------------------------------------------------------------------
-        */
-
-        if ($slides->count() < 8) {
-
-            $additionalSlides = $completedProjects
-                ->take(8 - $slides->count());
-
-            $slides = $slides
-                ->concat($additionalSlides)
-                ->values();
-        }
+        $slides = $projects->values();
 
 
         /*
@@ -206,11 +229,15 @@ class PageController extends Controller
 
                         'title' => $project['title'],
 
+                        'tagline' => $project['tagline'],
+
                         'subtitle' =>
                             $project['subtitle']
                             ?? $project['location'],
 
                         'location' => $project['location'],
+
+                        'specifications' => $project['specifications'],
 
                         'slug' => $project['slug'],
 
@@ -270,6 +297,18 @@ class PageController extends Controller
                         'gallery' => $project['gallery'],
                     ];
                 })
+                ->values(),
+
+            'under_construction' => $projects
+                ->filter(fn ($project) => $project['status'] === 'ongoing')
+                ->map(fn ($project) => [
+                    'id' => $project['id'],
+                    'title' => $project['title'],
+                    'slug' => $project['slug'],
+                    'status' => $project['status'],
+                    'image' => $project['ideal_image'],
+                    'description' => $project['description'],
+                ])
                 ->values(),
 
 

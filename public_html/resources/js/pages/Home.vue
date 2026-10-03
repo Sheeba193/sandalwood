@@ -6,7 +6,7 @@
 
         <div v-else>
             <AppLayout>
-                <section class="relative h-[85vh] w-full overflow-hidden bg-[#001221] text-white">
+                <section class="relative h-[78svh] min-h-[560px] max-h-[900px] w-full overflow-hidden bg-[#001221] text-white">
                     <div class="absolute inset-0 z-0">
                         <div
                             v-for="(slide, index) in slides"
@@ -18,64 +18,53 @@
                                 :class="currentSlide === index ? 'scale-110' : 'scale-100'"
                                 :src="slide.image"
                                 @load="handleImageLoad"
-                                class="h-full w-full transform object-cover opacity-60 transition-transform duration-[10000ms]"
+                                class="h-full w-full transform object-cover opacity-55 transition-transform duration-[10000ms]"
                             />
                         </div>
                     </div>
 
                     <button
                         @click="prevSlide"
-                        class="group absolute top-1/2 left-8 z-30 hidden -translate-y-1/2 opacity-60 transition-opacity hover:opacity-100 md:block"
+                        class="absolute top-1/2 left-3 z-30 -translate-y-1/2 opacity-80 transition-opacity hover:opacity-100 md:left-8"
                     >
-                        <div class="relative">
-                            <div
-                                class="absolute inset-0 scale-0 rounded-full bg-white/20 transition-transform duration-300 group-hover:scale-100"
-                            ></div>
-                            <svg class="relative z-10 h-10 w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="h-9 w-9 sm:h-10 sm:w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 19l-7-7 7-7" />
                             </svg>
-                        </div>
                     </button>
 
                     <button
                         @click="nextSlide"
-                        class="group absolute top-1/2 right-8 z-30 hidden -translate-y-1/2 opacity-60 transition-opacity hover:opacity-100 md:block"
+                        class="absolute top-1/2 right-3 z-30 -translate-y-1/2 opacity-80 transition-opacity hover:opacity-100 md:right-8"
                     >
-                        <div class="relative">
-                            <div
-                                class="absolute inset-0 scale-0 rounded-full bg-white/20 transition-transform duration-300 group-hover:scale-100"
-                            ></div>
-                            <svg class="relative z-10 h-10 w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="h-9 w-9 sm:h-10 sm:w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 5l7 7-7 7" />
                             </svg>
-                        </div>
                     </button>
 
                     <div class="relative z-20 flex h-full w-full flex-col items-center justify-center px-6 text-center">
                         <div class="text-content-container">
                             <transition name="fade-slide" mode="out-in">
                                 <div :key="currentSlide" class="flex flex-col items-center">
-                                    <h1 class="font-cinzel mb-2 text-4xl tracking-[0.3em] whitespace-nowrap uppercase md:text-6xl">
-                                        {{ slides[currentSlide]?.title }}
+                                    <p class="font-cinzel mb-1 text-3xl font-light tracking-[0.16em] uppercase sm:text-4xl md:text-5xl">
+                                        SANDALWOOD
+                                    </p>
+                                    <h1 class="font-cinzel mb-8 max-w-4xl text-3xl font-light tracking-[0.08em] uppercase sm:text-4xl md:text-5xl">
+                                        {{ heroProjectName }}
                                     </h1>
-                                    <h2 class="font-cinzel mb-8 text-3xl tracking-[0.1em] whitespace-nowrap md:text-5xl">
-                                        {{ slides[currentSlide]?.subtitle }}
-                                    </h2>
                                 </div>
                             </transition>
                         </div>
 
-                        <div class="font-cinzel mb-10 flex items-center space-x-6 text-[12px] tracking-[0.3em] uppercase opacity-80">
-                            <span>Loresho</span>
-                            <span class="h-4 w-px bg-white/40"></span>
-                            <span>Apartments</span>
-                            <span class="h-4 w-px bg-white/40"></span>
-                            <span>Under Construction</span>
+                        <div class="font-cinzel mb-8 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-[10px] tracking-[0.16em] uppercase opacity-90 sm:mb-10 sm:gap-x-5 sm:text-xs">
+                            <template v-for="(item, index) in [slides[currentSlide]?.location, slides[currentSlide]?.specifications, formatStatus(slides[currentSlide]?.status)].filter(Boolean)" :key="item">
+                                <span v-if="index" class="h-3 w-px bg-white/50"></span>
+                                <span>{{ item }}</span>
+                            </template>
                         </div>
 
                         <Link
-                            href="/projects"
-                            class="font-montserrat bg-[#001221] px-10 py-3 text-[12px] tracking-[0.3em] text-white uppercase transition-all duration-500 hover:bg-[#1a365d] hover:text-white"
+                            :href="slides[currentSlide]?.slug ? `/projects/${slides[currentSlide].slug}` : '/projects'"
+                            class="font-montserrat bg-black px-8 py-3 text-[11px] tracking-[0.2em] text-white uppercase transition-all duration-500 hover:bg-[#1a365d] sm:px-10 sm:text-xs sm:tracking-[0.3em]"
                         >
                             LEARN MORE
                         </Link>
@@ -92,13 +81,12 @@
                     </div>
                 </section>
                 <div class="relative z-10 w-full bg-white">
-                    <!-- JUSTIFIED TEXT VERSION -->
-                    <section class="reveal mx-auto max-w-7xl px-6 py-24 md:px-12">
-                        <div class="mx-auto max-w-4xl">
-                            <h2 class="font-cinzel mb-8 text-2xl tracking-[0.15em] text-[#001221] uppercase md:text-4xl">
+                    <section class="reveal mx-auto max-w-6xl px-6 py-14 sm:px-10 sm:py-20 lg:px-12">
+                        <div class="max-w-5xl">
+                            <h2 class="font-cinzel mb-5 text-2xl tracking-[0.08em] text-[#001221] uppercase sm:text-3xl sm:tracking-[0.15em]">
                                 PREMIUM PROPERTIES IN PRIME LOCATIONS
                             </h2>
-                            <p class="font-cormorant text-justify text-[18px] leading-relaxed text-gray-400">
+                            <p class="font-cormorant text-justify text-base leading-relaxed text-gray-500 sm:text-lg">
                                 Sandalwood Properties is renowned for its distinguished reputation in the real estate industry. With over two decades
                                 of experience, we conceptualise and deliver exceptional developments that redefine luxury living, seamlessly
                                 integrating lush green spaces and beautifully curated gardens that enhance both aesthetics and well-being. Each
@@ -108,107 +96,54 @@
                         </div>
                     </section>
 
-                    <section class="reveal mx-auto max-w-7xl px-6 py-24 md:px-12">
-                        <div class="mx-auto max-w-4xl">
-                            <span class="text-[10px] font-medium tracking-[0.2em] text-gray-400 uppercase">DEVELOPMENTS</span>
-                            <div class="h-[0.5px] w-24 bg-gray-200"></div>
+                    <section class="reveal mx-auto max-w-6xl px-6 py-10 sm:px-10 lg:px-12 lg:py-12">
+                        <div class="mb-3 flex items-center gap-4">
+                            <span class="font-cinzel text-[10px] tracking-[0.2em] text-gray-400">DEVELOPMENTS</span>
+                            <div class="h-px flex-1 bg-gray-300"></div>
                         </div>
-
-                        <div class="mx-auto max-w-4xl">
-                            <h3 class="font-cinzel mb-6 text-3xl tracking-[0.15em] text-[#001221] uppercase">RECENT LAUNCHES</h3>
-                            <p class="font-cormorant text-justify text-[18px] leading-relaxed text-gray-400">
+                        <h3 class="font-cinzel mb-2 text-3xl tracking-[0.08em] text-[#001221] uppercase sm:text-4xl">RECENT LAUNCHES</h3>
+                        <p class="font-cormorant mb-6 max-w-5xl text-justify text-base leading-relaxed text-gray-500 sm:text-lg">
                                 Each project is thoughtfully designed to captivate, the striking architectural designs and high-end finishes exude
                                 elegance and timeless luxury. Every detail reflects our commitment to creating exceptional living experiences that
                                 embody sophistication and comfort.
-                            </p>
-                        </div>
-
-                        <div class="mx-auto mt-8 grid max-w-4xl grid-cols-1 gap-12 md:grid-cols-3">
-                            <div v-for="proj in recent_launches" :key="proj.id" class="group cursor-pointer">
-                                <div class="mb-6 aspect-[4/5] overflow-hidden">
+                        </p>
+                        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
+                            <Link v-for="proj in recent_launches.slice(0, 2)" :key="proj.id" :href="`/projects/${proj.slug}`" class="group block">
+                                <div class="aspect-[4/3] overflow-hidden bg-gray-100">
                                     <img
                                         :src="proj.image"
+                                        :alt="proj.title"
                                         @load="handleImageLoad"
-                                        class="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                                        class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                                     />
                                 </div>
-                                <h4 class="text-[11px] font-medium tracking-[0.2em] text-gray-600 uppercase">{{ proj.title }}</h4>
-                            </div>
-                        </div>
-
-                        <div class="mt-16 text-center">
-                            <Link
-                                href="/projects"
-                                class="font-montserrat inline-block bg-[#001221] px-12 py-4 text-[10px] tracking-[0.2em] text-white uppercase transition-colors hover:bg-[#1a365d]"
-                            >
-                                VIEW ALL DEVELOPMENTS
+                                <h4 class="mt-2 text-center font-serif text-[10px] tracking-wide text-gray-500 uppercase sm:text-xs">{{ proj.title }}</h4>
                             </Link>
+                        </div>
+                        <div class="mt-8 text-center">
+                            <Link href="/projects" class="font-montserrat inline-block bg-[#001221] px-6 py-3 text-[11px] font-semibold tracking-wider text-white uppercase transition-colors hover:bg-[#1a365d]">VIEW ALL DEVELOPMENTS</Link>
                         </div>
                     </section>
 
-                    <section
-                        class="reveal mx-auto max-w-7xl border-t border-gray-100 px-6 py-24 md:px-12"
-                        @mouseenter="stopRotation"
-                        @mouseleave="startRotation"
-                    >
-                        <div class="mx-auto max-w-4xl">
-                            <div class="mb-6 flex items-center space-x-4">
-                                <span class="font-cinzel text-[10px] font-medium tracking-[0.2em] text-gray-400 uppercase">DEVELOPMENTS</span>
-                                <div class="h-[0.5px] w-24 bg-gray-200"></div>
-                            </div>
-
-                            <div class="mb-12 flex items-end justify-between">
-                                <div class="text-left">
-                                    <h3 class="font-cinzel mb-6 text-3xl tracking-[0.15em] text-[#001221] uppercase">COMPLETED PROJECTS</h3>
-                                    <p class="font-cormorant text-justify text-[18px] leading-relaxed text-gray-400">
-                                        Each finished project stands as an expression of vision realized, where superior craftsmanship meets timeless
-                                        design.
-                                    </p>
+                    <section class="reveal mx-auto max-w-6xl border-t border-gray-100 px-6 py-14 sm:px-10 lg:px-12 lg:py-20">
+                        <div class="mb-3 flex items-center gap-4">
+                            <span class="font-cinzel text-[10px] tracking-[0.2em] text-gray-400">DEVELOPMENTS</span>
+                            <div class="h-px w-24 bg-gray-300"></div>
+                        </div>
+                        <h3 class="font-cinzel mb-3 text-3xl tracking-[0.08em] text-[#001221] uppercase sm:text-4xl">COMPLETED PROJECTS</h3>
+                        <p class="font-cormorant mb-8 max-w-5xl text-justify text-base leading-relaxed text-gray-500 sm:text-lg">
+                            Each finished project stands as an expression of vision realized, where superior craftsmanship meets timeless design. Delivered to the highest standards, these properties embody enduring quality, elevated living, and the trust we have consistently earned in the real estate space.
+                        </p>
+                        <div class="grid grid-cols-1 gap-x-6 gap-y-7 sm:grid-cols-2 lg:auto-rows-[210px] lg:grid-cols-3">
+                            <Link v-for="(proj, index) in completed_projects.slice(0, 5)" :key="proj.id" :href="`/projects/${proj.slug}`" class="group flex h-full flex-col" :class="index === 0 ? 'lg:row-span-2' : ''">
+                                <div class="min-h-0 flex-1 overflow-hidden bg-gray-100" :class="index === 0 ? 'aspect-[4/3] lg:aspect-auto' : 'aspect-[4/3] lg:aspect-auto'">
+                                    <img :src="proj.image" :alt="proj.title" @load="handleImageLoad" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
                                 </div>
-                                <div class="mb-2 flex space-x-4">
-                                    <button @click="rotateProjects" class="transition-colors hover:text-gray-400">
-                                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path d="M9 5l7 7-7 7" stroke-width="1" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-1 gap-10 md:grid-cols-12">
-                                <div class="group cursor-pointer overflow-hidden md:col-span-6 lg:col-span-5">
-                                    <transition name="fade-scale" mode="out-in">
-                                        <div v-if="displayProjects?.length" :key="displayProjects[0]?.id">
-                                            <div class="mb-6 aspect-[3/4] overflow-hidden">
-                                                <img
-                                                    :src="displayProjects[0]?.image"
-                                                    class="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                                                    alt=""
-                                                />
-                                            </div>
-
-                                            <h4 class="font-cinzel text-[11px] font-medium tracking-[0.2em] text-gray-600 uppercase">
-                                                {{ displayProjects[0]?.title }}
-                                            </h4>
-                                        </div>
-                                    </transition>
-                                </div>
-
-                                <div class="grid grid-cols-2 gap-6 md:col-span-6 lg:col-span-7">
-                                    <transition-group name="list">
-                                        <div v-for="proj in displayProjects.slice(1, 5)" :key="proj.id" class="group cursor-pointer">
-                                            <div class="mb-3 aspect-video overflow-hidden lg:aspect-square">
-                                                <img
-                                                    :src="proj.image"
-                                                    class="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                                                />
-                                            </div>
-                                            <h4 class="font-cinzel text-[9px] font-medium tracking-[0.2em] text-gray-400 uppercase">
-                                                {{ proj.title }}
-                                            </h4>
-                                        </div>
-                                    </transition-group>
-                                </div>
-                            </div>
+                                <h4 class="mt-2 text-center font-serif text-[10px] tracking-wide text-gray-500 uppercase sm:text-xs">{{ proj.title }}</h4>
+                            </Link>
+                        </div>
+                        <div class="mt-10 text-center">
+                            <Link href="/projects" class="font-montserrat inline-block bg-[#001221] px-6 py-3 text-[11px] font-semibold tracking-wider text-white uppercase transition-colors hover:bg-[#1a365d]">VIEW ALL DEVELOPMENTS</Link>
                         </div>
                     </section>
                 </div>
@@ -218,7 +153,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, nextTick, onUnmounted } from 'vue';
+import { computed, onMounted, ref, nextTick } from 'vue';
 import Lenis from 'lenis';
 import { Link } from '@inertiajs/vue3';
 import SandalWoodLoader from '@/Components/SandalWoodLoader.vue';
@@ -230,36 +165,22 @@ const props = defineProps({
     recent_launches: { type: Array, default: () => [] },
 
     completed_projects: { type: Array, default: () => [] },
+    under_construction: { type: Array, default: () => [] },
 });
 
 const loading = ref(true);
 const currentSlide = ref(0);
 const imagesLoaded = ref(0);
-const displayProjects = ref([...props.completed_projects]);
-
 const totalImages = (props.slides?.length || 0) + (props.recent_launches?.length || 0) + (props.completed_projects?.length || 0);
+const heroProjectName = computed(() => {
+    const title = props.slides?.[currentSlide.value]?.title ?? '';
+    return title.replace(/^sandalwood\s*/i, '') || title;
+});
 
-let rotationInterval: ReturnType<typeof setInterval> | null = null;
-
-const rotateProjects = () => {
-    if (displayProjects.value.length <= 1) return;
-    const shiftedItem = displayProjects.value.shift();
-    if (shiftedItem) {
-        displayProjects.value.push(shiftedItem);
-    }
-};
-
-const startRotation = () => {
-    if (!rotationInterval && displayProjects.value.length > 0) {
-        rotationInterval = setInterval(rotateProjects, 5000);
-    }
-};
-
-const stopRotation = () => {
-    if (rotationInterval) {
-        clearInterval(rotationInterval);
-        rotationInterval = null;
-    }
+const formatStatus = (status?: string) => {
+    if (!status) return '';
+    if (status === 'ongoing') return 'Under Construction';
+    return status.replaceAll('_', ' ');
 };
 
 const handleImageLoad = () => {
@@ -342,11 +263,6 @@ onMounted(async () => {
     if (props.slides.length > 0) {
         setInterval(nextSlide, 6000);
     }
-    startRotation();
-});
-
-onUnmounted(() => {
-    stopRotation();
 });
 </script>
 

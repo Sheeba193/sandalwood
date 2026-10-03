@@ -40,6 +40,21 @@ class ProjectImageFolders
             'IMG-20251113-WA0024.jpg',
             'IMG-20251113-WA0025.jpg',
         ],
+        'the-colosseum-residences' => [
+            '1.png',
+            '3I9A7706.JPG',
+            '3I9A7738.JPG',
+            '3I9A7747.JPG',
+            '3I9A7750.JPG',
+            '3I9A7779.JPG',
+            '3I9A7797.JPG',
+            '3I9A7849.JPG',
+            '3I9A7884.JPG',
+            '3I9A7893.JPG',
+            '3I9A7912.JPG',
+            '3I9A8003.JPG',
+            '3I9A8033.JPG',
+        ],
     ];
 
     private const IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'avif', 'gif'];

@@ -14,7 +14,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Cache::remember('all_projects_list_v6', 3600, function () {
+        $projects = Cache::remember('all_projects_list_v7', 3600, function () {
             return Project::with('media')
                 ->orderBy('is_featured', 'desc')
                 ->orderBy('created_at', 'desc')
@@ -136,7 +136,7 @@ class ProjectController extends Controller
             ]);
         }
 
-        $project = Cache::remember("project_v2_{$slug}", 3600, function () use ($slug) {
+        $project = Cache::remember("project_v3_{$slug}", 3600, function () use ($slug) {
 
             $project = Project::with(['media', 'amenities'])
                 ->where('slug', $slug)
@@ -158,6 +158,10 @@ class ProjectController extends Controller
             */
 
             $idealImage = $project->getFirstMediaUrl('ideal');
+
+            $colosseumImage = $project->slug === 'the-colosseum-residences'
+                ? '/images/projects/the-colosseum-residences/1.png'
+                : null;
 
             /*
             |--------------------------------------------------------------------------
@@ -236,7 +240,8 @@ class ProjectController extends Controller
                 |--------------------------------------------------------------------------
                 */
 
-                'cover_image' => $coverImage
+                'cover_image' => $colosseumImage
+                    ?: $coverImage
                     ?: $projectImage
                     ?: '/images/sandalwood_kyuna.jpg',
 
@@ -252,7 +257,8 @@ class ProjectController extends Controller
 
                 'ideal_description' => $project->ideal_description,
 
-                'ideal_image' => $idealImage
+                'ideal_image' => $colosseumImage
+                    ?: $idealImage
                     ?: $coverImage
                     ?: $projectImage
                     ?: '/images/sandalwood_kyuna.jpg',
@@ -308,7 +314,7 @@ class ProjectController extends Controller
         ]);
     }
 
-    private function referenceProjects(): array
+    public function referenceProjects(): array
     {
         $projects = [
             ['id' => 16, 'title' => 'Sandalwood Kyuna', 'slug' => 'sandalwood-kyuna', 'status' => 'ongoing', 'images' => ['/images/projects/sandalwood-kyuna/WhatsApp%20Image%202026-10-03%20at%2009.53.10%20(2).jpeg']],
