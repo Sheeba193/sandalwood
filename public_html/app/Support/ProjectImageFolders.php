@@ -11,6 +11,23 @@ class ProjectImageFolders
     ];
 
     private const ORDERED_FILES = [
+        'sandalwood-kyuna' => [
+            'WhatsApp Image 2026-10-03 at 09.53.10 (2).jpeg',
+            'WhatsApp Image 2026-10-03 at 09.53.07 (1).jpeg',
+            'WhatsApp Image 2026-10-03 at 09.53.07.jpeg',
+            'WhatsApp Image 2026-10-03 at 09.53.08 (1).jpeg',
+            'WhatsApp Image 2026-10-03 at 09.53.08 (2).jpeg',
+            'WhatsApp Image 2026-10-03 at 09.53.08.jpeg',
+            'WhatsApp Image 2026-10-03 at 09.53.09 (1).jpeg',
+            'WhatsApp Image 2026-10-03 at 09.53.09 (2).jpeg',
+            'WhatsApp Image 2026-10-03 at 09.53.09 (3).jpeg',
+            'WhatsApp Image 2026-10-03 at 09.53.09.jpeg',
+            'WhatsApp Image 2026-10-03 at 09.53.10 (1).jpeg',
+            'WhatsApp Image 2026-10-03 at 09.53.10.jpeg',
+            'WhatsApp Image 2026-10-03 at 09.53.11 (1).jpeg',
+            'WhatsApp Image 2026-10-03 at 09.53.11 (2).jpeg',
+            'WhatsApp Image 2026-10-03 at 09.53.11.jpeg',
+        ],
         'sandalwood-loresho' => [
             'loresho.jpg',
             'loresho4.jpg',

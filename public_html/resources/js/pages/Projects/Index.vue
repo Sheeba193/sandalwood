@@ -116,6 +116,14 @@ const referenceProjects: Project[] = [
     { id: 13, title: 'Chilly Breezes', status: 'completed', slug: 'chilly-breezes', image: '/images/IMG-20251113-WA0020.jpg' },
     { id: 14, title: 'Silver Terraces', status: 'completed', slug: 'silver-terraces', image: '/images/IMG-20251113-WA0014.jpg' },
     { id: 15, title: 'Ivory Terraces', status: 'completed', slug: 'ivory-terraces', image: '/images/projects/ivory-terraces/3I9A0277.JPG' },
+    {
+        id: 16,
+        title: 'Sandalwood Kyuna',
+        status: 'ongoing',
+        slug: 'sandalwood-kyuna',
+        image: '/images/projects/sandalwood-kyuna/WhatsApp%20Image%202026-10-03%20at%2009.53.10%20(2).jpeg',
+        images: ['/images/projects/sandalwood-kyuna/WhatsApp%20Image%202026-10-03%20at%2009.53.10%20(2).jpeg'],
+    },
 ];
 
 const projectImageSets: Record<string, string[]> = {
