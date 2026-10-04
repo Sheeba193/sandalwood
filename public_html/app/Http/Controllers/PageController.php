@@ -395,7 +395,7 @@ class PageController extends Controller
      */
     public function about()
     {
-        $projects = Cache::remember('about_projects_with_images', 3600, function () {
+        $projects = Cache::remember('about_projects_with_images_v2', 3600, function () {
 
             return Project::with('media')
                 ->orderBy('is_featured', 'desc')
@@ -410,14 +410,22 @@ class PageController extends Controller
                     $coverImage =
                         $project->getFirstMediaUrl('cover');
 
-                    $gallery = $project->getMedia('gallery')
+                    $folderImages = ProjectImageFolders::images($project->slug);
+
+                    $gallery = collect($folderImages)
+                        ->map(fn ($url, $index) => [
+                            'id' => 'folder-' . $index,
+                            'url' => $url,
+                            'name' => basename(parse_url($url, PHP_URL_PATH) ?: $url),
+                        ])
+                        ->merge($project->getMedia('gallery')
                         ->map(function ($media) {
                             return [
                                 'id' => $media->id,
                                 'url' => $media->getUrl(),
                                 'name' => $media->file_name,
                             ];
-                        })
+                        }))
                         ->values()
                         ->toArray();
 
@@ -446,13 +454,16 @@ class PageController extends Controller
                         |--------------------------------------------------------------------------
                         */
 
-                        'image' => $idealImage
+                        'image' => $folderImages[0]
+                            ?? $idealImage
                             ?: '/images/default-project.jpg',
 
-                        'ideal_image' => $idealImage
+                        'ideal_image' => $folderImages[0]
+                            ?? $idealImage
                             ?: '/images/default-project.jpg',
 
-                        'cover_image' => $coverImage
+                        'cover_image' => $folderImages[0]
+                            ?? $coverImage
                             ?: '/images/default-project.jpg',
 
                         /*

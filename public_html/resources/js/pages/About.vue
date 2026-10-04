@@ -74,8 +74,9 @@ onMounted(() => {
 
         <div v-else>
             <AppLayout>
-                <section class="relative h-[30vh] bg-[#001221] overflow-hidden">
-                    <img src="/images/about-hero.jpg" class="w-full h-full object-cover opacity-50" alt="Hero" />
+                <section class="relative h-[42vh] min-h-[300px] max-h-[620px] bg-[#001221] overflow-hidden">
+                    <img src="/images/projects/the-haven/3I9A7215.JPG" class="w-full h-full object-cover object-center opacity-70" alt="Landscaped grounds at a Sandalwood property" />
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#001221]/40 via-transparent to-[#001221]/10" aria-hidden="true"></div>
                 </section>
 
                 <div class="bg-white relative z-10">
@@ -89,14 +90,14 @@ onMounted(() => {
                                 ABOUT SANDALWOOD PROPERTIES
                             </h2>
                             <p class="text-[18px] leading-relaxed text-gray-500 font-cormorant text-justify">
-                                Sandalwood Developers is a distinguished real estate development company, recognized for its excellence in delivering thoughtfully designed residential and office
-                                developments. With a strong foundation built over two decades, Sandalwood Developers combines expertise in design, construction, and project delivery to create
+                                Sandalwood Properties is a distinguished real estate development company, recognized for its excellence in delivering thoughtfully designed residential and office
+                                developments. With a strong foundation built over two decades, Sandalwood Properties combines expertise in design, construction, and project delivery to create
                                 exceptional living environments.
                             </p>
                         </div>
                     </section>
 
-                    <section class="bg-[#c1c2c3] py-20 reveal">
+                    <section class="bg-[#f1f2f3] py-16 md:py-20 reveal">
                         <div class="max-w-7xl mx-auto px-6 md:px-12 flex flex-wrap justify-between items-center gap-12">
                             <div v-for="(stat, i) in stats" :key="i" class="flex items-center">
                                 <div class="flex items-center space-x-6">
@@ -146,18 +147,18 @@ onMounted(() => {
                         <div class="max-w-4xl mx-auto">
                         <div class="flex justify-between items-end mb-12">
                             <h3 class="text-2xl tracking-[0.15em] uppercase text-[#001221] font-cinzel">SANDALWOOD PROPERTIES</h3>
-                            <Link href="/projects" class="text-[14px] bg-[#001221] text-white px-8 py-3 tracking-[0.2em] font-montserrat uppercase">VIEW ALL</Link>
+                            <Link href="/projects" class="text-[14px] bg-[#001221] text-white px-8 py-3 tracking-[0.2em] font-montserrat uppercase">VIEW ALL PROPERTIES</Link>
                         </div>
 
                         <div class="relative overflow-hidden">
                             <div class="flex transition-transform duration-1000 ease-in-out" :style="{ transform: `translateX(-${currentSlide * 100}%)` }">
                                 <div v-for="(group, idx) in propertyGroups" :key="idx" class="flex-none w-full grid grid-cols-1 md:grid-cols-3 gap-8">
-                                    <div v-for="prop in group" :key="prop.id" class="group cursor-pointer">
+                                    <Link v-for="prop in group" :key="prop.id" :href="`/projects/${prop.slug}`" class="group block">
                                         <div class="overflow-hidden mb-6 aspect-[4/3] bg-gray-50">
-                                            <img :src="prop.image" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+                                            <img :src="prop.image" :alt="prop.title" loading="lazy" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
                                         </div>
-                                        <h4 class="text-[18px] leading-relaxed text-gray-500 font-cormorant text-justify">{{ prop.title }}</h4>
-                                    </div>
+                                        <h4 class="text-[18px] leading-relaxed text-gray-500 font-cormorant">{{ prop.title }}</h4>
+                                    </Link>
                                 </div>
                             </div>
                         </div>

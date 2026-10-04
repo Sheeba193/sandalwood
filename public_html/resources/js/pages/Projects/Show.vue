@@ -2,35 +2,35 @@
     <AppLayout>
         <SandalWoodLoader v-if="loading" />
 
-        <main v-else class="min-h-screen bg-white pb-24">
+        <main v-else class="min-h-screen bg-white pb-20">
             <section class="w-full">
-                <img :src="project.cover_image" :alt="project.title" class="h-[250px] w-full object-cover md:h-[250px]" />
+                <img :src="project.cover_image" :alt="project.title" class="h-[min(62vw,560px)] min-h-[300px] w-full object-cover md:min-h-[400px]" />
             </section>
 
-            <section class="mx-auto max-w-5xl px-6 py-6">
+            <section class="mx-auto max-w-6xl px-6 pt-10 pb-5 md:px-10 md:pt-14">
                 <div class="mb-4 flex items-center gap-4">
-                    <span class="font-montserrat text-xs tracking-[0.2em] text-gray-500 uppercase">WELCOME TO {{ project.title }}</span>
-                    <div class="h-px w-12 bg-gray-300"></div>
+                    <span class="font-montserrat text-[10px] tracking-[0.16em] text-gray-500 uppercase">Welcome to {{ project.title }}</span>
+                    <div class="h-px w-20 bg-gray-300"></div>
                 </div>
 
-                <h1 class="font-cinzel mb-6 text-2xl tracking-wider text-[#1a365d] uppercase">
+                <h1 class="font-cinzel mb-2 text-3xl tracking-wide text-[#1a365d] uppercase md:text-4xl">
                     {{ project.title }}
                 </h1>
 
-                <p class="font-cormorant w-full max-w-none text-justify text-lg leading-relaxed text-gray-600">
+                <p v-if="project.description" class="font-cormorant w-full max-w-none text-justify text-lg leading-relaxed text-gray-600">
                     {{ project.description }}
                 </p>
             </section>
 
-            <section class="mx-auto max-w-5xl px-6 py-6">
-                <div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
-                    <div class="overflow-hidden rounded-sm shadow-2xl">
-                        <img :src="project.ideal_image" class="h-full w-full object-cover" alt="" />
+            <section class="mx-auto max-w-6xl px-6 py-5 md:px-10 md:py-7">
+                <div class="grid grid-cols-1 items-center gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
+                    <div class="overflow-hidden">
+                        <img :src="project.ideal_image" :alt="`${project.title} setting`" class="aspect-[4/3] w-full object-cover" />
                     </div>
-                    <div class="space-y-6">
-                        <div class="mt-10 flex items-center gap-4">
-                            <span class="font-montserrat text-xs tracking-[0.2em] text-gray-400 uppercase">The Ideal Setting</span>
-                            <div class="h-px flex-grow bg-gray-200"></div>
+                    <div v-if="project.ideal_description" class="space-y-5">
+                        <div class="flex items-center gap-3">
+                            <span class="font-montserrat text-[10px] tracking-[0.16em] text-gray-500 uppercase">{{ project.ideal_title || 'The Ideal Setting' }}</span>
+                            <div class="h-px w-20 bg-gray-300"></div>
                         </div>
                         <p class="font-cormorant text-justify text-lg leading-relaxed text-gray-600">
                             {{ project.ideal_description }}
@@ -39,47 +39,37 @@
                 </div>
             </section>
 
-            <section class="mx-auto my-6 max-w-4xl border-y border-gray-100 px-6 py-12">
-                <div class="flex flex-wrap justify-center gap-12 md:gap-24">
-                    <div class="flex flex-col items-center text-center">
-                        <div class="mb-2 text-2xl">
-                            <BedDouble class="h-8 w-8 text-gray-700" />
-                        </div>
-                        <span class="font-montserrat text-[11px] font-bold tracking-wider text-gray-400 uppercase">II Floors</span>
+            <section class="mx-auto my-6 max-w-5xl px-6 py-9">
+                <div v-if="project.specifications || project.location || project.amenities?.length" class="flex flex-wrap justify-center gap-x-12 gap-y-6">
+                    <div v-if="project.specifications" class="flex max-w-52 items-center gap-3 text-gray-700">
+                        <BedDouble class="h-7 w-7 shrink-0" />
+                        <span class="font-cormorant text-base leading-tight">{{ project.specifications }}</span>
                     </div>
-                    <div class="flex flex-col items-center text-center">
-                        <div class="mb-2 text-2xl">
-                            <MapPin class="h-8 w-8 text-gray-700" />
-                        </div>
-                        <span class="font-montserrat text-[11px] font-bold tracking-wider text-gray-400 uppercase">View Location</span>
-                    </div>
-                    <div class="flex flex-col items-center text-center">
-                        <div class="mb-2 text-2xl">
-                            <HouseWifi class="h-8 w-8 text-gray-700" />
-                        </div>
-                        <span class="font-montserrat text-[11px] font-bold tracking-wider text-gray-400 uppercase">Exclusive Amenities</span>
+                    <a v-if="project.location" :href="project.location_url || undefined" :target="project.location_url ? '_blank' : undefined" :rel="project.location_url ? 'noopener noreferrer' : undefined" class="flex max-w-52 items-center gap-3 text-gray-700" :class="project.location_url ? 'hover:text-[#1a365d]' : ''">
+                        <MapPin class="h-7 w-7 shrink-0" />
+                        <span class="font-cormorant text-base leading-tight">{{ project.location_url ? 'View Location' : project.location }}</span>
+                    </a>
+                    <div v-if="project.amenities?.length" class="flex max-w-52 items-center gap-3 text-gray-700">
+                        <HouseWifi class="h-7 w-7 shrink-0" />
+                        <span class="font-cormorant text-base leading-tight">Exclusive Amenities</span>
                     </div>
                 </div>
-                <div class="mt-10 flex justify-center">
-                    <button
-                        class="font-montserrat bg-[#001529] px-10 py-3 text-xs tracking-[0.2em] text-white uppercase transition-colors hover:bg-[#00203a]"
-                    >
-                        Enquire
-                    </button>
+                <div class="mt-7 flex justify-center">
+                    <a href="/contact" class="font-montserrat bg-[#001529] px-8 py-2.5 text-xs font-semibold tracking-wide text-white uppercase transition-colors hover:bg-[#00203a]">Enquire</a>
                 </div>
             </section>
 
             <!-- =========================================================
                GALLERY
           ========================================================== -->
-            <section class="mx-auto max-w-5xl px-6 py-6">
+            <section class="mx-auto max-w-6xl px-6 py-7 md:px-10 md:py-10">
                 <div class="mb-4 flex items-center gap-4">
-                    <span class="font-montserrat text-xs tracking-[0.2em] text-gray-500 uppercase"> Gallery </span>
+                    <span class="font-cinzel text-2xl tracking-wide text-[#1a365d] uppercase">Gallery</span>
 
                     <div class="h-px w-12 bg-gray-300"></div>
                 </div>
 
-                <h2 class="font-cinzel mb-3 text-3xl text-[#1a365d] uppercase">Exquisite Living Spaces Just for You</h2>
+                <h2 class="font-cinzel mb-3 text-xl text-[#1a365d] uppercase md:text-2xl">Exquisite Living Spaces Just for You</h2>
 
                 <!-- No gallery -->
                 <div v-if="project.gallery.length === 0" class="py-16 text-center">
@@ -96,7 +86,7 @@
                         }"
                     >
                         <!-- Each slide contains TWO images -->
-                        <div v-for="slide in gallerySlides" :key="slide.index" class="grid min-w-full grid-cols-1 gap-8 md:grid-cols-2">
+                        <div v-for="slide in gallerySlides" :key="slide.index" class="grid min-w-full grid-cols-1 gap-5 md:grid-cols-2 md:gap-8">
                             <!-- First / Second image -->
                             <button
                                 v-for="image in slide.images"
@@ -108,7 +98,7 @@
                                 <img
                                     :src="image.url"
                                     :alt="image.name || project.title"
-                                    class="h-[350px] w-full object-cover transition-transform duration-1000 group-hover/image:scale-105 md:h-[350px]"
+                                    class="aspect-[4/3] w-full object-cover transition-transform duration-1000 group-hover/image:scale-105"
                                 />
 
                                 <!-- Image overlay -->
@@ -191,18 +181,18 @@
                 </div>
             </section>
 
-            <section class="mx-auto max-w-5xl px-6 py-6">
+            <section v-if="project.amenities?.length" class="mx-auto max-w-6xl px-6 py-7 md:px-10 md:py-10">
                 <div class="mb-4 flex items-center gap-4">
                     <span class="font-montserrat text-xs tracking-[0.2em] text-gray-500 uppercase">Wellness and Leisure</span>
                     <div class="h-px w-12 bg-gray-300"></div>
                 </div>
                 <h2 class="font-cinzel mb-4 text-4xl tracking-wide text-[#1a365d] uppercase">Amenities</h2>
-                <p class="font-cormorant max-w-2xl text-xl text-gray-500">Elevating your lifestyle through a refined selection of amenities.</p>
+                <p class="font-cormorant max-w-3xl text-lg leading-relaxed text-gray-600">A curated selection of modern amenities brings comfort and convenience to your doorstep.</p>
 
 
-                <div class="mt-12 grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-5">
+                <div class="mt-9 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 md:grid-cols-5">
                     <div v-for="amenity in project.amenities" :key="amenity.name" class="group flex flex-col items-center text-center">
-                        <div class="flex h-24 w-24 items-center justify-center">
+                        <div class="flex h-20 w-20 items-center justify-center md:h-24 md:w-24">
                             <img v-if="amenity.image" :src="getImageUrl(amenity.image)" :alt="amenity.name" class="h-full w-full object-contain" />
                         </div>
                         <span
@@ -379,6 +369,7 @@ interface Project {
     */
 
     gallery: ProjectImage[];
+    amenities: { id: number; name: string; image: string | null }[];
 
     created_at: string;
     updated_at: string;
@@ -821,6 +812,10 @@ onUnmounted(() => {
 
 .font-cinzel {
     font-family: 'Cinzel', serif;
+}
+
+h1.font-cinzel {
+    font-family: 'Cinzel', serif !important;
 }
 
 .font-cormorant {
