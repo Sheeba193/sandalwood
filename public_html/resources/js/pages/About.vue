@@ -21,18 +21,28 @@ const stats = [
     { value: '10+', label: 'PRIME<br>LOCATIONS' }
 ];
 
-// Computed property to group projects into sets of 3 for the slider
-const propertyGroups = computed(() => {
-    const groups = [];
-    if (!props.projects) return groups;
+// Keep the three featured properties at the start of the showcase.
+const orderedProjects = computed(() => {
+    const priority = ['sandalwood-loresho', 'sandalwood-kyuna', 'the-colosseum-residences'];
+    return [...(props.projects || [])].sort((a, b) => {
+        const aIndex = priority.indexOf(a.slug);
+        const bIndex = priority.indexOf(b.slug);
+        return (aIndex === -1 ? priority.length : aIndex) - (bIndex === -1 ? priority.length : bIndex);
+    });
+});
 
-    for (let i = 0; i < props.projects.length; i += 3) {
-        groups.push(props.projects.slice(i, i + 3));
-    }
-    return groups;
+// Each slide shows three properties, advancing one property at a time.
+const propertyGroups = computed(() => {
+    const projects = orderedProjects.value;
+    if (projects.length <= 3) return projects.length ? [projects] : [];
+
+    return projects.map((_, start) =>
+        Array.from({ length: 3 }, (_, offset) => projects[(start + offset) % projects.length]),
+    );
 });
 
 const next = () => {
+    if (!propertyGroups.value.length) return;
     if (currentSlide.value < propertyGroups.value.length - 1) {
         currentSlide.value++;
     } else {
@@ -41,6 +51,7 @@ const next = () => {
 };
 
 const prev = () => {
+    if (!propertyGroups.value.length) return;
     if (currentSlide.value > 0) {
         currentSlide.value--;
     } else {

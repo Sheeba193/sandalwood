@@ -487,6 +487,30 @@ class PageController extends Controller
                 });
         });
 
+        // Keep the About showcase populated with the same real folder-backed
+        // catalog used by project detail routes when the database is unseeded.
+        if ($projects->isEmpty()) {
+            $projects = collect(app(ProjectController::class)->referenceProjects())
+                ->map(fn ($project) => [
+                    'id' => $project['id'],
+                    'title' => $project['title'],
+                    'slug' => $project['slug'],
+                    'status' => $project['status'],
+                    'image' => $project['images'][0] ?? null,
+                    'ideal_image' => $project['images'][0] ?? null,
+                    'cover_image' => $project['images'][0] ?? null,
+                    'gallery' => collect($project['images'])
+                        ->map(fn ($url, $index) => [
+                            'id' => 'folder-' . $index,
+                            'url' => $url,
+                            'name' => basename(parse_url($url, PHP_URL_PATH) ?: $url),
+                        ])
+                        ->all(),
+                ])
+                ->filter(fn ($project) => $project['image'])
+                ->values();
+        }
+
 
         return Inertia::render('About', [
             'projects' => $projects,
