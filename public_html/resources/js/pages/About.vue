@@ -179,13 +179,13 @@ onMounted(() => {
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 19l-7-7 7-7"/></svg>
                             </button>
 
-                            <div class="flex items-center space-x-2">
+                            <div class="carousel-pagination flex items-center space-x-2">
                                 <button
                                     v-for="(_, i) in propertyGroups"
                                     :key="i"
                                     @click="currentSlide = i"
                                     class="w-2.5 h-2.5 transition-all duration-300"
-                                    :class="currentSlide === i ? 'bg-black' : 'bg-gray-200'"
+                                    :class="currentSlide === i ? '!bg-black' : '!bg-gray-200'"
                                 ></button>
                             </div>
 
@@ -204,4 +204,7 @@ onMounted(() => {
 <style scoped>
 .reveal { opacity: 0; transform: translateY(40px); transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
 .reveal.active { opacity: 1; transform: translateY(0); }
+.carousel-pagination button.bg-black,
+.carousel-pagination button.bg-black:active { background-color: #000 !important; }
+.carousel-pagination button.bg-gray-200 { background-color: #e5e7eb !important; }
 </style>

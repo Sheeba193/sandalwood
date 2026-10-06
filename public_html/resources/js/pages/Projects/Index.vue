@@ -13,9 +13,10 @@
                         </p>
                     </header>
 
-                    <nav class="mb-10 flex flex-wrap gap-3">
+                    <nav class="project-filters mb-10 flex flex-wrap gap-3">
                         <button
                             @click="activeFilter = 'all'"
+                            :aria-pressed="activeFilter === 'all'"
                             :class="activeFilter === 'all' ? 'bg-[#001221] text-white' : 'border border-gray-300 text-gray-600'"
                             class="font-montserrat rounded-full px-6 py-2 text-[11px] tracking-widest uppercase transition-all"
                         >
@@ -23,6 +24,7 @@
                         </button>
                         <button
                             @click="activeFilter = 'ongoing'"
+                            :aria-pressed="activeFilter === 'ongoing'"
                             :class="activeFilter === 'ongoing' ? 'bg-[#001221] text-white' : 'border border-gray-300 text-gray-600'"
                             class="rounded-full px-6 py-2 text-[11px] tracking-widest uppercase transition-all"
                         >
@@ -30,6 +32,7 @@
                         </button>
                         <button
                             @click="activeFilter = 'completed'"
+                            :aria-pressed="activeFilter === 'completed'"
                             :class="activeFilter === 'completed' ? 'bg-[#001221] text-white' : 'border border-gray-300 text-gray-600'"
                             class="rounded-full px-6 py-2 text-[11px] tracking-widest uppercase transition-all"
                         >
@@ -354,5 +357,17 @@ onMounted(() => {
 .reveal-on-scroll.active {
     opacity: 1;
     transform: translateY(0);
+}
+.project-filters button[aria-pressed="true"],
+.project-filters button[aria-pressed="true"]:hover,
+.project-filters button[aria-pressed="true"]:active {
+    background-color: #001221 !important;
+    color: #fff !important;
+}
+.project-filters button[aria-pressed="false"],
+.project-filters button[aria-pressed="false"]:hover,
+.project-filters button[aria-pressed="false"]:active {
+    background-color: #fff !important;
+    color: #4b5563 !important;
 }
 </style>
