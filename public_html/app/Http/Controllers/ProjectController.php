@@ -9,6 +9,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 class ProjectController extends Controller
 {
+    private const KITISURU_DESCRIPTION = "Sandalwood Kitisuru offers a rare expression of refined living, with just eleven exclusive villas, each sitting on one acre setting in one of Nairobi's most coveted residential enclaves.\n\nElegant architecture, expansive spaces, and beautifully landscaped gardens come together to create an environment that feels private, serene, and effortlessly sophisticated.\n\nDesigned for those who value exceptional quality, comfort, and understated luxury, it is a place where every detail enhances everyday living, allowing life to unfold with comfort, balance, and distinction.";
+    private const KITISURU_IDEAL_DESCRIPTION = "Perfectly positioned to offer a rare balance of elite seclusion and effortless urban connectivity, Sandalwood Kitisuru ensures that Nairobi's premier commercial and social hubs are always within easy reach.\n\nTucked away in a quiet enclave, the estate benefits from seamless access to major transit.\n\nThis strategic location effortlessly links residents to world-class amenities including the International School of Kenya (ISK), Village Market, and premier medical facilities, allowing you to enjoy your privacy without ever feeling removed from the heartbeat of the city.";
+    private const KITISURU_TRANQUIL_DESCRIPTION = 'Surrounded by lush greenery and beautifully landscaped gardens, Sandalwood Kitisuru evokes a feeling of calm, privacy, and quiet escape. A place where the pace slows, the air feels lighter, and nature becomes part of everyday luxury.';
+
     /**
      * Display a listing of all projects.
      */
@@ -106,12 +110,16 @@ class ProjectController extends Controller
             $gallery = collect($referenceProject['images'])
                 ->map(fn ($url, $index) => ['id' => $index + 1, 'url' => $url, 'name' => $this->galleryImageName($slug, $url, $index)])
                 ->all();
-            $coverImage = $slug === 'sandalwood-loresho'
-                ? '/images/projects/sandalwood-loresho/IMG-20251113-WA0024.jpg'
-                : $referenceProject['images'][0];
-            $idealImage = $slug === 'sandalwood-loresho'
-                ? '/images/projects/sandalwood-loresho/IMG-20251113-WA0018.jpg'
-                : $referenceProject['images'][0];
+            $coverImage = match ($slug) {
+                'sandalwood-loresho' => '/images/projects/sandalwood-loresho/IMG-20251113-WA0024.jpg',
+                'sandalwood-kitisuru' => '/images/projects/sandalwood-kitisuru/1.JPG',
+                default => $referenceProject['images'][0],
+            };
+            $idealImage = match ($slug) {
+                'sandalwood-loresho' => '/images/projects/sandalwood-loresho/IMG-20251113-WA0018.jpg',
+                'sandalwood-kitisuru' => '/images/projects/sandalwood-kitisuru/2.JPG',
+                default => $referenceProject['images'][0],
+            };
 
             return Inertia::render('Projects/Show', [
                 'project' => [
@@ -120,24 +128,38 @@ class ProjectController extends Controller
                     'slug' => $referenceProject['slug'],
                     'subtitle' => null,
                     'tagline' => null,
-                    'location' => '',
-                    'location_url' => $slug === 'sandalwood-loresho' ? Project::LORESHO_MAPS_URL : null,
-                    'specifications' => $slug === 'sandalwood-loresho' ? '3 & 4 BEDROOM APARTMENTS' : null,
+                    'location' => $slug === 'sandalwood-kitisuru' ? 'Kitisuru, Nairobi, Kenya' : '',
+                    'location_url' => match ($slug) {
+                        'sandalwood-loresho' => Project::LORESHO_MAPS_URL,
+                        'sandalwood-kitisuru' => Project::KITISURU_MAPS_URL,
+                        default => null,
+                    },
+                    'specifications' => match ($slug) {
+                        'sandalwood-loresho' => '3 & 4 BEDROOM APARTMENTS',
+                        'sandalwood-kitisuru' => '5 BEDROOM VILLAS',
+                        default => null,
+                    },
                     'status' => $referenceProject['status'],
                     'is_featured' => false,
-                    'description' => $slug === 'sandalwood-loresho'
-                        ? 'An exclusive collection of residential apartments set within the tranquil and serene surroundings of Loresho, Nairobi. Designed to offer a perfect balance of serenity and modern convenience, the development features thoughtfully planned living spaces complemented by a selection of recreational and functional amenities.'
-                        : 'Project information will be updated soon.',
+                    'description' => match ($slug) {
+                        'sandalwood-loresho' => 'An exclusive collection of residential apartments set within the tranquil and serene surroundings of Loresho, Nairobi. Designed to offer a perfect balance of serenity and modern convenience, the development features thoughtfully planned living spaces complemented by a selection of recreational and functional amenities.',
+                        'sandalwood-kitisuru' => self::KITISURU_DESCRIPTION,
+                        default => 'Project information will be updated soon.',
+                    },
                     'image' => $coverImage,
                     'cover_image' => $coverImage,
                     'ideal_title' => 'THE IDEAL SETTING',
-                    'ideal_description' => $slug === 'sandalwood-loresho'
-                        ? "Sandalwood Loresho is just a 2-minute drive from Lions SightFirst Eye Hospital. The development ensures access to quality healthcare, while nearby retail centers, international schools, and lifestyle hubs in Westlands and the wider Nairobi area are all within a short drive. Seamless connectivity via Waiyaki Way and Lower Kabete Road allows for easy access to Nairobi's key destinations, all while preserving the calm, green charm that defines Loresho."
-                        : null,
+                    'ideal_description' => match ($slug) {
+                        'sandalwood-loresho' => "Sandalwood Loresho is just a 2-minute drive from Lions SightFirst Eye Hospital. The development ensures access to quality healthcare, while nearby retail centers, international schools, and lifestyle hubs in Westlands and the wider Nairobi area are all within a short drive. Seamless connectivity via Waiyaki Way and Lower Kabete Road allows for easy access to Nairobi's key destinations, all while preserving the calm, green charm that defines Loresho.",
+                        'sandalwood-kitisuru' => self::KITISURU_IDEAL_DESCRIPTION,
+                        default => null,
+                    },
                     'ideal_image' => $idealImage,
                     'tranquil_title' => 'A TRANQUIL RETREAT',
-                    'tranquil_description' => null,
-                    'tranquil_image' => $referenceProject['images'][0],
+                    'tranquil_description' => $slug === 'sandalwood-kitisuru' ? self::KITISURU_TRANQUIL_DESCRIPTION : null,
+                    'tranquil_image' => $slug === 'sandalwood-kitisuru'
+                        ? '/images/projects/sandalwood-kitisuru/3.JPG'
+                        : $referenceProject['images'][0],
                     'gallery' => $gallery,
                     'amenities' => [],
                     'created_at' => now()->toISOString(),
@@ -151,6 +173,23 @@ class ProjectController extends Controller
             $project = Project::with(['media', 'amenities'])
                 ->where('slug', $slug)
                 ->firstOrFail();
+
+            $folderImages = $this->projectFolderImages($project->slug);
+            $loreshoHeroImage = $project->slug === 'sandalwood-loresho'
+                ? $this->projectFolderImage($folderImages, 'IMG-20251113-WA0024.jpg')
+                : null;
+            $loreshoIdealImage = $project->slug === 'sandalwood-loresho'
+                ? $this->projectFolderImage($folderImages, 'IMG-20251113-WA0018.jpg')
+                : null;
+            $kitisuruHeroImage = $project->slug === 'sandalwood-kitisuru'
+                ? $this->projectFolderImage($folderImages, '1.JPG')
+                : null;
+            $kitisuruIdealImage = $project->slug === 'sandalwood-kitisuru'
+                ? $this->projectFolderImage($folderImages, '2.JPG')
+                : null;
+            $kitisuruTranquilImage = $project->slug === 'sandalwood-kitisuru'
+                ? $this->projectFolderImage($folderImages, '3.JPG')
+                : null;
 
             /*
             |--------------------------------------------------------------------------
@@ -196,18 +235,13 @@ class ProjectController extends Controller
                 ->values()
                 ->toArray();
 
-            $folderImages = $this->projectFolderImages($project->slug);
-            $loreshoHeroImage = $project->slug === 'sandalwood-loresho'
-                ? collect($folderImages)->first(fn ($url) => str_ends_with(rawurldecode($url), '/IMG-20251113-WA0024.jpg'))
-                : null;
-            $loreshoIdealImage = $project->slug === 'sandalwood-loresho'
-                ? collect($folderImages)->first(fn ($url) => str_ends_with(rawurldecode($url), '/IMG-20251113-WA0018.jpg'))
-                : null;
             $loreshoDescription = 'An exclusive collection of residential apartments set within the tranquil and serene surroundings of Loresho, Nairobi. Designed to offer a perfect balance of serenity and modern convenience, the development features thoughtfully planned living spaces complemented by a selection of recreational and functional amenities.';
             $loreshoIdealDescription = "Sandalwood Loresho is just a 2-minute drive from Lions SightFirst Eye Hospital. The development ensures access to quality healthcare, while nearby retail centers, international schools, and lifestyle hubs in Westlands and the wider Nairobi area are all within a short drive. Seamless connectivity via Waiyaki Way and Lower Kabete Road allows for easy access to Nairobi's key destinations, all while preserving the calm, green charm that defines Loresho.";
             $description = $project->description;
             if ($project->slug === 'sandalwood-loresho' && str_word_count((string) $description) < 20) {
                 $description = $loreshoDescription;
+            } elseif ($project->slug === 'sandalwood-kitisuru' && str_word_count((string) $description) < 20) {
+                $description = self::KITISURU_DESCRIPTION;
             }
             if ($folderImages) {
                 $gallery = collect($folderImages)
@@ -239,10 +273,18 @@ class ProjectController extends Controller
                 'location' => $project->location,
 
                 'location_url' => $project->location_url
-                    ?: ($project->slug === 'sandalwood-loresho' ? Project::LORESHO_MAPS_URL : null),
+                    ?: match ($project->slug) {
+                        'sandalwood-loresho' => Project::LORESHO_MAPS_URL,
+                        'sandalwood-kitisuru' => Project::KITISURU_MAPS_URL,
+                        default => null,
+                    },
 
                 'specifications' => $project->specifications
-                    ?: ($project->slug === 'sandalwood-loresho' ? '3 & 4 BEDROOM APARTMENTS' : null),
+                    ?: match ($project->slug) {
+                        'sandalwood-loresho' => '3 & 4 BEDROOM APARTMENTS',
+                        'sandalwood-kitisuru' => '5 BEDROOM VILLAS',
+                        default => null,
+                    },
 
                 'status' => $project->status,
 
@@ -266,6 +308,7 @@ class ProjectController extends Controller
 
                 'cover_image' => $colosseumImage
                     ?: $loreshoHeroImage
+                    ?: $kitisuruHeroImage
                     ?: $coverImage
                     ?: $projectImage
                     ?: ($folderImages[0] ?? null)
@@ -282,10 +325,15 @@ class ProjectController extends Controller
                     ?: 'THE IDEAL SETTING',
 
                 'ideal_description' => $project->ideal_description
-                    ?: ($project->slug === 'sandalwood-loresho' ? $loreshoIdealDescription : null),
+                    ?: match ($project->slug) {
+                        'sandalwood-loresho' => $loreshoIdealDescription,
+                        'sandalwood-kitisuru' => self::KITISURU_IDEAL_DESCRIPTION,
+                        default => null,
+                    },
 
                 'ideal_image' => $colosseumImage
                     ?: $loreshoIdealImage
+                    ?: $kitisuruIdealImage
                     ?: $idealImage
                     ?: $coverImage
                     ?: $projectImage
@@ -302,9 +350,11 @@ class ProjectController extends Controller
                 'tranquil_title' => $project->tranquil_title
                     ?: 'A TRANQUIL RETREAT',
 
-                'tranquil_description' => $project->tranquil_description,
+                'tranquil_description' => $project->tranquil_description
+                    ?: ($project->slug === 'sandalwood-kitisuru' ? self::KITISURU_TRANQUIL_DESCRIPTION : null),
 
-                'tranquil_image' => $folderImages[2] ?? ($tranquilImage ?: '/images/sandalwood_kyuna.jpg'),
+                'tranquil_image' => $kitisuruTranquilImage
+                    ?: ($folderImages[2] ?? ($tranquilImage ?: '/images/sandalwood_kyuna.jpg')),
 
 
                 /*
@@ -381,16 +431,35 @@ class ProjectController extends Controller
 
     private function galleryImageName(string $slug, string $url, int $index): string
     {
-        if ($slug !== 'sandalwood-loresho') {
-            return "Project gallery image " . ($index + 1);
+        $filename = basename(rawurldecode(parse_url($url, PHP_URL_PATH) ?: $url));
+
+        if ($slug === 'sandalwood-loresho') {
+            return match ($filename) {
+                'loresho.jpg' => 'Sandalwood Loresho entrance',
+                'IMG-20251113-WA0018.jpg', 'IMG-20251113-WA0015.jpg' => 'Sandalwood Loresho pool and landscaped gardens',
+                'IMG-20251113-WA0024.jpg' => 'Sandalwood Loresho apartment living room',
+                default => 'Sandalwood Loresho gallery image ' . ($index + 1),
+            };
         }
 
-        return match (basename(rawurldecode(parse_url($url, PHP_URL_PATH) ?: $url))) {
-            'loresho.jpg' => 'Sandalwood Loresho entrance',
-            'IMG-20251113-WA0018.jpg', 'IMG-20251113-WA0015.jpg' => 'Sandalwood Loresho pool and landscaped gardens',
-            'IMG-20251113-WA0024.jpg' => 'Sandalwood Loresho apartment living room',
-            default => 'Sandalwood Loresho gallery image ' . ($index + 1),
-        };
+        if ($slug === 'sandalwood-kitisuru') {
+            return match ($filename) {
+                '1.JPG' => 'Sandalwood Kitisuru garden entrance',
+                '2.JPG' => 'Sandalwood Kitisuru swimming pool and garden',
+                '3.JPG', '12.JPG', '5.JPG' => 'Sandalwood Kitisuru landscaped estate road',
+                '4.JPG' => 'Sandalwood Kitisuru main entrance gate',
+                default => 'Sandalwood Kitisuru garden and villa',
+            };
+        }
+
+        return "Project gallery image " . ($index + 1);
+    }
+
+    private function projectFolderImage(array $images, string $filename): ?string
+    {
+        return collect($images)->first(
+            fn ($url) => basename(rawurldecode(parse_url($url, PHP_URL_PATH) ?: $url)) === $filename,
+        );
     }
 
     private function projectFolderImages(string $slug): array

@@ -40,6 +40,18 @@ class ProjectImageFolders
             'IMG-20251113-WA0024.jpg',
             'IMG-20251113-WA0025.jpg',
         ],
+        'sandalwood-kitisuru' => [
+            '4.JPG',
+            '12.JPG',
+            '5.JPG',
+            '6.JPG',
+            '8.JPG',
+            '28.JPG',
+            '11.JPG',
+            '3.JPG',
+            '2.JPG',
+            '1.JPG',
+        ],
         'the-colosseum-residences' => [
             '1.png',
             '3I9A7706.JPG',

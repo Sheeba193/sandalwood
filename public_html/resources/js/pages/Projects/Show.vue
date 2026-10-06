@@ -4,7 +4,7 @@
 
         <main v-else class="min-h-screen bg-white pb-20">
             <section class="w-full">
-                <img :src="project.cover_image" :alt="`${project.title} living room`" class="h-[min(50.5vw,700px)] min-h-[300px] w-full object-cover md:min-h-[400px]" />
+                <img :src="project.cover_image" :alt="project.slug === 'sandalwood-kitisuru' ? `${project.title} garden entrance` : `${project.title} living room`" class="h-[min(50.5vw,700px)] min-h-[300px] w-full object-cover md:min-h-[400px]" />
             </section>
 
             <section class="mx-auto max-w-6xl px-6 pt-10 pb-5 md:px-10 md:pt-14">
@@ -17,7 +17,7 @@
                     {{ project.title }}
                 </h1>
 
-                <p v-if="project.description" class="font-cormorant w-full max-w-none text-justify text-lg leading-relaxed text-gray-600">
+                <p v-if="project.description" class="font-cormorant w-full max-w-none whitespace-pre-line text-justify text-lg leading-relaxed text-gray-600">
                     {{ project.description }}
                 </p>
             </section>
@@ -25,16 +25,33 @@
             <section class="mx-auto max-w-6xl px-6 py-5 md:px-10 md:py-7">
                 <div class="grid grid-cols-1 items-center gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
                     <div class="overflow-hidden">
-                        <img :src="project.ideal_image" :alt="`${project.title} pool and residential setting`" class="aspect-[1.24/1] w-full object-cover" />
+                        <img :src="project.ideal_image" :alt="project.slug === 'sandalwood-kitisuru' ? `${project.title} swimming pool and garden` : `${project.title} pool and residential setting`" class="aspect-[1.24/1] w-full object-cover" />
                     </div>
                     <div class="space-y-5">
                         <div class="flex items-center gap-3">
                             <span class="font-montserrat text-[10px] tracking-[0.16em] text-gray-500 uppercase">{{ project.ideal_title || 'The Ideal Setting' }}</span>
                             <div class="h-px w-20 bg-gray-300"></div>
                         </div>
-                        <p v-if="project.ideal_description" class="font-cormorant text-justify text-lg leading-relaxed text-gray-600">
+                        <p v-if="project.ideal_description" class="font-cormorant whitespace-pre-line text-justify text-lg leading-relaxed text-gray-600">
                             {{ project.ideal_description }}
                         </p>
+                    </div>
+                </div>
+            </section>
+
+            <section v-if="project.slug === 'sandalwood-kitisuru' && project.tranquil_description && project.tranquil_image" class="mx-auto max-w-6xl px-6 py-8 md:px-10 md:py-10">
+                <div class="grid grid-cols-1 items-center gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-10">
+                    <div class="space-y-5 lg:pr-4">
+                        <div class="flex items-center gap-3">
+                            <span class="font-montserrat text-[10px] tracking-[0.16em] text-gray-500 uppercase">{{ project.tranquil_title || 'A Tranquil Retreat' }}</span>
+                            <div class="h-px w-20 bg-gray-300"></div>
+                        </div>
+                        <p class="font-cormorant whitespace-pre-line text-justify text-lg leading-relaxed text-gray-600">
+                            {{ project.tranquil_description }}
+                        </p>
+                    </div>
+                    <div class="overflow-hidden lg:col-start-2 lg:row-start-1">
+                        <img :src="project.tranquil_image" :alt="`${project.title} landscaped garden and estate road`" class="aspect-[1.4/1] w-full object-cover" />
                     </div>
                 </div>
             </section>
@@ -53,13 +70,14 @@
                         <MapPin class="h-7 w-7 shrink-0" />
                         <span class="font-cormorant text-base leading-tight">{{ project.location }}</span>
                     </div>
-                    <div v-if="amenityItems.length" class="flex max-w-52 items-center gap-3 text-gray-700">
+                    <div v-if="showAmenitySection" class="flex max-w-52 items-center gap-3 text-gray-700">
                         <HouseWifi class="h-7 w-7 shrink-0" />
                         <span class="font-cormorant text-base leading-tight">Exclusive Amenities</span>
                     </div>
                 </div>
                 <div class="mt-7 flex justify-center">
-                    <a href="/contact" class="font-montserrat bg-[#001529] px-8 py-2.5 text-xs font-semibold tracking-wide text-white uppercase transition-colors hover:bg-[#00203a]">Enquire</a>
+                    <span v-if="project.slug === 'sandalwood-kitisuru'" class="font-montserrat bg-[#001529] px-5 py-2.5 text-xs font-semibold tracking-wide text-white uppercase">Sold Out</span>
+                    <a v-else href="/contact" class="font-montserrat bg-[#001529] px-8 py-2.5 text-xs font-semibold tracking-wide text-white uppercase transition-colors hover:bg-[#00203a]">Enquire</a>
                 </div>
             </section>
 
@@ -189,7 +207,7 @@
                 </div>
             </section>
 
-            <section v-if="amenityItems.length" class="mx-auto max-w-6xl px-6 py-7 md:px-10 md:py-10">
+            <section v-if="showAmenitySection" class="mx-auto max-w-6xl px-6 py-7 md:px-10 md:py-10">
                 <div class="mb-4 flex items-center gap-4">
                     <span class="font-montserrat text-xs tracking-[0.2em] text-gray-500 uppercase">Wellness and Leisure</span>
                     <div class="h-px w-12 bg-gray-300"></div>
@@ -441,6 +459,8 @@ const amenityItems = computed(() => {
 
     return [...matchedReferenceAmenities, ...additionalProjectAmenities];
 });
+
+const showAmenitySection = computed(() => props.project.slug !== 'sandalwood-kitisuru' && amenityItems.value.length > 0);
 
 const getAmenityIcon = (name: string) => {
     const label = name.toLowerCase();

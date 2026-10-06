@@ -136,7 +136,11 @@ class AdminProjectController extends Controller
                 'location' => $project->location,
                 'specifications' => $project->specifications,
                 'location_url' => $project->location_url
-                    ?: ($project->slug === 'sandalwood-loresho' ? Project::LORESHO_MAPS_URL : null),
+                    ?: match ($project->slug) {
+                        'sandalwood-loresho' => Project::LORESHO_MAPS_URL,
+                        'sandalwood-kitisuru' => Project::KITISURU_MAPS_URL,
+                        default => null,
+                    },
                 'amenity_ids' => $project->amenities->pluck('id')->values(),
                 'status' => $project->status,
                 'is_featured' => $project->is_featured,

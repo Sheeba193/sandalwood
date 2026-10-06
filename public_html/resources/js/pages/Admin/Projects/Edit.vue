@@ -262,7 +262,13 @@ const form = reactive({
     subtitle: props.project.subtitle || '',
     tagline: props.project.tagline || '',
     location: props.project.location || '',
-    specifications: props.project.specifications || (props.project.title === 'Sandalwood Loresho' ? '3 & 4 BEDROOM APARTMENTS' : ''),
+    specifications:
+        props.project.specifications ||
+        (props.project.title === 'Sandalwood Loresho'
+            ? '3 & 4 BEDROOM APARTMENTS'
+            : props.project.title === 'Sandalwood Kitisuru'
+              ? '5 BEDROOM VILLAS'
+              : ''),
     location_url: props.project.location_url || '',
     amenity_ids: props.project.amenity_ids || [],
     status: props.project.status || 'ongoing',
