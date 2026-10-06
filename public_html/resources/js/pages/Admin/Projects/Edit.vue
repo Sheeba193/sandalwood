@@ -70,6 +70,27 @@
                     </div>
                 </div>
 
+                <!-- Project Amenities -->
+                <div class="overflow-hidden rounded-lg border border-gray-200 bg-white">
+                    <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
+                        <h2 class="text-base font-semibold text-gray-900">Project Amenities</h2>
+                        <p class="mt-1 text-sm text-gray-500">Select every amenity available at this project.</p>
+                    </div>
+                    <div v-if="amenities.length" class="grid grid-cols-2 gap-4 p-6 md:grid-cols-3 lg:grid-cols-4">
+                        <label v-for="amenity in amenities" :key="amenity.id" class="cursor-pointer">
+                            <input v-model="form.amenity_ids" type="checkbox" :value="amenity.id" class="peer sr-only" />
+                            <div class="h-full overflow-hidden rounded-lg border-2 border-gray-200 transition peer-checked:border-emerald-600 hover:border-gray-400">
+                                <div class="flex h-28 items-center justify-center bg-gray-50 p-4">
+                                    <img v-if="amenity.image" :src="getImageUrl(amenity.image)" :alt="amenity.name" class="h-full w-full object-contain" />
+                                    <span v-else class="text-xs text-gray-400">No image</span>
+                                </div>
+                                <div class="p-3 text-sm font-medium text-gray-700">{{ amenity.name }}</div>
+                            </div>
+                        </label>
+                    </div>
+                    <p v-else class="p-6 text-sm text-gray-500">No amenities have been created yet.</p>
+                </div>
+
                 <!-- Featured / Banner Image -->
                 <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
                     <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
@@ -201,6 +222,12 @@ interface GalleryItem {
     url: string;
 }
 
+interface AmenityItem {
+    id: number;
+    name: string;
+    image: string | null;
+}
+
 interface ProjectProps {
     id: number;
     title: string;
@@ -209,6 +236,7 @@ interface ProjectProps {
     location: string;
     specifications?: string;
     location_url?: string;
+    amenity_ids?: number[];
     status: string;
     is_featured: number;
     description: string;
@@ -224,6 +252,7 @@ interface ProjectProps {
 
 const props = defineProps<{
     project: ProjectProps;
+    amenities: AmenityItem[];
 }>();
 
 const processing = ref(false);
@@ -233,8 +262,9 @@ const form = reactive({
     subtitle: props.project.subtitle || '',
     tagline: props.project.tagline || '',
     location: props.project.location || '',
-    specifications: props.project.specifications || '',
+    specifications: props.project.specifications || (props.project.title === 'Sandalwood Loresho' ? '3 & 4 BEDROOM APARTMENTS' : ''),
     location_url: props.project.location_url || '',
+    amenity_ids: props.project.amenity_ids || [],
     status: props.project.status || 'ongoing',
     is_featured: props.project.is_featured || 0,
     description: props.project.description || '',
@@ -247,6 +277,12 @@ const form = reactive({
     retreat_image: null as File | null,
     gallery: [] as File[],
 });
+
+const getImageUrl = (image: string | null) => {
+    if (!image) return '';
+    if (image.startsWith('http://') || image.startsWith('https://') || image.startsWith('/')) return image;
+    return `/storage/${image}`;
+};
 
 const handleFileSelect = (event: Event, field: 'featured_image' | 'setting_image' | 'retreat_image') => {
     const target = event.target as HTMLInputElement;

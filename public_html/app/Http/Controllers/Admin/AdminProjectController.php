@@ -124,9 +124,10 @@ class AdminProjectController extends Controller
 
     public function edit(Project $project)
     {
-        $project->load('media');
+        $project->load(['media', 'amenities']);
 
         return Inertia::render('Admin/Projects/Edit', [
+            'amenities' => Amenities::orderBy('name')->get(),
             'project' => [
                 'id' => $project->id,
                 'title' => $project->title,
@@ -134,7 +135,9 @@ class AdminProjectController extends Controller
                 'tagline' => $project->tagline,
                 'location' => $project->location,
                 'specifications' => $project->specifications,
-                'location_url' => $project->location_url,
+                'location_url' => $project->location_url
+                    ?: ($project->slug === 'sandalwood-loresho' ? Project::LORESHO_MAPS_URL : null),
+                'amenity_ids' => $project->amenities->pluck('id')->values(),
                 'status' => $project->status,
                 'is_featured' => $project->is_featured,
                 'description' => $project->description,
@@ -163,6 +166,8 @@ class AdminProjectController extends Controller
             'location' => ['required', 'string', 'max:255'],
             'specifications' => ['nullable', 'string', 'max:500'],
             'location_url' => ['nullable', 'url', 'max:2048'],
+            'amenity_ids' => ['nullable', 'array'],
+            'amenity_ids.*' => ['integer', 'exists:amenities,id'],
             'status' => ['required', 'in:ongoing,completed,planned,sold_out'],
             'is_featured' => ['nullable', 'boolean'],
             'description' => ['nullable', 'string'],
@@ -193,6 +198,8 @@ class AdminProjectController extends Controller
             'tranquil_description' => $validated['retreat_description'] ?? null,
         ]);
 
+        $project->amenities()->sync($validated['amenity_ids'] ?? []);
+
         foreach ([
             'featured_image' => 'cover',
             'setting_image' => 'ideal',
@@ -207,7 +214,9 @@ class AdminProjectController extends Controller
             $project->addMedia($image)->toMediaCollection('gallery');
         }
 
-        Cache::forget('all_projects_list_v3');
+        Cache::forget('all_projects_list_v7');
+        Cache::forget("project_v4_{$previousSlug}");
+        Cache::forget("project_v4_{$project->slug}");
         Cache::forget("project_{$previousSlug}");
         Cache::forget("project_{$project->slug}");
 
@@ -218,7 +227,8 @@ class AdminProjectController extends Controller
 
     public function destroy(Project $project)
     {
-        Cache::forget('all_projects_list_v3');
+        Cache::forget('all_projects_list_v7');
+        Cache::forget("project_v4_{$project->slug}");
         Cache::forget("project_{$project->slug}");
         // Deletes the project and all associated Spatie media
         $project->clearMediaCollection('cover');

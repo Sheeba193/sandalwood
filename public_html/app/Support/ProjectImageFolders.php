@@ -30,11 +30,11 @@ class ProjectImageFolders
         ],
         'sandalwood-loresho' => [
             'loresho.jpg',
+            'IMG-20251113-WA0018.jpg',
             'loresho4.jpg',
             'loresho5.jpg',
             'IMG-20251113-WA0015.jpg',
             'IMG-20251113-WA0017.jpg',
-            'IMG-20251113-WA0018.jpg',
             'IMG-20251113-WA0021.jpg',
             'IMG-20251113-WA0019.jpg',
             'IMG-20251113-WA0024.jpg',

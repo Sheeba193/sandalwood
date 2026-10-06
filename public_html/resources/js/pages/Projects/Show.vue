@@ -4,7 +4,7 @@
 
         <main v-else class="min-h-screen bg-white pb-20">
             <section class="w-full">
-                <img :src="project.cover_image" :alt="project.title" class="h-[min(62vw,560px)] min-h-[300px] w-full object-cover md:min-h-[400px]" />
+                <img :src="project.cover_image" :alt="`${project.title} living room`" class="h-[min(50.5vw,700px)] min-h-[300px] w-full object-cover md:min-h-[400px]" />
             </section>
 
             <section class="mx-auto max-w-6xl px-6 pt-10 pb-5 md:px-10 md:pt-14">
@@ -25,14 +25,14 @@
             <section class="mx-auto max-w-6xl px-6 py-5 md:px-10 md:py-7">
                 <div class="grid grid-cols-1 items-center gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
                     <div class="overflow-hidden">
-                        <img :src="project.ideal_image" :alt="`${project.title} setting`" class="aspect-[4/3] w-full object-cover" />
+                        <img :src="project.ideal_image" :alt="`${project.title} pool and residential setting`" class="aspect-[1.24/1] w-full object-cover" />
                     </div>
-                    <div v-if="project.ideal_description" class="space-y-5">
+                    <div class="space-y-5">
                         <div class="flex items-center gap-3">
                             <span class="font-montserrat text-[10px] tracking-[0.16em] text-gray-500 uppercase">{{ project.ideal_title || 'The Ideal Setting' }}</span>
                             <div class="h-px w-20 bg-gray-300"></div>
                         </div>
-                        <p class="font-cormorant text-justify text-lg leading-relaxed text-gray-600">
+                        <p v-if="project.ideal_description" class="font-cormorant text-justify text-lg leading-relaxed text-gray-600">
                             {{ project.ideal_description }}
                         </p>
                     </div>
@@ -40,16 +40,20 @@
             </section>
 
             <section class="mx-auto my-6 max-w-5xl px-6 py-9">
-                <div v-if="project.specifications || project.location || project.amenities?.length" class="flex flex-wrap justify-center gap-x-12 gap-y-6">
+                <div v-if="project.specifications || project.location || project.location_url || amenityItems.length" class="flex flex-wrap justify-center gap-x-8 gap-y-6 md:gap-x-12">
                     <div v-if="project.specifications" class="flex max-w-52 items-center gap-3 text-gray-700">
                         <BedDouble class="h-7 w-7 shrink-0" />
                         <span class="font-cormorant text-base leading-tight">{{ project.specifications }}</span>
                     </div>
-                    <a v-if="project.location" :href="project.location_url || undefined" :target="project.location_url ? '_blank' : undefined" :rel="project.location_url ? 'noopener noreferrer' : undefined" class="flex max-w-52 items-center gap-3 text-gray-700" :class="project.location_url ? 'hover:text-[#1a365d]' : ''">
+                    <a v-if="project.location_url" :href="project.location_url" target="_blank" rel="noopener noreferrer" class="flex max-w-52 items-center gap-3 text-gray-700 hover:text-[#1a365d]">
                         <MapPin class="h-7 w-7 shrink-0" />
-                        <span class="font-cormorant text-base leading-tight">{{ project.location_url ? 'View Location' : project.location }}</span>
+                        <span class="font-cormorant text-base leading-tight">View Location</span>
                     </a>
-                    <div v-if="project.amenities?.length" class="flex max-w-52 items-center gap-3 text-gray-700">
+                    <div v-else-if="project.location" class="flex max-w-52 items-center gap-3 text-gray-700">
+                        <MapPin class="h-7 w-7 shrink-0" />
+                        <span class="font-cormorant text-base leading-tight">{{ project.location }}</span>
+                    </div>
+                    <div v-if="amenityItems.length" class="flex max-w-52 items-center gap-3 text-gray-700">
                         <HouseWifi class="h-7 w-7 shrink-0" />
                         <span class="font-cormorant text-base leading-tight">Exclusive Amenities</span>
                     </div>
@@ -64,15 +68,15 @@
           ========================================================== -->
             <section class="mx-auto max-w-6xl px-6 py-7 md:px-10 md:py-10">
                 <div class="mb-4 flex items-center gap-4">
-                    <span class="font-cinzel text-2xl tracking-wide text-[#1a365d] uppercase">Gallery</span>
+                    <span class="font-cinzel text-3xl tracking-wide text-[#1a365d] uppercase">Gallery</span>
 
                     <div class="h-px w-12 bg-gray-300"></div>
                 </div>
 
-                <h2 class="font-cinzel mb-3 text-xl text-[#1a365d] uppercase md:text-2xl">Exquisite Living Spaces Just for You</h2>
+                <h2 class="font-cinzel mb-3 text-2xl text-[#1a365d] uppercase md:text-3xl">Exquisite Living Spaces Just for You</h2>
 
                 <!-- No gallery -->
-                <div v-if="project.gallery.length === 0" class="py-16 text-center">
+                <div v-if="galleryImages.length === 0" class="py-16 text-center">
                     <p class="font-cormorant text-lg text-gray-400">Gallery images coming soon.</p>
                 </div>
 
@@ -97,8 +101,8 @@
                             >
                                 <img
                                     :src="image.url"
-                                    :alt="image.name || project.title"
-                                    class="aspect-[4/3] w-full object-cover transition-transform duration-1000 group-hover/image:scale-105"
+                                    :alt="image.name ? `${project.title}: ${image.name}` : `${project.title} gallery image`"
+                                    class="aspect-[3/2] w-full object-cover transition-transform duration-1000 group-hover/image:scale-105"
                                 />
 
                                 <!-- Image overlay -->
@@ -160,8 +164,10 @@
                 </div>
 
                 <!-- Gallery indicators -->
-                <div v-if="gallerySlides.length > 1" class="mt-10 flex items-center justify-center gap-2">
-                    <div class="h-px w-16 bg-gray-300"></div>
+                <div v-if="gallerySlides.length > 1" class="mt-10 flex items-center justify-center gap-4">
+                    <button type="button" @click="previousGallerySlide" class="text-gray-400 transition hover:text-gray-900" aria-label="Previous gallery slide">
+                        <ArrowLeft class="h-5 w-5" />
+                    </button>
 
                     <div class="flex items-center gap-2">
                         <button
@@ -170,18 +176,20 @@
                             type="button"
                             @click="goToGallerySlide(index)"
                             :class="[
-                                'h-2 rounded-full transition-all duration-500',
-                                index === gallerySlide ? 'w-6 bg-[#1a365d]' : 'w-2 bg-gray-300 hover:bg-gray-400',
+                                'h-3 w-3 rounded-none transition-colors duration-300',
+                                index === gallerySlide ? 'bg-black' : 'bg-gray-300 hover:bg-gray-500',
                             ]"
                             :aria-label="`Go to gallery slide ${index + 1}`"
                         ></button>
                     </div>
 
-                    <div class="h-px w-16 bg-gray-300"></div>
+                    <button type="button" @click="nextGallerySlide" class="text-gray-700 transition hover:text-black" aria-label="Next gallery slide">
+                        <ArrowRight class="h-5 w-5" />
+                    </button>
                 </div>
             </section>
 
-            <section v-if="project.amenities?.length" class="mx-auto max-w-6xl px-6 py-7 md:px-10 md:py-10">
+            <section v-if="amenityItems.length" class="mx-auto max-w-6xl px-6 py-7 md:px-10 md:py-10">
                 <div class="mb-4 flex items-center gap-4">
                     <span class="font-montserrat text-xs tracking-[0.2em] text-gray-500 uppercase">Wellness and Leisure</span>
                     <div class="h-px w-12 bg-gray-300"></div>
@@ -190,17 +198,18 @@
                 <p class="font-cormorant max-w-3xl text-lg leading-relaxed text-gray-600">A curated selection of modern amenities brings comfort and convenience to your doorstep.</p>
 
 
-                <div class="mt-9 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 md:grid-cols-5">
-                    <div v-for="amenity in project.amenities" :key="amenity.name" class="group flex flex-col items-center text-center">
-                        <div class="flex h-20 w-20 items-center justify-center md:h-24 md:w-24">
+                <div class="mt-9 grid grid-cols-2 gap-x-5 gap-y-10 sm:grid-cols-3 md:grid-cols-5 md:gap-x-8 md:gap-y-14">
+                    <div v-for="amenity in amenityItems" :key="amenity.id" class="group flex flex-col items-center text-center">
+                        <div class="flex h-20 w-20 items-center justify-center text-[#ff7417] md:h-24 md:w-24">
                             <img v-if="amenity.image" :src="getImageUrl(amenity.image)" :alt="amenity.name" class="h-full w-full object-contain" />
+                            <component :is="getAmenityIcon(amenity.name)" v-else :size="82" :stroke-width="1.35" aria-hidden="true" />
                         </div>
                         <span
-                            class="font-montserrat text-[11px] font-bold tracking-wider text-gray-700 uppercase
-           block w-32 text-center whitespace-normal break-words"
+                            class="font-montserrat mt-2 block w-36 text-center text-[11px] font-medium tracking-[0.12em] text-gray-700 uppercase whitespace-normal break-words"
                         >
-    {{ amenity.name }}
-</span>                    </div>
+                            {{ amenity.name }}
+                        </span>
+                    </div>
                 </div>
             </section>
 
@@ -227,7 +236,7 @@
         ========================================================== -->
             <Teleport to="body">
                 <div
-                    v-if="showLightbox && project.gallery.length > 0"
+                    v-if="showLightbox && galleryImages.length > 0"
                     class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 p-4"
                     @click.self="closeLightbox"
                 >
@@ -272,15 +281,15 @@
                     <!-- Image -->
                     <div class="flex max-h-[90vh] max-w-[90vw] flex-col items-center">
                         <img
-                            :src="project.gallery[currentImageIndex]?.url"
-                            :alt="project.gallery[currentImageIndex]?.name || project.title"
+                            :src="galleryImages[currentImageIndex]?.url"
+                            :alt="galleryImages[currentImageIndex]?.name ? `${project.title}: ${galleryImages[currentImageIndex].name}` : `${project.title} gallery image`"
                             class="max-h-[80vh] max-w-full object-contain"
                         />
 
                         <p class="font-montserrat mt-4 text-xs tracking-[0.2em] text-white/60 uppercase">
                             {{ currentImageIndex + 1 }}
                             /
-                            {{ project.gallery.length }}
+                            {{ galleryImages.length }}
                         </p>
                     </div>
 
@@ -312,7 +321,23 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import SandalWoodLoader from '@/Components/SandalWoodLoader.vue';
-import { BedDouble, MapPin, HouseWifi } from '@lucide/vue';
+import {
+    AirVent,
+    ArrowLeft,
+    ArrowRight,
+    Armchair,
+    Baby,
+    BedDouble,
+    BriefcaseBusiness,
+    CircleDot,
+    Dumbbell,
+    Flag,
+    Flower2,
+    HouseWifi,
+    MapPin,
+    Waves,
+    WavesLadder,
+} from '@lucide/vue';
 
 /*
 |--------------------------------------------------------------------------
@@ -385,6 +410,53 @@ const props = defineProps<{
     project: Project;
 }>();
 
+const galleryImages = computed(() => props.project.gallery ?? []);
+
+const referenceAmenityNames = [
+    'Garden',
+    'Padel Court',
+    'Office Workspace',
+    'Steam and Sauna',
+    "Indoor Kids' Play Area",
+    'Swimming Pool',
+    'Gym',
+    "Residents' Lounge",
+    'Golf Simulator',
+    'AC Provision in All Rooms',
+];
+
+const amenityItems = computed(() => {
+    const projectAmenities = props.project.amenities ?? [];
+    if (props.project.slug !== 'sandalwood-loresho') return projectAmenities;
+
+    const displayNames = new Set(referenceAmenityNames.map((name) => name.toLowerCase().replace(/[^a-z0-9]/g, '')));
+    const matchedReferenceAmenities = referenceAmenityNames.map((name, index) => {
+        const normalizedName = name.toLowerCase().replace(/[^a-z0-9]/g, '');
+        return projectAmenities.find((amenity) => amenity.name.toLowerCase().replace(/[^a-z0-9]/g, '') === normalizedName)
+            ?? { id: `reference-${index}`, name, image: null };
+    });
+    const additionalProjectAmenities = projectAmenities.filter(
+        (amenity) => !displayNames.has(amenity.name.toLowerCase().replace(/[^a-z0-9]/g, '')),
+    );
+
+    return [...matchedReferenceAmenities, ...additionalProjectAmenities];
+});
+
+const getAmenityIcon = (name: string) => {
+    const label = name.toLowerCase();
+    if (label.includes('garden')) return Flower2;
+    if (label.includes('padel')) return CircleDot;
+    if (label.includes('office') || label.includes('workspace')) return BriefcaseBusiness;
+    if (label.includes('sauna') || label.includes('steam')) return Waves;
+    if (label.includes('kids') || label.includes('play area')) return Baby;
+    if (label.includes('pool') || label.includes('swimming')) return WavesLadder;
+    if (label.includes('gym')) return Dumbbell;
+    if (label.includes('lounge')) return Armchair;
+    if (label.includes('golf')) return Flag;
+    if (label.includes('ac') || label.includes('air condition')) return AirVent;
+    return CircleDot;
+};
+
 /*
 |--------------------------------------------------------------------------
 | Loading
@@ -429,10 +501,10 @@ const gallerySlides = computed(() => {
         images: ProjectImage[];
     }[] = [];
 
-    for (let i = 0; i < props.project.gallery.length; i += 2) {
+    for (let i = 0; i < galleryImages.value.length; i += 2) {
         slides.push({
             index: i / 2,
-            images: props.project.gallery.slice(i, i + 2),
+            images: galleryImages.value.slice(i, i + 2),
         });
     }
 
@@ -509,7 +581,7 @@ const resumeGallery = () => {
 */
 
 const getOriginalImageIndex = (imageId: number): number => {
-    return props.project.gallery.findIndex((image) => image.id === imageId);
+    return galleryImages.value.findIndex((image) => image.id === imageId);
 };
 
 /*
@@ -737,19 +809,19 @@ const closeLightbox = () => {
 };
 
 const nextImage = () => {
-    if (!props.project.gallery.length) {
+    if (!galleryImages.value.length) {
         return;
     }
 
-    currentImageIndex.value = (currentImageIndex.value + 1) % props.project.gallery.length;
+    currentImageIndex.value = (currentImageIndex.value + 1) % galleryImages.value.length;
 };
 
 const prevImage = () => {
-    if (!props.project.gallery.length) {
+    if (!galleryImages.value.length) {
         return;
     }
 
-    currentImageIndex.value = (currentImageIndex.value - 1 + props.project.gallery.length) % props.project.gallery.length;
+    currentImageIndex.value = (currentImageIndex.value - 1 + galleryImages.value.length) % galleryImages.value.length;
 };
 
 /*
