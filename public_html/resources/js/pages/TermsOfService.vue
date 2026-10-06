@@ -1,20 +1,20 @@
 <template>
     <AppLayout>
         <!-- Hero Section -->
-        <section class="relative py-20 bg-gray-900 text-white transition-colors duration-300">
-            <div class="absolute inset-0 bg-black/50"></div>
-            <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <h1 class="text-4xl md:text-6xl font-bold mb-6 animate-fade-in-up">Terms of Service</h1>
-                <p class="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto animate-fade-in-up delay-200">
+        <section class="bg-[#001221] py-14 text-white md:py-16">
+            <div class="mx-auto max-w-6xl px-6 text-center md:px-10">
+                <p class="font-montserrat mb-3 text-[10px] tracking-[0.2em] text-white/60 uppercase">Legal Information</p>
+                <h1 class="font-cinzel mb-4 text-3xl tracking-wide text-white uppercase md:text-5xl">Terms of Service</h1>
+                <p class="font-cormorant mx-auto max-w-3xl text-lg leading-relaxed text-white/75 md:text-xl">
                     Guidelines for using our website and services
                 </p>
             </div>
         </section>
 
         <!-- Content Section -->
-        <section class="py-20 bg-white transition-colors duration-300">
-            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="prose prose-lg max-w-none">
+        <section class="bg-white py-12 md:py-16">
+            <div class="mx-auto max-w-5xl px-6 md:px-10">
+                <div class="legal-copy">
                     <div class="mb-12">
                         <p class="text-lg text-gray-600 mb-6">
                             Effective Date: {{ new Date().getFullYear() }}
@@ -122,7 +122,7 @@
                         <!-- Contact - Updated to use shared data -->
                         <section>
                             <h2 class="text-3xl font-bold text-gray-900 mb-6">10. Contact Information</h2>
-                            <div class="bg-gray-50 rounded-lg p-6 space-y-3">
+                            <div class="rounded-sm border border-gray-100 bg-gray-50 p-6 space-y-3">
                                 <p class="text-gray-900 font-semibold text-lg">Sandalwood Properties</p>
 
                                 <!-- Address -->
@@ -150,7 +150,7 @@
                             </div>
 
                             <!-- Business Hours Note -->
-                            <div class="mt-6 bg-primary/5 rounded-lg p-6">
+                            <div class="legal-note mt-6 rounded-sm border border-[#e9e2d4] bg-[#faf8f4] p-6">
                                 <h3 class="text-lg font-semibold text-gray-900 mb-3">Response Time</h3>
                                 <p class="text-gray-600">
                                     We aim to respond to all inquiries within 24-48 business hours. For urgent matters, please contact us by phone during business hours: Monday - Friday, 8:00 AM - 6:00 PM.
@@ -169,20 +169,86 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 </script>
 
 <style scoped>
-.animate-fade-in-up {
-    opacity: 0;
-    transform: translateY(30px);
-    animation: fadeInUp 0.8s ease forwards;
+.font-montserrat {
+    font-family: 'Montserrat', sans-serif;
 }
 
-.delay-200 {
-    animation-delay: 0.2s;
+.font-cinzel {
+    font-family: 'Cinzel', serif;
 }
 
-@keyframes fadeInUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.font-cormorant {
+    font-family: 'Cormorant Garamond', serif;
+}
+
+.legal-copy > div:first-child {
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.25rem;
+}
+
+.legal-copy > div:first-child p {
+    color: #64748b;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.legal-copy > div:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+.legal-copy h2 {
+    color: #1a365d;
+    font-family: 'Cinzel', serif;
+    font-size: 1.35rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 0.85rem;
+}
+
+.legal-copy h3 {
+    color: #1a365d;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.legal-copy p,
+.legal-copy li {
+    color: #4b5563;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    line-height: 1.7;
+}
+
+.legal-copy ul {
+    list-style-position: outside;
+    margin-left: 1.2rem;
+}
+
+.legal-copy li::marker {
+    color: #c9a96e;
+}
+
+.legal-copy a {
+    color: #1a365d;
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: #c9a96e;
+    text-underline-offset: 3px;
+}
+
+.legal-copy .bg-gray-50 {
+    background-color: #f8fafc;
+    border-left: 3px solid #c9a96e;
+}
+
+.legal-copy .legal-note {
+    border-left: 3px solid #c9a96e;
 }
 </style>

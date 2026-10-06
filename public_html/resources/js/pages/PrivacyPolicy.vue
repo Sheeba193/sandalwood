@@ -1,20 +1,20 @@
 <template>
     <AppLayout>
         <!-- Hero Section -->
-        <section class="relative py-20 bg-gray-900 text-white transition-colors duration-300">
-            <div class="absolute inset-0 bg-black/50"></div>
-            <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <h1 class="text-4xl md:text-6xl font-bold mb-6 animate-fade-in-up">Privacy Policy</h1>
-                <p class="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto animate-fade-in-up delay-200">
+        <section class="bg-[#001221] py-14 text-white md:py-16">
+            <div class="mx-auto max-w-6xl px-6 text-center md:px-10">
+                <p class="font-montserrat mb-3 text-[10px] tracking-[0.2em] text-white/60 uppercase">Legal Information</p>
+                <h1 class="font-cinzel mb-4 text-3xl tracking-wide text-white uppercase md:text-5xl">Privacy Policy</h1>
+                <p class="font-cormorant mx-auto max-w-3xl text-lg leading-relaxed text-white/75 md:text-xl">
                     How we protect and manage your personal information
                 </p>
             </div>
         </section>
 
         <!-- Content Section -->
-        <section class="py-20 bg-white transition-colors duration-300">
-            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="prose prose-lg max-w-none">
+        <section class="bg-white py-12 md:py-16">
+            <div class="mx-auto max-w-5xl px-6 md:px-10">
+                <div class="legal-copy">
                     <div class="mb-12">
                         <p class="text-lg text-gray-600 mb-6">
                             Last updated: {{ new Date().getFullYear() }}
@@ -110,7 +110,7 @@
                             <p class="text-gray-600 mb-4">
                                 If you have any questions about this Privacy Policy, please contact us:
                             </p>
-                            <div class="bg-gray-50 rounded-lg p-6 space-y-2">
+                            <div class="rounded-sm border border-gray-100 bg-gray-50 p-6 space-y-2">
                                 <p class="text-gray-600">
                                     <strong>Email:</strong>
                                     <a :href="`mailto:${$page.props.contact.emails.info}`" class="text-primary hover:text-primary/80 transition-colors duration-300 ml-1">
@@ -155,20 +155,82 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 </script>
 
 <style scoped>
-.animate-fade-in-up {
-    opacity: 0;
-    transform: translateY(30px);
-    animation: fadeInUp 0.8s ease forwards;
+.font-montserrat {
+    font-family: 'Montserrat', sans-serif;
 }
 
-.delay-200 {
-    animation-delay: 0.2s;
+.font-cinzel {
+    font-family: 'Cinzel', serif;
 }
 
-@keyframes fadeInUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.font-cormorant {
+    font-family: 'Cormorant Garamond', serif;
+}
+
+.legal-copy > div:first-child {
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.25rem;
+}
+
+.legal-copy > div:first-child p {
+    color: #64748b;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.legal-copy > div:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+.legal-copy h2 {
+    color: #1a365d;
+    font-family: 'Cinzel', serif;
+    font-size: 1.35rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 0.85rem;
+}
+
+.legal-copy h3 {
+    color: #1a365d;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.legal-copy p,
+.legal-copy li {
+    color: #4b5563;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    line-height: 1.7;
+}
+
+.legal-copy ul {
+    list-style-position: outside;
+    margin-left: 1.2rem;
+}
+
+.legal-copy li::marker {
+    color: #c9a96e;
+}
+
+.legal-copy a {
+    color: #1a365d;
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: #c9a96e;
+    text-underline-offset: 3px;
+}
+
+.legal-copy .bg-gray-50 {
+    background-color: #f8fafc;
+    border-left: 3px solid #c9a96e;
 }
 </style>

@@ -31,12 +31,12 @@
                                     <path fill-rule="evenodd" d="M5.22 7.22a.75.75 0 0 1 1.06 0L10 10.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 8.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
                                 </svg>
                             </Link>
-                            <div class="invisible absolute left-1/2 top-full z-50 w-[min(46rem,90vw)] -translate-x-1/2 translate-y-2 border border-white/10 bg-[#001221] p-6 opacity-0 shadow-2xl transition duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
-                                <Link href="/projects" class="mb-5 inline-block border-b border-white/20 pb-3 text-xs font-semibold tracking-[0.18em] text-white/70 uppercase hover:text-white">All Projects</Link>
-                                <div class="grid grid-cols-2 gap-8">
+                            <div class="invisible absolute right-0 top-full z-50 max-h-[70vh] w-[min(34rem,90vw)] overflow-y-auto border border-white/10 bg-[#071a2d] p-5 opacity-0 shadow-xl transition duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                                <Link href="/projects" class="mb-4 inline-flex border-b border-white/15 pb-2 text-[11px] font-semibold tracking-[0.16em] text-white/65 uppercase transition hover:text-white">All Projects</Link>
+                                <div class="grid grid-cols-2 gap-6">
                                     <div v-for="group in projectGroups" :key="group.title">
-                                        <h2 class="mb-3 text-[10px] font-semibold tracking-[0.18em] text-white/50 uppercase">{{ group.title }}</h2>
-                                        <Link v-for="project in group.projects" :key="project.slug" :href="`/projects/${project.slug}`" class="block py-1.5 text-sm text-white/90 transition-colors hover:text-white">
+                                        <h2 class="mb-2 border-b border-white/10 pb-2 text-[10px] font-semibold tracking-[0.16em] text-[#d6b983] uppercase">{{ group.title }}</h2>
+                                        <Link v-for="project in group.projects" :key="project.slug" :href="`/projects/${project.slug}`" class="block rounded-sm px-2 py-1.5 text-[13px] text-white/85 transition-colors hover:bg-white/5 hover:text-white">
                                             {{ project.title }}
                                         </Link>
                                     </div>
