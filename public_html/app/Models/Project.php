@@ -12,9 +12,6 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Project extends Model implements HasMedia
 {
-    public const LORESHO_MAPS_URL = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4919.970799173085!2d36.74429797567676!3d-1.2552488111263767!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f19007b338919%3A0xb98835a6bb981f00!2sSandalwood%20Loresho!5e0!3m2!1sen!2ske!4v1773423345983!5m2!1sen!2ske';
-    public const KITISURU_MAPS_URL = 'https://www.google.com/maps/search/?api=1&query=Sandalwood%20Kitisuru%2C%20Nairobi%2C%20Kenya&query_place_id=ChIJr4BV7FoZLxgRYY_F2SP0610';
-
     use InteractsWithMedia;
 
     protected $fillable = [

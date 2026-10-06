@@ -7,6 +7,7 @@ use App\Http\Requests\ProjectRequest;
 use App\Http\Resources\AdminProjectResource;
 use App\Models\Amenities;
 use App\Models\Project;
+use App\Support\ProjectLocationLinks;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
@@ -135,12 +136,7 @@ class AdminProjectController extends Controller
                 'tagline' => $project->tagline,
                 'location' => $project->location,
                 'specifications' => $project->specifications,
-                'location_url' => $project->location_url
-                    ?: match ($project->slug) {
-                        'sandalwood-loresho' => Project::LORESHO_MAPS_URL,
-                        'sandalwood-kitisuru' => Project::KITISURU_MAPS_URL,
-                        default => null,
-                    },
+                'location_url' => $project->location_url ?: ProjectLocationLinks::forSlug($project->slug),
                 'amenity_ids' => $project->amenities->pluck('id')->values(),
                 'status' => $project->status,
                 'is_featured' => $project->is_featured,

@@ -15,14 +15,34 @@
 
                 <div class="hidden md:flex items-center space-x-8">
                     <div class="flex items-center space-x-8">
-                        <template v-for="item in navigationItems" :key="item.path">
-                            <Link
-                                :href="item.path"
-                                class="text-sm font-bold tracking-widest text-white transition-colors hover:text-gray-300"
-                            >
-                                {{ item.label }}
+                        <Link
+                            v-for="item in navigationItems"
+                            :key="item.path"
+                            :href="item.path"
+                            class="text-sm font-bold tracking-widest text-white transition-colors hover:text-gray-300"
+                        >
+                            {{ item.label }}
+                        </Link>
+
+                        <div class="group relative">
+                            <Link href="/projects" class="inline-flex items-center gap-1 text-sm font-bold tracking-widest text-white transition-colors hover:text-gray-300" aria-haspopup="true">
+                                PROJECTS
+                                <svg class="h-4 w-4 transition-transform group-hover:rotate-180 group-focus-within:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M5.22 7.22a.75.75 0 0 1 1.06 0L10 10.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 8.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                                </svg>
                             </Link>
-                        </template>
+                            <div class="invisible absolute left-1/2 top-full z-50 w-[min(46rem,90vw)] -translate-x-1/2 translate-y-2 border border-white/10 bg-[#001221] p-6 opacity-0 shadow-2xl transition duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+                                <Link href="/projects" class="mb-5 inline-block border-b border-white/20 pb-3 text-xs font-semibold tracking-[0.18em] text-white/70 uppercase hover:text-white">All Projects</Link>
+                                <div class="grid grid-cols-2 gap-8">
+                                    <div v-for="group in projectGroups" :key="group.title">
+                                        <h2 class="mb-3 text-[10px] font-semibold tracking-[0.18em] text-white/50 uppercase">{{ group.title }}</h2>
+                                        <Link v-for="project in group.projects" :key="project.slug" :href="`/projects/${project.slug}`" class="block py-1.5 text-sm text-white/90 transition-colors hover:text-white">
+                                            {{ project.title }}
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="flex items-center space-x-5 border-l border-white/20 pl-8">
@@ -53,15 +73,31 @@
 
             <div v-if="isMobileMenuOpen" class="border-t border-white/10 bg-[#001221] pb-6 shadow-2xl md:hidden">
                 <div class="px-2 pt-2 space-y-1">
-                    <template v-for="item in navigationItems" :key="item.path">
-                        <Link
-                            :href="item.path"
-                            class="block rounded-md px-4 py-3 font-medium text-white hover:bg-white/5"
-                            @click="closeMobileMenu"
-                        >
-                            {{ item.label }}
-                        </Link>
-                    </template>
+                    <Link
+                        v-for="item in navigationItems"
+                        :key="item.path"
+                        :href="item.path"
+                        class="block rounded-md px-4 py-3 font-medium text-white hover:bg-white/5"
+                        @click="closeMobileMenu"
+                    >
+                        {{ item.label }}
+                    </Link>
+                    <details class="group rounded-md px-4 py-2 text-white">
+                        <summary class="cursor-pointer list-none py-2 font-medium marker:hidden">
+                            <span class="flex items-center justify-between">Projects
+                                <svg class="h-4 w-4 transition-transform group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M5.22 7.22a.75.75 0 0 1 1.06 0L10 10.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 8.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                                </svg>
+                            </span>
+                        </summary>
+                        <Link href="/projects" class="block py-2 pl-3 text-sm font-semibold text-white/80" @click="closeMobileMenu">All Projects</Link>
+                        <div v-for="group in projectGroups" :key="group.title" class="py-2 pl-3">
+                            <h2 class="pb-1 text-[10px] font-semibold tracking-[0.16em] text-white/50 uppercase">{{ group.title }}</h2>
+                            <Link v-for="project in group.projects" :key="project.slug" :href="`/projects/${project.slug}`" class="block py-1.5 text-sm text-white/85 hover:text-white" @click="closeMobileMenu">
+                                {{ project.title }}
+                            </Link>
+                        </div>
+                    </details>
                     <div class="pt-4 px-4">
                         <button
                             @click="openContactModalFromMobile"
@@ -79,14 +115,28 @@
 </template>
 
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { Link, usePage } from '@inertiajs/vue3';
+import { computed, ref } from 'vue';
 import ContactModal from '@/Components/ContactModal.vue';
+
+interface ProjectNavigationItem {
+    title: string;
+    slug: string;
+    status: string;
+}
+
+const page = usePage<{ projectNavigation?: ProjectNavigationItem[] }>();
+const projectGroups = computed(() => {
+    const projects = page.props.projectNavigation ?? [];
+    return [
+        { title: 'Under Development', projects: projects.filter((project) => !['completed', 'sold_out'].includes(project.status.toLowerCase())) },
+        { title: 'Completed', projects: projects.filter((project) => ['completed', 'sold_out'].includes(project.status.toLowerCase())) },
+    ].filter((group) => group.projects.length > 0);
+});
 
 const navigationItems = [
     { path: '/', label: 'HOME' },
     { path: '/about', label: 'ABOUT US' },
-    { path: '/projects', label: 'PROJECTS' },
     { path: '/contact', label: 'CONTACT' },
 ];
 

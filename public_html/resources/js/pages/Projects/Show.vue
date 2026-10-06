@@ -255,6 +255,12 @@
                 </div>
             </section>
 
+            <section class="mx-auto max-w-6xl px-6 pt-6 pb-12 text-center md:px-10 md:pb-16">
+                <a href="/projects" class="font-montserrat inline-flex min-h-12 items-center justify-center bg-[#001529] px-8 py-3 text-xs font-semibold tracking-[0.14em] text-white uppercase transition-colors hover:bg-[#1a365d]">
+                    View More Projects
+                </a>
+            </section>
+
             <!--            <section class="max-w-7xl mx-auto px-6 py-16 border-t border-gray-100">-->
             <!--                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">-->
             <!--                    <div class="space-y-2">-->

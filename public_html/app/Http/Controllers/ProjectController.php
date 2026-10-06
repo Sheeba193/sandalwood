@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Support\ProjectImageFolders;
+use App\Support\ProjectLocationLinks;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -188,22 +189,7 @@ class ProjectController extends Controller
                         'sandalwood-riverside' => 'Riverside, Nairobi, Kenya',
                         default => '',
                     },
-                    'location_url' => match ($slug) {
-                        'sandalwood-loresho' => Project::LORESHO_MAPS_URL,
-                        'sandalwood-kitisuru' => Project::KITISURU_MAPS_URL,
-                        'sandalwood-othaya' => 'https://www.google.com/maps/search/?api=1&query=Sandalwood+Othaya%2C+Othaya+Road%2C+Lavington%2C+Nairobi',
-                        'sandalwood-waterfront' => 'https://www.google.com/maps/search/?api=1&query=Sandalwood+Waterfront%2C+Karen%2C+Nairobi%2C+Kenya',
-                        'sandalwood-brookside' => 'https://www.google.com/maps/search/?api=1&query=Sandalwood+Brookside+Gardens%2C+Westlands%2C+Nairobi%2C+Kenya',
-                        'the-colosseum-residences' => 'https://www.google.com/maps/search/?api=1&query=The+Colosseum+Residences%2C+Westlands%2C+Nairobi%2C+Kenya',
-                        'silver-terraces' => 'https://www.google.com/maps/search/?api=1&query=Silver+Terraces%2C+Rhapta+Road%2C+Westlands%2C+Nairobi',
-                        'ivory-terraces' => 'https://www.google.com/maps/search/?api=1&query=Ivory+Terraces%2C+Terrace+Close%2C+Westlands%2C+Nairobi',
-                        'the-convex' => 'https://www.google.com/maps/search/?api=1&query=The+Convex%2C+Riverside+Lane%2C+Westlands%2C+Nairobi',
-                        'chilly-breezes' => 'https://www.google.com/maps/search/?api=1&query=Chilly+Breezes%2C+Piliplili+Way%2C+Westlands%2C+Nairobi',
-                        'the-haven' => 'https://www.google.com/maps/search/?api=1&query=The+Haven%2C+Loresho%2C+Nairobi',
-                        'oak-and-ivy' => 'https://www.google.com/maps/search/?api=1&query=Oak+and+Ivy%2C+Loresho%2C+Nairobi',
-                        'sandalwood-riverside' => 'https://www.google.com/maps/search/?api=1&query=Sandalwood+Riverside%2C+Riverside%2C+Nairobi',
-                        default => null,
-                    },
+                    'location_url' => ProjectLocationLinks::forSlug($slug),
                     'specifications' => match ($slug) {
                         'sandalwood-loresho' => '3 & 4 BEDROOM APARTMENTS',
                         'sandalwood-kitisuru' => '5 BEDROOM VILLAS',
@@ -456,23 +442,7 @@ class ProjectController extends Controller
                                 default => $project->location,
                             }))),
 
-                'location_url' => $project->location_url
-                    ?: match ($project->slug) {
-                        'sandalwood-loresho' => Project::LORESHO_MAPS_URL,
-                        'sandalwood-kitisuru' => Project::KITISURU_MAPS_URL,
-                        'sandalwood-othaya' => 'https://www.google.com/maps/search/?api=1&query=Sandalwood+Othaya%2C+Othaya+Road%2C+Lavington%2C+Nairobi',
-                        'sandalwood-waterfront' => 'https://www.google.com/maps/search/?api=1&query=Sandalwood+Waterfront%2C+Karen%2C+Nairobi%2C+Kenya',
-                        'sandalwood-brookside' => 'https://www.google.com/maps/search/?api=1&query=Sandalwood+Brookside+Gardens%2C+Westlands%2C+Nairobi%2C+Kenya',
-                        'the-colosseum-residences' => 'https://www.google.com/maps/search/?api=1&query=The+Colosseum+Residences%2C+Westlands%2C+Nairobi%2C+Kenya',
-                        'silver-terraces' => 'https://www.google.com/maps/search/?api=1&query=Silver+Terraces%2C+Rhapta+Road%2C+Westlands%2C+Nairobi',
-                        'ivory-terraces' => 'https://www.google.com/maps/search/?api=1&query=Ivory+Terraces%2C+Terrace+Close%2C+Westlands%2C+Nairobi',
-                        'the-convex' => 'https://www.google.com/maps/search/?api=1&query=The+Convex%2C+Riverside+Lane%2C+Westlands%2C+Nairobi',
-                        'chilly-breezes' => 'https://www.google.com/maps/search/?api=1&query=Chilly+Breezes%2C+Piliplili+Way%2C+Westlands%2C+Nairobi',
-                        'the-haven' => 'https://www.google.com/maps/search/?api=1&query=The+Haven%2C+Loresho%2C+Nairobi',
-                        'oak-and-ivy' => 'https://www.google.com/maps/search/?api=1&query=Oak+and+Ivy%2C+Loresho%2C+Nairobi',
-                        'sandalwood-riverside' => 'https://www.google.com/maps/search/?api=1&query=Sandalwood+Riverside%2C+Riverside%2C+Nairobi',
-                        default => null,
-                    },
+                'location_url' => $project->location_url ?: ProjectLocationLinks::forSlug($project->slug),
 
                 'specifications' => $project->specifications
                     ?: match ($project->slug) {
