@@ -4,7 +4,7 @@
 
         <main v-else class="min-h-screen bg-white pb-20">
             <section class="w-full">
-                <img :src="project.cover_image" :alt="['sandalwood-kitisuru', 'sandalwood-othaya', 'sandalwood-brookside'].includes(project.slug) ? `${project.title} landscaped garden` : project.slug === 'sandalwood-waterfront' ? `${project.title} lake and garden bridge` : `${project.title} living room`" class="h-[min(50.5vw,700px)] min-h-[300px] w-full object-cover md:min-h-[400px]" />
+                <img :src="project.cover_image" :alt="['sandalwood-kitisuru', 'sandalwood-othaya', 'sandalwood-brookside', 'the-haven'].includes(project.slug) ? `${project.title} landscaped garden` : project.slug === 'sandalwood-waterfront' ? `${project.title} lake and garden bridge` : project.slug === 'the-convex' ? `${project.title} reception lobby` : project.slug === 'chilly-breezes' ? `${project.title} rooftop terrace` : project.slug === 'silver-terraces' ? `${project.title} landscaped entrance` : project.slug === 'ivory-terraces' ? `${project.title} rooftop pool` : `${project.title} living room`" class="h-[min(50.5vw,700px)] min-h-[300px] w-full object-cover md:min-h-[400px]" />
             </section>
 
             <section class="mx-auto max-w-6xl px-6 pt-10 pb-5 md:px-10 md:pt-14">
@@ -59,7 +59,7 @@
             <section class="mx-auto my-6 max-w-5xl px-6 py-9">
                 <div v-if="project.specifications || project.location || project.location_url || amenityItems.length" class="flex flex-wrap justify-center gap-x-8 gap-y-6 md:gap-x-12">
                     <div v-if="project.specifications" class="flex max-w-52 items-center gap-3 text-gray-700">
-                        <BedDouble class="h-7 w-7 shrink-0" />
+                        <component :is="project.slug === 'the-convex' ? Building2 : BedDouble" class="h-7 w-7 shrink-0" />
                         <span class="font-cormorant text-base leading-tight">{{ project.specifications }}</span>
                     </div>
                     <a v-if="project.location_url" :href="project.location_url" target="_blank" rel="noopener noreferrer" class="flex max-w-52 items-center gap-3 text-gray-700 hover:text-[#1a365d]">
@@ -73,6 +73,10 @@
                     <div v-if="showAmenitySection" class="flex max-w-52 items-center gap-3 text-gray-700">
                         <HouseWifi class="h-7 w-7 shrink-0" />
                         <span class="font-cormorant text-base leading-tight">Exclusive Amenities</span>
+                    </div>
+                    <div v-if="project.slug === 'the-convex'" class="flex max-w-52 items-center gap-3 text-gray-700">
+                        <RulerDimensionLine class="h-7 w-7 shrink-0" />
+                        <span class="font-cormorant text-base leading-tight">300,000 SQFT</span>
                     </div>
                 </div>
                 <div class="mt-7 flex justify-center">
@@ -354,6 +358,11 @@ import {
     FireExtinguisher,
     Footprints,
     AlarmSmoke,
+    Accessibility,
+    Bike,
+    Building2,
+    Martini,
+    RulerDimensionLine,
     Dumbbell,
     Flag,
     Flower2,
@@ -493,6 +502,61 @@ const referenceAmenityNamesByProject: Record<string, string[]> = {
     'Standby Power Generator',
     'Fire Fighting and Alarm System',
   ],
+  'silver-terraces': [
+    'Heated Swimming Pool',
+    'Ample Parking Spaces',
+    'Gym',
+    '24 Hours CCTV Surveillance',
+    'Stand By Power Generator',
+    'Rooftop Lounge',
+    'Steam and Sauna',
+    'Borehole',
+    'High Speed Elevators',
+    'Fire Alarm and Detection System',
+  ],
+  'ivory-terraces': [
+    'Heated Swimming Pool',
+    'Ample Parking Spaces',
+    'Gym',
+    '24 Hours CCTV Surveillance',
+    'Stand By Power Generator',
+    'Rooftop Lounge',
+    'Steam and Sauna',
+    "Kids' Play Area",
+    'High Speed Elevators',
+    'Fire Alarm and Detection System',
+  ],
+  'the-convex': [
+    'Ample Parking Spaces',
+    'High Speed Elevators',
+    'Reception Desk',
+    'Lounge',
+    'Standby Power Generator',
+    'Fire Alarm and Detection System',
+    '24 Hours CCTV Surveillance',
+  ],
+  'chilly-breezes': [
+    'Swimming Pool',
+    'Ample Parking Spaces',
+    'Gym',
+    '24 Hours CCTV Surveillance',
+    'Stand By Power Generator',
+    'Rooftop Lounge',
+    'Disability Access',
+    'Borehole',
+    'High Speed Elevators',
+  ],
+  'the-haven': [
+    'Lush Gardens',
+    'Club House',
+    "Jogging and Kids' Cycling Track",
+    'Steam and Sauna',
+    'Sports Bar',
+    'Swimming Pool',
+    'Gym',
+    '24 Hours CCTV Surveillance',
+    'Standby Power Generator',
+  ],
 };
 
 const amenityItems = computed(() => {
@@ -514,10 +578,10 @@ const amenityItems = computed(() => {
 });
 
 const showAmenitySection = computed(() => props.project.slug !== 'sandalwood-kitisuru' && amenityItems.value.length > 0);
-const isSoldOutProject = computed(() => ['sandalwood-kitisuru', 'sandalwood-othaya', 'sandalwood-brookside'].includes(props.project.slug) || props.project.status === 'sold_out');
+const isSoldOutProject = computed(() => ['sandalwood-kitisuru', 'sandalwood-othaya', 'sandalwood-brookside', 'the-convex', 'the-haven'].includes(props.project.slug) || props.project.status === 'sold_out');
 const amenityDescription = computed(() => props.project.slug === 'sandalwood-othaya'
     ? 'Elevating your lifestyle through a refined selection of amenities.'
-    : ['sandalwood-waterfront', 'sandalwood-brookside', 'the-colosseum-residences'].includes(props.project.slug)
+    : ['sandalwood-waterfront', 'sandalwood-brookside', 'the-colosseum-residences', 'silver-terraces', 'ivory-terraces', 'the-convex', 'chilly-breezes', 'the-haven'].includes(props.project.slug)
       ? 'Elevating your lifestyle through a refined selection of amenities.'
       : 'A curated selection of modern amenities brings comfort, convenience, and a refined lifestyle right to your doorstep.');
 
@@ -529,12 +593,15 @@ const getAmenityIcon = (name: string) => {
     if (label.includes('borehole')) return Droplets;
     if (label.includes('elevator') || label.includes('lift')) return ArrowUpDown;
     if (label.includes('club house') || label.includes('clubhouse')) return HouseWifi;
+    if (label.includes('disability access')) return Accessibility;
+    if (label.includes('sports bar')) return Martini;
+    if (label.includes('cycling')) return Bike;
     if (label.includes('jogging') || label.includes('running track')) return Footprints;
     if (label.includes('fire fighting')) return FireExtinguisher;
     if (label.includes('alarm')) return AlarmSmoke;
     if (label.includes('garden')) return Flower2;
     if (label.includes('padel')) return CircleDot;
-    if (label.includes('office') || label.includes('workspace')) return BriefcaseBusiness;
+    if (label.includes('office') || label.includes('workspace') || label.includes('reception')) return BriefcaseBusiness;
     if (label.includes('sauna') || label.includes('steam')) return Waves;
     if (label.includes('kids') || label.includes('play area')) return Baby;
     if (label.includes('pool') || label.includes('swimming')) return WavesLadder;

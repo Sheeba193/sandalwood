@@ -21,13 +21,23 @@ class ProjectController extends Controller
     private const BROOKSIDE_TRANQUIL_DESCRIPTION = 'Surrounded by lush greenery and beautifully landscaped gardens, Sandalwood Brookside offers a calm, private escape within the city. Winding garden paths and mature trees create a peaceful setting where nature becomes part of everyday living.';
     private const COLOSSEUM_DESCRIPTION = 'Overlooking the lush greenery of Muthaiga and moments away from Karura Forest, this exclusive residential development comprising elegantly designed apartments embodies a bespoke sense of urban luxury. High-end finishes, thoughtful design, and contemporary architecture come together to create an atmosphere of understated opulence, offering residents a private retreat within the city where sophistication, comfort, and refined living are seamlessly woven into every detail.';
     private const COLOSSEUM_IDEAL_DESCRIPTION = "The Colosseum enjoys exceptional connectivity within one of Nairobi's most established urban neighbourhoods. It offers quick access to Westlands, a major commercial and lifestyle hub, as well as the CBD. Residents are also within close reach of key institutions such as Aga Khan Hospital, reputable schools, and a variety of shopping and dining destinations scattered across Parklands and nearby areas. With well-linked roads and multiple transport options, the location ensures effortless movement.";
+    private const SILVER_DESCRIPTION = 'At Silver Terraces, contemporary living meets a relaxed residential atmosphere, creating a space that feels peaceful while still connected to the lively energy of Westlands. Located off Rhapta Road, the development offers a warm and comfortable environment that makes everyday city living feel more enjoyable.';
+    private const SILVER_IDEAL_DESCRIPTION = 'Located just off Rhapta Road in the tranquil Westlands neighbourhood, Silver Terraces offers excellent road connectivity and convenient access to key shopping malls, schools, restaurants, hospitals, and business hubs within the city. Its prime location blends the ease of urban accessibility with the comfort and privacy of a well-positioned residential setting.';
+    private const IVORY_DESCRIPTION = 'Ivory Terraces offers a sophisticated and uplifting living experience, where spacious modern interiors and a peaceful atmosphere create a true sense of comfort within the vibrant setting of Westlands. Located off Rhapta Road on Terrace Close, the development blends privacy, warmth, and contemporary upscale living in a setting that feels both inviting and well-connected to the energy of the city.';
+    private const IVORY_IDEAL_DESCRIPTION = 'Located in the heart of Westlands off Rhapta Road, Ivory Terraces offers excellent accessibility to major roads, business hubs, shopping malls, restaurants, schools, hospitals, and entertainment spots within Nairobi. Its central location places residents close to the convenience and energy of the city while still enjoying the comfort of a private residential setting.';
+    private const CONVEX_DESCRIPTION = 'Nestled in the heart of Westlands, The Convex creates an environment where the pace of the city feels distant and productivity flourishes effortlessly. More than just a workplace, it is thoughtfully designed to inspire clarity, creativity, and purposeful work. Its ambiance and understated elegance foster a sense of focus within a space that feels both professional and refreshingly inspiring.';
+    private const CONVEX_IDEAL_DESCRIPTION = 'Strategically located on Riverside Lane in Westlands, The Convex is a completed, ready-to-use office development offering seamless connectivity to Lavington, Kilimani, and Nairobi CBD within just 15 minutes. With multiple access points and close proximity to banks, restaurants, hotels, prime residential neighbourhoods, the Australian High Commission, and the Netherlands Embassy, it places business and convenience at the center of everyday work life.';
+    private const CHILLY_DESCRIPTION = 'Chilly Breezes offers a refreshing and inviting living experience, where well-lit modern spaces and a relaxed atmosphere create a comforting escape within Westlands. Located along Piliplili Way, the development brings together warmth, privacy, and convenience in a setting that feels peaceful, welcoming, and well-connected.';
+    private const CHILLY_IDEAL_DESCRIPTION = 'Located along Piliplili Way off Rhapta Road in the vibrant city of Westlands, Chilly Breezes places residents within easy reach of schools, hospitals, shopping malls, and popular restaurants, making everyday living both convenient and well-connected. With modern apartment design, impressive amenities, and quick access to key lifestyle amenities, the development offers a comfortable urban setting suited for residents who value both accessibility and contemporary living.';
+    private const HAVEN_DESCRIPTION = 'Set in the peaceful neighbourhood of Loresho, this exclusive villa development offers beautifully designed homes surrounded by lush gardens, creating a calm and refined living environment where comfort, privacy, and nature come together effortlessly.';
+    private const HAVEN_IDEAL_DESCRIPTION = 'Located in the serene and well-established neighbourhood of Loresho, this villa development enjoys excellent accessibility to key parts of Nairobi. It is well connected via Waiyaki Way and Lower Kabete Road, allowing for smooth travel to Westlands, the CBD, and surrounding suburbs. Residents are also within convenient reach of essential amenities such as reputable schools, shopping centres, healthcare facilities including Lions SightFirst Eye Hospital, and several recreational spots.';
 
     /**
      * Display a listing of all projects.
      */
     public function index()
     {
-        $projects = Cache::remember('all_projects_list_v8', 3600, function () {
+        $projects = Cache::remember('all_projects_list_v9', 3600, function () {
             return Project::with('media')
                 ->orderBy('is_featured', 'desc')
                 ->orderBy('created_at', 'desc')
@@ -126,6 +136,11 @@ class ProjectController extends Controller
                 'sandalwood-waterfront' => '/images/projects/sandalwood-waterfront/3I9A8425.JPG',
                 'sandalwood-brookside' => '/images/projects/sandalwood-brookside/3I9A7558.JPG.jpeg',
                 'the-colosseum-residences' => '/images/projects/the-colosseum-residences/3I9A7797.JPG',
+                'silver-terraces' => '/images/projects/silver-terraces/3I9A0030.JPG',
+                'ivory-terraces' => '/images/projects/ivory-terraces/3I9A0207.JPG',
+                'the-convex' => '/images/projects/the-convex/3I9A0304.JPG',
+                'chilly-breezes' => '/images/projects/chilly-breezes/3I9A9604.JPG',
+                'the-haven' => '/images/projects/the-haven/3I9A7215.JPG',
                 default => $referenceProject['images'][0],
             };
             $idealImage = match ($slug) {
@@ -135,6 +150,11 @@ class ProjectController extends Controller
                 'sandalwood-waterfront' => '/images/projects/sandalwood-waterfront/3I9A8351.JPG',
                 'sandalwood-brookside' => '/images/projects/sandalwood-brookside/3I9A7580.JPG.jpeg',
                 'the-colosseum-residences' => '/images/projects/the-colosseum-residences/1.png',
+                'silver-terraces' => '/images/projects/silver-terraces/3I9A0027.JPG',
+                'ivory-terraces' => '/images/projects/ivory-terraces/3I9A0277.JPG',
+                'the-convex' => '/images/projects/the-convex/3I9A0335.JPG',
+                'chilly-breezes' => '/images/projects/chilly-breezes/3I9A9764.JPG',
+                'the-haven' => '/images/projects/the-haven/3I9A7217-2.JPG',
                 default => $referenceProject['images'][0],
             };
 
@@ -151,6 +171,11 @@ class ProjectController extends Controller
                         'sandalwood-waterfront' => 'Karen, Nairobi, Kenya',
                         'sandalwood-brookside' => 'Brookside Gardens, Westlands, Nairobi',
                         'the-colosseum-residences' => 'Westlands, Nairobi, Kenya',
+                        'silver-terraces' => 'Rhapta Road, Westlands, Nairobi',
+                        'ivory-terraces' => 'Terrace Close, off Rhapta Road, Westlands, Nairobi',
+                        'the-convex' => 'Riverside Lane, Westlands, Nairobi',
+                        'chilly-breezes' => 'Piliplili Way, Westlands, Nairobi',
+                        'the-haven' => 'Loresho, Nairobi, Kenya',
                         default => '',
                     },
                     'location_url' => match ($slug) {
@@ -160,6 +185,11 @@ class ProjectController extends Controller
                         'sandalwood-waterfront' => 'https://www.google.com/maps/search/?api=1&query=Sandalwood+Waterfront%2C+Karen%2C+Nairobi%2C+Kenya',
                         'sandalwood-brookside' => 'https://www.google.com/maps/search/?api=1&query=Sandalwood+Brookside+Gardens%2C+Westlands%2C+Nairobi%2C+Kenya',
                         'the-colosseum-residences' => 'https://www.google.com/maps/search/?api=1&query=The+Colosseum+Residences%2C+Westlands%2C+Nairobi%2C+Kenya',
+                        'silver-terraces' => 'https://www.google.com/maps/search/?api=1&query=Silver+Terraces%2C+Rhapta+Road%2C+Westlands%2C+Nairobi',
+                        'ivory-terraces' => 'https://www.google.com/maps/search/?api=1&query=Ivory+Terraces%2C+Terrace+Close%2C+Westlands%2C+Nairobi',
+                        'the-convex' => 'https://www.google.com/maps/search/?api=1&query=The+Convex%2C+Riverside+Lane%2C+Westlands%2C+Nairobi',
+                        'chilly-breezes' => 'https://www.google.com/maps/search/?api=1&query=Chilly+Breezes%2C+Piliplili+Way%2C+Westlands%2C+Nairobi',
+                        'the-haven' => 'https://www.google.com/maps/search/?api=1&query=The+Haven%2C+Loresho%2C+Nairobi',
                         default => null,
                     },
                     'specifications' => match ($slug) {
@@ -169,6 +199,11 @@ class ProjectController extends Controller
                         'sandalwood-waterfront' => '5 BEDROOM APARTMENTS',
                         'sandalwood-brookside' => '3 BEDROOM APARTMENTS',
                         'the-colosseum-residences' => '2, 3 & 4 BEDROOM APARTMENTS',
+                        'silver-terraces' => '2 & 3 BEDROOM APARTMENTS',
+                        'ivory-terraces' => '2 & 3 BEDROOM APARTMENTS',
+                        'the-convex' => '11 FLOORS',
+                        'chilly-breezes' => '1, 2 & 3 BEDROOM APARTMENTS',
+                        'the-haven' => '4 & 5 BEDROOM APARTMENTS',
                         default => null,
                     },
                     'status' => $referenceProject['status'],
@@ -180,6 +215,11 @@ class ProjectController extends Controller
                         'sandalwood-waterfront' => self::WATERFRONT_DESCRIPTION,
                         'sandalwood-brookside' => self::BROOKSIDE_DESCRIPTION,
                         'the-colosseum-residences' => self::COLOSSEUM_DESCRIPTION,
+                        'silver-terraces' => self::SILVER_DESCRIPTION,
+                        'ivory-terraces' => self::IVORY_DESCRIPTION,
+                        'the-convex' => self::CONVEX_DESCRIPTION,
+                        'chilly-breezes' => self::CHILLY_DESCRIPTION,
+                        'the-haven' => self::HAVEN_DESCRIPTION,
                         default => 'Project information will be updated soon.',
                     },
                     'image' => $coverImage,
@@ -192,6 +232,11 @@ class ProjectController extends Controller
                         'sandalwood-waterfront' => self::WATERFRONT_IDEAL_DESCRIPTION,
                         'sandalwood-brookside' => self::BROOKSIDE_IDEAL_DESCRIPTION,
                         'the-colosseum-residences' => self::COLOSSEUM_IDEAL_DESCRIPTION,
+                        'silver-terraces' => self::SILVER_IDEAL_DESCRIPTION,
+                        'ivory-terraces' => self::IVORY_IDEAL_DESCRIPTION,
+                        'the-convex' => self::CONVEX_IDEAL_DESCRIPTION,
+                        'chilly-breezes' => self::CHILLY_IDEAL_DESCRIPTION,
+                        'the-haven' => self::HAVEN_IDEAL_DESCRIPTION,
                         default => null,
                     },
                     'ideal_image' => $idealImage,
@@ -214,7 +259,7 @@ class ProjectController extends Controller
             ]);
         }
 
-        $project = Cache::remember("project_v7_{$slug}", 3600, function () use ($slug) {
+        $project = Cache::remember("project_v8_{$slug}", 3600, function () use ($slug) {
 
             $project = Project::with(['media', 'amenities'])
                 ->where('slug', $slug)
@@ -262,6 +307,19 @@ class ProjectController extends Controller
                 : null;
             $colosseumIdealImage = $project->slug === 'the-colosseum-residences'
                 ? $this->projectFolderImage($folderImages, '1.png')
+                : null;
+            $terraceImages = [
+                'silver-terraces' => ['hero' => '3I9A0030.JPG', 'ideal' => '3I9A0027.JPG'],
+                'ivory-terraces' => ['hero' => '3I9A0207.JPG', 'ideal' => '3I9A0277.JPG'],
+                'the-convex' => ['hero' => '3I9A0304.JPG', 'ideal' => '3I9A0335.JPG'],
+                'chilly-breezes' => ['hero' => '3I9A9604.JPG', 'ideal' => '3I9A9764.JPG'],
+                'the-haven' => ['hero' => '3I9A7215.JPG', 'ideal' => '3I9A7217-2.JPG'],
+            ];
+            $projectHeroImage = isset($terraceImages[$project->slug])
+                ? $this->projectFolderImage($folderImages, $terraceImages[$project->slug]['hero'])
+                : null;
+            $projectIdealImage = isset($terraceImages[$project->slug])
+                ? $this->projectFolderImage($folderImages, $terraceImages[$project->slug]['ideal'])
                 : null;
 
             /*
@@ -319,6 +377,16 @@ class ProjectController extends Controller
                 $description = self::BROOKSIDE_DESCRIPTION;
             } elseif ($project->slug === 'the-colosseum-residences' && str_word_count((string) $description) < 20) {
                 $description = self::COLOSSEUM_DESCRIPTION;
+            } elseif ($project->slug === 'silver-terraces' && str_word_count((string) $description) < 20) {
+                $description = self::SILVER_DESCRIPTION;
+            } elseif ($project->slug === 'ivory-terraces' && str_word_count((string) $description) < 20) {
+                $description = self::IVORY_DESCRIPTION;
+            } elseif ($project->slug === 'the-convex' && str_word_count((string) $description) < 20) {
+                $description = self::CONVEX_DESCRIPTION;
+            } elseif ($project->slug === 'chilly-breezes' && str_word_count((string) $description) < 20) {
+                $description = self::CHILLY_DESCRIPTION;
+            } elseif ($project->slug === 'the-haven' && str_word_count((string) $description) < 20) {
+                $description = self::HAVEN_DESCRIPTION;
             }
             if ($folderImages) {
                 $gallery = collect($folderImages)
@@ -351,7 +419,16 @@ class ProjectController extends Controller
                     ? 'Othaya Road, Lavington, Nairobi'
                     : ($project->slug === 'sandalwood-waterfront'
                         ? 'Karen, Nairobi, Kenya'
-                        : ($project->slug === 'sandalwood-brookside' ? 'Brookside Gardens, Westlands, Nairobi' : $project->location)),
+                        : ($project->slug === 'sandalwood-brookside'
+                            ? 'Brookside Gardens, Westlands, Nairobi'
+                            : (match ($project->slug) {
+                                'silver-terraces' => 'Rhapta Road, Westlands, Nairobi',
+                                'ivory-terraces' => 'Terrace Close, off Rhapta Road, Westlands, Nairobi',
+                                'the-convex' => 'Riverside Lane, Westlands, Nairobi',
+                                'chilly-breezes' => 'Piliplili Way, Westlands, Nairobi',
+                                'the-haven' => 'Loresho, Nairobi, Kenya',
+                                default => $project->location,
+                            }))),
 
                 'location_url' => $project->location_url
                     ?: match ($project->slug) {
@@ -361,6 +438,11 @@ class ProjectController extends Controller
                         'sandalwood-waterfront' => 'https://www.google.com/maps/search/?api=1&query=Sandalwood+Waterfront%2C+Karen%2C+Nairobi%2C+Kenya',
                         'sandalwood-brookside' => 'https://www.google.com/maps/search/?api=1&query=Sandalwood+Brookside+Gardens%2C+Westlands%2C+Nairobi%2C+Kenya',
                         'the-colosseum-residences' => 'https://www.google.com/maps/search/?api=1&query=The+Colosseum+Residences%2C+Westlands%2C+Nairobi%2C+Kenya',
+                        'silver-terraces' => 'https://www.google.com/maps/search/?api=1&query=Silver+Terraces%2C+Rhapta+Road%2C+Westlands%2C+Nairobi',
+                        'ivory-terraces' => 'https://www.google.com/maps/search/?api=1&query=Ivory+Terraces%2C+Terrace+Close%2C+Westlands%2C+Nairobi',
+                        'the-convex' => 'https://www.google.com/maps/search/?api=1&query=The+Convex%2C+Riverside+Lane%2C+Westlands%2C+Nairobi',
+                        'chilly-breezes' => 'https://www.google.com/maps/search/?api=1&query=Chilly+Breezes%2C+Piliplili+Way%2C+Westlands%2C+Nairobi',
+                        'the-haven' => 'https://www.google.com/maps/search/?api=1&query=The+Haven%2C+Loresho%2C+Nairobi',
                         default => null,
                     },
 
@@ -372,6 +454,11 @@ class ProjectController extends Controller
                         'sandalwood-waterfront' => '5 BEDROOM APARTMENTS',
                         'sandalwood-brookside' => '3 BEDROOM APARTMENTS',
                         'the-colosseum-residences' => '2, 3 & 4 BEDROOM APARTMENTS',
+                        'silver-terraces' => '2 & 3 BEDROOM APARTMENTS',
+                        'ivory-terraces' => '2 & 3 BEDROOM APARTMENTS',
+                        'the-convex' => '11 FLOORS',
+                        'chilly-breezes' => '1, 2 & 3 BEDROOM APARTMENTS',
+                        'the-haven' => '4 & 5 BEDROOM APARTMENTS',
                         default => null,
                     },
 
@@ -396,6 +483,7 @@ class ProjectController extends Controller
                 */
 
                 'cover_image' => $colosseumHeroImage
+                    ?: $projectHeroImage
                     ?: $loreshoHeroImage
                     ?: $kitisuruHeroImage
                     ?: $othayaHeroImage
@@ -424,10 +512,16 @@ class ProjectController extends Controller
                         'sandalwood-waterfront' => self::WATERFRONT_IDEAL_DESCRIPTION,
                         'sandalwood-brookside' => self::BROOKSIDE_IDEAL_DESCRIPTION,
                         'the-colosseum-residences' => self::COLOSSEUM_IDEAL_DESCRIPTION,
+                        'silver-terraces' => self::SILVER_IDEAL_DESCRIPTION,
+                        'ivory-terraces' => self::IVORY_IDEAL_DESCRIPTION,
+                        'the-convex' => self::CONVEX_IDEAL_DESCRIPTION,
+                        'chilly-breezes' => self::CHILLY_IDEAL_DESCRIPTION,
+                        'the-haven' => self::HAVEN_IDEAL_DESCRIPTION,
                         default => null,
                     },
 
                 'ideal_image' => $colosseumIdealImage
+                    ?: $projectIdealImage
                     ?: $loreshoIdealImage
                     ?: $kitisuruIdealImage
                     ?: $othayaIdealImage
@@ -597,6 +691,56 @@ class ProjectController extends Controller
                 '3I9A7706.JPG' => 'The Colosseum landscaped courtyard',
                 '3I9A8033.JPG' => 'The Colosseum residents gym',
                 default => 'The Colosseum Residences gallery image ' . ($index + 1),
+            };
+        }
+
+        if ($slug === 'silver-terraces') {
+            return match ($filename) {
+                '3I9A0030.JPG' => 'Silver Terraces landscaped entrance',
+                '3I9A0027.JPG' => 'Silver Terraces residential driveway',
+                '3I9A0049.JPG' => 'Silver Terraces living room',
+                '3I9A0102.JPG' => 'Silver Terraces dining room',
+                default => 'Silver Terraces gallery image ' . ($index + 1),
+            };
+        }
+
+        if ($slug === 'ivory-terraces') {
+            return match ($filename) {
+                '3I9A0207.JPG', 'Ivory(2).jpeg' => 'Ivory Terraces rooftop swimming pool',
+                '3I9A0277.JPG' => 'Ivory Terraces landscaped entrance',
+                '3I9A9890.JPG' => 'Ivory Terraces living room',
+                '3I9A9866.JPG' => 'Ivory Terraces bedroom',
+                default => 'Ivory Terraces gallery image ' . ($index + 1),
+            };
+        }
+
+        if ($slug === 'the-convex') {
+            return match ($filename) {
+                '3I9A0304.JPG' => 'The Convex reception lobby',
+                '3I9A0335.JPG' => 'The Convex office building',
+                '3I9A0315.JPG' => 'The Convex main entrance',
+                '2.png' => 'The Convex exterior and driveway',
+                default => 'The Convex gallery image ' . ($index + 1),
+            };
+        }
+
+        if ($slug === 'chilly-breezes') {
+            return match ($filename) {
+                '3I9A9604.JPG' => 'Chilly Breezes rooftop terrace',
+                '3I9A9652.JPG' => 'Chilly Breezes rooftop pool deck',
+                '3I9A9792.JPG' => 'Chilly Breezes residential entrance',
+                '3I9A9764.JPG' => 'Chilly Breezes landscaped residential courtyard',
+                default => 'Chilly Breezes gallery image ' . ($index + 1),
+            };
+        }
+
+        if ($slug === 'the-haven') {
+            return match ($filename) {
+                '3I9A7215.JPG' => 'The Haven villa and landscaped garden',
+                '3I9A7217-2.JPG' => 'The Haven villa exterior',
+                '3I9A7266.JPG' => 'The Haven landscaped entrance path',
+                '3I9A7331.JPG' => 'The Haven swimming pool and garden',
+                default => 'The Haven gallery image ' . ($index + 1),
             };
         }
 
