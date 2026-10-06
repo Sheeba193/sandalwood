@@ -4,7 +4,7 @@
 
         <main v-else class="min-h-screen bg-white pb-20">
             <section class="w-full">
-                <img :src="project.cover_image" :alt="project.slug === 'sandalwood-kitisuru' || project.slug === 'sandalwood-othaya' ? `${project.title} landscaped garden` : `${project.title} living room`" class="h-[min(50.5vw,700px)] min-h-[300px] w-full object-cover md:min-h-[400px]" />
+                <img :src="project.cover_image" :alt="['sandalwood-kitisuru', 'sandalwood-othaya'].includes(project.slug) ? `${project.title} landscaped garden` : project.slug === 'sandalwood-waterfront' ? `${project.title} lake and garden bridge` : `${project.title} living room`" class="h-[min(50.5vw,700px)] min-h-[300px] w-full object-cover md:min-h-[400px]" />
             </section>
 
             <section class="mx-auto max-w-6xl px-6 pt-10 pb-5 md:px-10 md:pt-14">
@@ -25,7 +25,7 @@
             <section class="mx-auto max-w-6xl px-6 py-5 md:px-10 md:py-7">
                 <div class="grid grid-cols-1 items-center gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
                     <div class="overflow-hidden">
-                        <img :src="project.ideal_image" :alt="project.slug === 'sandalwood-othaya' ? `${project.title} entrance gate` : project.slug === 'sandalwood-kitisuru' ? `${project.title} swimming pool and garden` : `${project.title} pool and residential setting`" class="aspect-[1.24/1] w-full object-cover" />
+                        <img :src="project.ideal_image" :alt="project.slug === 'sandalwood-waterfront' ? `${project.title} gardens and villas` : project.slug === 'sandalwood-othaya' ? `${project.title} entrance gate` : project.slug === 'sandalwood-kitisuru' ? `${project.title} swimming pool and garden` : `${project.title} pool and residential setting`" class="aspect-[1.24/1] w-full object-cover" />
                     </div>
                     <div class="space-y-5">
                         <div class="flex items-center gap-3">
@@ -216,8 +216,8 @@
                 <p class="font-cormorant max-w-3xl text-lg leading-relaxed text-gray-600">{{ amenityDescription }}</p>
 
 
-                <div class="mt-9 grid grid-cols-2 gap-x-5 gap-y-10 sm:grid-cols-3 md:grid-cols-5 md:gap-x-8 md:gap-y-14">
-                    <div v-for="amenity in amenityItems" :key="amenity.id" class="group flex flex-col items-center text-center">
+                <div :class="project.slug === 'sandalwood-waterfront' ? 'mt-9 flex flex-wrap justify-center gap-x-5 gap-y-10 md:gap-x-8 md:gap-y-14' : 'mt-9 grid grid-cols-2 gap-x-5 gap-y-10 sm:grid-cols-3 md:grid-cols-5 md:gap-x-8 md:gap-y-14'">
+                    <div v-for="amenity in amenityItems" :key="amenity.id" :class="['group flex flex-col items-center text-center', project.slug === 'sandalwood-waterfront' ? 'w-[calc((100%-1.25rem)/2)] sm:w-[calc((100%-2.5rem)/3)] md:w-[calc((100%-8rem)/5)]' : '']">
                         <div class="flex h-20 w-20 items-center justify-center text-[#ff7417] md:h-24 md:w-24">
                             <img v-if="amenity.image" :src="getImageUrl(amenity.image)" :alt="amenity.name" class="h-full w-full object-contain" />
                             <component :is="getAmenityIcon(amenity.name)" v-else :size="82" :stroke-width="1.35" aria-hidden="true" />
@@ -458,6 +458,17 @@ const referenceAmenityNamesByProject: Record<string, string[]> = {
     'High Speed Elevators',
     'Borehole',
   ],
+  'sandalwood-waterfront': [
+    'Lush Gardens',
+    'Club House',
+    "Kids' Play Area",
+    'Steam and Sauna',
+    'Borehole',
+    'Swimming Pool',
+    'Gym',
+    '24 Hours CCTV Surveillance',
+    'Standby Power Generator',
+  ],
 };
 
 const amenityItems = computed(() => {
@@ -482,7 +493,9 @@ const showAmenitySection = computed(() => props.project.slug !== 'sandalwood-kit
 const isSoldOutProject = computed(() => ['sandalwood-kitisuru', 'sandalwood-othaya'].includes(props.project.slug) || props.project.status === 'sold_out');
 const amenityDescription = computed(() => props.project.slug === 'sandalwood-othaya'
     ? 'Elevating your lifestyle through a refined selection of amenities.'
-    : 'A curated selection of modern amenities brings comfort, convenience, and a refined lifestyle right to your doorstep.');
+    : props.project.slug === 'sandalwood-waterfront'
+      ? 'Elevating your lifestyle through a refined selection of amenities.'
+      : 'A curated selection of modern amenities brings comfort, convenience, and a refined lifestyle right to your doorstep.');
 
 const getAmenityIcon = (name: string) => {
     const label = name.toLowerCase();
@@ -491,6 +504,7 @@ const getAmenityIcon = (name: string) => {
     if (label.includes('power') || label.includes('generator')) return Zap;
     if (label.includes('borehole')) return Droplets;
     if (label.includes('elevator') || label.includes('lift')) return ArrowUpDown;
+    if (label.includes('club house') || label.includes('clubhouse')) return HouseWifi;
     if (label.includes('garden')) return Flower2;
     if (label.includes('padel')) return CircleDot;
     if (label.includes('office') || label.includes('workspace')) return BriefcaseBusiness;

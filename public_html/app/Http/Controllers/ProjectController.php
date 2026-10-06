@@ -14,6 +14,8 @@ class ProjectController extends Controller
     private const KITISURU_TRANQUIL_DESCRIPTION = 'Surrounded by lush greenery and beautifully landscaped gardens, Sandalwood Kitisuru evokes a feeling of calm, privacy, and quiet escape. A place where the pace slows, the air feels lighter, and nature becomes part of everyday luxury.';
     private const OTHAYA_DESCRIPTION = "Sandalwood Othaya offers a refreshing living experience where elegant spaces, high-end modern finishes, and a lush garden setting create an atmosphere that feels peaceful and beautifully balanced within the heart of Lavington. Located along Othaya Road, the development blends privacy and warmth with a serene outdoor environment that brings a quiet sense of escape to everyday city living.";
     private const OTHAYA_IDEAL_DESCRIPTION = "Sandalwood Othaya enjoys excellent connectivity through Othaya Road and its close links to major routes connecting Lavington, Kileleshwa, Kilimani, and Westlands, making movement across Nairobi smooth and convenient. Its location within one of the city's most desirable residential areas, combined with easy access to business hubs, shopping centers, schools, restaurants, and lifestyle amenities, makes it an ideal development for comfortable and well-balanced urban living.";
+    private const WATERFRONT_DESCRIPTION = 'Sandalwood Waterfront in Karen comprises exclusive villas featuring beautifully designed homes set within a unique landscape with a man-made lake, creating a distinctive residential environment that blends modern architecture with natural elements, spacious surroundings, and a strong sense of privacy and comfort.';
+    private const WATERFRONT_IDEAL_DESCRIPTION = "Sandalwood Waterfront in Karen enjoys a well-connected location with convenient access to key amenities while maintaining a private residential feel. The development is within easy reach of top shopping destinations such as The Hub Karen, Karen Crossroads, and Galleria Mall, with a variety of retail, dining, and entertainment options. Residents also benefit from proximity to reputable schools and quality healthcare facilities like Nairobi Hospital Karen Branch and Karen Hospital. With good road connections, the development allows for smooth access to Nairobi's central business areas and surrounding suburbs.";
 
     /**
      * Display a listing of all projects.
@@ -116,12 +118,14 @@ class ProjectController extends Controller
                 'sandalwood-loresho' => '/images/projects/sandalwood-loresho/IMG-20251113-WA0024.jpg',
                 'sandalwood-kitisuru' => '/images/projects/sandalwood-kitisuru/1.JPG',
                 'sandalwood-othaya' => '/images/projects/sandalwood-othaya/3I9A8204.JPG',
+                'sandalwood-waterfront' => '/images/projects/sandalwood-waterfront/3I9A8425.JPG',
                 default => $referenceProject['images'][0],
             };
             $idealImage = match ($slug) {
                 'sandalwood-loresho' => '/images/projects/sandalwood-loresho/IMG-20251113-WA0018.jpg',
                 'sandalwood-kitisuru' => '/images/projects/sandalwood-kitisuru/2.JPG',
                 'sandalwood-othaya' => '/images/projects/sandalwood-othaya/3I9A8056-2.JPG',
+                'sandalwood-waterfront' => '/images/projects/sandalwood-waterfront/3I9A8351.JPG',
                 default => $referenceProject['images'][0],
             };
 
@@ -135,18 +139,21 @@ class ProjectController extends Controller
                     'location' => match ($slug) {
                         'sandalwood-kitisuru' => 'Kitisuru, Nairobi, Kenya',
                         'sandalwood-othaya' => 'Othaya Road, Lavington, Nairobi',
+                        'sandalwood-waterfront' => 'Karen, Nairobi, Kenya',
                         default => '',
                     },
                     'location_url' => match ($slug) {
                         'sandalwood-loresho' => Project::LORESHO_MAPS_URL,
                         'sandalwood-kitisuru' => Project::KITISURU_MAPS_URL,
                         'sandalwood-othaya' => 'https://www.google.com/maps/search/?api=1&query=Sandalwood+Othaya%2C+Othaya+Road%2C+Lavington%2C+Nairobi',
+                        'sandalwood-waterfront' => 'https://www.google.com/maps/search/?api=1&query=Sandalwood+Waterfront%2C+Karen%2C+Nairobi%2C+Kenya',
                         default => null,
                     },
                     'specifications' => match ($slug) {
                         'sandalwood-loresho' => '3 & 4 BEDROOM APARTMENTS',
                         'sandalwood-kitisuru' => '5 BEDROOM VILLAS',
                         'sandalwood-othaya' => '3 BEDROOM APARTMENTS',
+                        'sandalwood-waterfront' => '5 BEDROOM APARTMENTS',
                         default => null,
                     },
                     'status' => $referenceProject['status'],
@@ -155,6 +162,7 @@ class ProjectController extends Controller
                         'sandalwood-loresho' => 'An exclusive collection of residential apartments set within the tranquil and serene surroundings of Loresho, Nairobi. Designed to offer a perfect balance of serenity and modern convenience, the development features thoughtfully planned living spaces complemented by a selection of recreational and functional amenities.',
                         'sandalwood-kitisuru' => self::KITISURU_DESCRIPTION,
                         'sandalwood-othaya' => self::OTHAYA_DESCRIPTION,
+                        'sandalwood-waterfront' => self::WATERFRONT_DESCRIPTION,
                         default => 'Project information will be updated soon.',
                     },
                     'image' => $coverImage,
@@ -164,6 +172,7 @@ class ProjectController extends Controller
                         'sandalwood-loresho' => "Sandalwood Loresho is just a 2-minute drive from Lions SightFirst Eye Hospital. The development ensures access to quality healthcare, while nearby retail centers, international schools, and lifestyle hubs in Westlands and the wider Nairobi area are all within a short drive. Seamless connectivity via Waiyaki Way and Lower Kabete Road allows for easy access to Nairobi's key destinations, all while preserving the calm, green charm that defines Loresho.",
                         'sandalwood-kitisuru' => self::KITISURU_IDEAL_DESCRIPTION,
                         'sandalwood-othaya' => self::OTHAYA_IDEAL_DESCRIPTION,
+                        'sandalwood-waterfront' => self::WATERFRONT_IDEAL_DESCRIPTION,
                         default => null,
                     },
                     'ideal_image' => $idealImage,
@@ -180,7 +189,7 @@ class ProjectController extends Controller
             ]);
         }
 
-        $project = Cache::remember("project_v5_{$slug}", 3600, function () use ($slug) {
+        $project = Cache::remember("project_v6_{$slug}", 3600, function () use ($slug) {
 
             $project = Project::with(['media', 'amenities'])
                 ->where('slug', $slug)
@@ -207,6 +216,12 @@ class ProjectController extends Controller
                 : null;
             $othayaIdealImage = $project->slug === 'sandalwood-othaya'
                 ? $this->projectFolderImage($folderImages, '3I9A8056-2.JPG')
+                : null;
+            $waterfrontHeroImage = $project->slug === 'sandalwood-waterfront'
+                ? $this->projectFolderImage($folderImages, '3I9A8425.JPG')
+                : null;
+            $waterfrontIdealImage = $project->slug === 'sandalwood-waterfront'
+                ? $this->projectFolderImage($folderImages, '3I9A8351.JPG')
                 : null;
 
             /*
@@ -262,6 +277,8 @@ class ProjectController extends Controller
                 $description = self::KITISURU_DESCRIPTION;
             } elseif ($project->slug === 'sandalwood-othaya' && str_word_count((string) $description) < 20) {
                 $description = self::OTHAYA_DESCRIPTION;
+            } elseif ($project->slug === 'sandalwood-waterfront' && str_word_count((string) $description) < 20) {
+                $description = self::WATERFRONT_DESCRIPTION;
             }
             if ($folderImages) {
                 $gallery = collect($folderImages)
@@ -290,13 +307,16 @@ class ProjectController extends Controller
 
                 'tagline' => $project->tagline,
 
-                'location' => $project->slug === 'sandalwood-othaya' ? 'Othaya Road, Lavington, Nairobi' : $project->location,
+                'location' => $project->slug === 'sandalwood-othaya'
+                    ? 'Othaya Road, Lavington, Nairobi'
+                    : ($project->slug === 'sandalwood-waterfront' ? 'Karen, Nairobi, Kenya' : $project->location),
 
                 'location_url' => $project->location_url
                     ?: match ($project->slug) {
                         'sandalwood-loresho' => Project::LORESHO_MAPS_URL,
                         'sandalwood-kitisuru' => Project::KITISURU_MAPS_URL,
                         'sandalwood-othaya' => 'https://www.google.com/maps/search/?api=1&query=Sandalwood+Othaya%2C+Othaya+Road%2C+Lavington%2C+Nairobi',
+                        'sandalwood-waterfront' => 'https://www.google.com/maps/search/?api=1&query=Sandalwood+Waterfront%2C+Karen%2C+Nairobi%2C+Kenya',
                         default => null,
                     },
 
@@ -305,6 +325,7 @@ class ProjectController extends Controller
                         'sandalwood-loresho' => '3 & 4 BEDROOM APARTMENTS',
                         'sandalwood-kitisuru' => '5 BEDROOM VILLAS',
                         'sandalwood-othaya' => '3 BEDROOM APARTMENTS',
+                        'sandalwood-waterfront' => '5 BEDROOM APARTMENTS',
                         default => null,
                     },
 
@@ -332,6 +353,7 @@ class ProjectController extends Controller
                     ?: $loreshoHeroImage
                     ?: $kitisuruHeroImage
                     ?: $othayaHeroImage
+                    ?: $waterfrontHeroImage
                     ?: $coverImage
                     ?: $projectImage
                     ?: ($folderImages[0] ?? null)
@@ -352,6 +374,7 @@ class ProjectController extends Controller
                         'sandalwood-loresho' => $loreshoIdealDescription,
                         'sandalwood-kitisuru' => self::KITISURU_IDEAL_DESCRIPTION,
                         'sandalwood-othaya' => self::OTHAYA_IDEAL_DESCRIPTION,
+                        'sandalwood-waterfront' => self::WATERFRONT_IDEAL_DESCRIPTION,
                         default => null,
                     },
 
@@ -359,6 +382,7 @@ class ProjectController extends Controller
                     ?: $loreshoIdealImage
                     ?: $kitisuruIdealImage
                     ?: $othayaIdealImage
+                    ?: $waterfrontIdealImage
                     ?: $idealImage
                     ?: $coverImage
                     ?: $projectImage
@@ -485,6 +509,17 @@ class ProjectController extends Controller
                 '3I9A8117-2.JPG', '3I9A8128.JPG' => 'Sandalwood Othaya swimming pool and garden',
                 '3I9A8204.JPG' => 'Sandalwood Othaya landscaped garden',
                 default => 'Sandalwood Othaya gallery image ' . ($index + 1),
+            };
+        }
+
+        if ($slug === 'sandalwood-waterfront') {
+            return match ($filename) {
+                '3I9A8425.JPG' => 'Sandalwood Waterfront bridge over the lake',
+                '3I9A8351.JPG', '3I9A8393.JPG' => 'Sandalwood Waterfront landscaped gardens and lake',
+                '3I9A8683.JPG' => 'Sandalwood Waterfront gardens and estate road',
+                '3I9A8548.JPG', '3I9A8407.JPG' => 'Sandalwood Waterfront villa and gardens',
+                '3I9A8628.JPG' => 'Sandalwood Waterfront swimming pool',
+                default => 'Sandalwood Waterfront gallery image ' . ($index + 1),
             };
         }
 
