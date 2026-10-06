@@ -4,7 +4,7 @@
 
         <main v-else class="min-h-screen bg-white pb-20">
             <section class="w-full">
-                <img :src="project.cover_image" :alt="['sandalwood-kitisuru', 'sandalwood-othaya'].includes(project.slug) ? `${project.title} landscaped garden` : project.slug === 'sandalwood-waterfront' ? `${project.title} lake and garden bridge` : `${project.title} living room`" class="h-[min(50.5vw,700px)] min-h-[300px] w-full object-cover md:min-h-[400px]" />
+                <img :src="project.cover_image" :alt="['sandalwood-kitisuru', 'sandalwood-othaya', 'sandalwood-brookside'].includes(project.slug) ? `${project.title} landscaped garden` : project.slug === 'sandalwood-waterfront' ? `${project.title} lake and garden bridge` : `${project.title} living room`" class="h-[min(50.5vw,700px)] min-h-[300px] w-full object-cover md:min-h-[400px]" />
             </section>
 
             <section class="mx-auto max-w-6xl px-6 pt-10 pb-5 md:px-10 md:pt-14">
@@ -25,7 +25,7 @@
             <section class="mx-auto max-w-6xl px-6 py-5 md:px-10 md:py-7">
                 <div class="grid grid-cols-1 items-center gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
                     <div class="overflow-hidden">
-                        <img :src="project.ideal_image" :alt="project.slug === 'sandalwood-waterfront' ? `${project.title} gardens and villas` : project.slug === 'sandalwood-othaya' ? `${project.title} entrance gate` : project.slug === 'sandalwood-kitisuru' ? `${project.title} swimming pool and garden` : `${project.title} pool and residential setting`" class="aspect-[1.24/1] w-full object-cover" />
+                        <img :src="project.ideal_image" :alt="project.slug === 'sandalwood-waterfront' || project.slug === 'sandalwood-brookside' ? `${project.title} landscaped gardens` : project.slug === 'sandalwood-othaya' ? `${project.title} entrance gate` : project.slug === 'sandalwood-kitisuru' ? `${project.title} swimming pool and garden` : `${project.title} pool and residential setting`" class="aspect-[1.24/1] w-full object-cover" />
                     </div>
                     <div class="space-y-5">
                         <div class="flex items-center gap-3">
@@ -39,7 +39,7 @@
                 </div>
             </section>
 
-            <section v-if="project.slug === 'sandalwood-kitisuru' && project.tranquil_description && project.tranquil_image" class="mx-auto max-w-6xl px-6 py-8 md:px-10 md:py-10">
+            <section v-if="['sandalwood-kitisuru', 'sandalwood-brookside'].includes(project.slug) && project.tranquil_description && project.tranquil_image" class="mx-auto max-w-6xl px-6 py-8 md:px-10 md:py-10">
                 <div class="grid grid-cols-1 items-center gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-10">
                     <div class="space-y-5 lg:pr-4">
                         <div class="flex items-center gap-3">
@@ -351,6 +351,9 @@ import {
     CarFront,
     Cctv,
     Droplets,
+    FireExtinguisher,
+    Footprints,
+    AlarmSmoke,
     Dumbbell,
     Flag,
     Flower2,
@@ -469,6 +472,27 @@ const referenceAmenityNamesByProject: Record<string, string[]> = {
     '24 Hours CCTV Surveillance',
     'Standby Power Generator',
   ],
+  'sandalwood-brookside': [
+    'Lush Gardens',
+    'Ample Parking Spaces',
+    'High Speed Elevators',
+    'Steam and Sauna',
+    'Standby Power Generator',
+    'Swimming Pool',
+    '24 Hours CCTV Surveillance',
+  ],
+  'the-colosseum-residences': [
+    'Lush Gardens',
+    'High Speed Elevators',
+    'Rooftop Jogging Track',
+    'Steam and Sauna',
+    "Indoor Kids' Play Area",
+    'Swimming Pool',
+    'Gym',
+    '24 Hours CCTV Surveillance',
+    'Standby Power Generator',
+    'Fire Fighting and Alarm System',
+  ],
 };
 
 const amenityItems = computed(() => {
@@ -490,10 +514,10 @@ const amenityItems = computed(() => {
 });
 
 const showAmenitySection = computed(() => props.project.slug !== 'sandalwood-kitisuru' && amenityItems.value.length > 0);
-const isSoldOutProject = computed(() => ['sandalwood-kitisuru', 'sandalwood-othaya'].includes(props.project.slug) || props.project.status === 'sold_out');
+const isSoldOutProject = computed(() => ['sandalwood-kitisuru', 'sandalwood-othaya', 'sandalwood-brookside'].includes(props.project.slug) || props.project.status === 'sold_out');
 const amenityDescription = computed(() => props.project.slug === 'sandalwood-othaya'
     ? 'Elevating your lifestyle through a refined selection of amenities.'
-    : props.project.slug === 'sandalwood-waterfront'
+    : ['sandalwood-waterfront', 'sandalwood-brookside', 'the-colosseum-residences'].includes(props.project.slug)
       ? 'Elevating your lifestyle through a refined selection of amenities.'
       : 'A curated selection of modern amenities brings comfort, convenience, and a refined lifestyle right to your doorstep.');
 
@@ -505,6 +529,9 @@ const getAmenityIcon = (name: string) => {
     if (label.includes('borehole')) return Droplets;
     if (label.includes('elevator') || label.includes('lift')) return ArrowUpDown;
     if (label.includes('club house') || label.includes('clubhouse')) return HouseWifi;
+    if (label.includes('jogging') || label.includes('running track')) return Footprints;
+    if (label.includes('fire fighting')) return FireExtinguisher;
+    if (label.includes('alarm')) return AlarmSmoke;
     if (label.includes('garden')) return Flower2;
     if (label.includes('padel')) return CircleDot;
     if (label.includes('office') || label.includes('workspace')) return BriefcaseBusiness;

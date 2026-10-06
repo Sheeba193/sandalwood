@@ -270,9 +270,13 @@ const form = reactive({
               ? '5 BEDROOM VILLAS'
               : props.project.title === 'Sandalwood Othaya'
                 ? '3 BEDROOM APARTMENTS'
-                : props.project.title === 'Sandalwood Waterfront'
-                  ? '5 BEDROOM APARTMENTS'
-                  : ''),
+              : props.project.title === 'Sandalwood Waterfront'
+                ? '5 BEDROOM APARTMENTS'
+                : props.project.title === 'Sandalwood Brookside'
+                  ? '3 BEDROOM APARTMENTS'
+                  : props.project.title === 'The Colosseum Residences'
+                    ? '2, 3 & 4 BEDROOM APARTMENTS'
+                    : ''),
     location_url: props.project.location_url || '',
     amenity_ids: props.project.amenity_ids || [],
     status: props.project.status || 'ongoing',

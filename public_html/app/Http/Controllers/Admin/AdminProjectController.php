@@ -218,9 +218,9 @@ class AdminProjectController extends Controller
             $project->addMedia($image)->toMediaCollection('gallery');
         }
 
-        Cache::forget('all_projects_list_v7');
-        Cache::forget("project_v6_{$previousSlug}");
-        Cache::forget("project_v6_{$project->slug}");
+        Cache::forget('all_projects_list_v8');
+        Cache::forget("project_v7_{$previousSlug}");
+        Cache::forget("project_v7_{$project->slug}");
         Cache::forget("project_{$previousSlug}");
         Cache::forget("project_{$project->slug}");
 
@@ -231,8 +231,8 @@ class AdminProjectController extends Controller
 
     public function destroy(Project $project)
     {
-        Cache::forget('all_projects_list_v7');
-        Cache::forget("project_v6_{$project->slug}");
+        Cache::forget('all_projects_list_v8');
+        Cache::forget("project_v7_{$project->slug}");
         Cache::forget("project_{$project->slug}");
         // Deletes the project and all associated Spatie media
         $project->clearMediaCollection('cover');

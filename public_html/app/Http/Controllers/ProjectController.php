@@ -16,13 +16,18 @@ class ProjectController extends Controller
     private const OTHAYA_IDEAL_DESCRIPTION = "Sandalwood Othaya enjoys excellent connectivity through Othaya Road and its close links to major routes connecting Lavington, Kileleshwa, Kilimani, and Westlands, making movement across Nairobi smooth and convenient. Its location within one of the city's most desirable residential areas, combined with easy access to business hubs, shopping centers, schools, restaurants, and lifestyle amenities, makes it an ideal development for comfortable and well-balanced urban living.";
     private const WATERFRONT_DESCRIPTION = 'Sandalwood Waterfront in Karen comprises exclusive villas featuring beautifully designed homes set within a unique landscape with a man-made lake, creating a distinctive residential environment that blends modern architecture with natural elements, spacious surroundings, and a strong sense of privacy and comfort.';
     private const WATERFRONT_IDEAL_DESCRIPTION = "Sandalwood Waterfront in Karen enjoys a well-connected location with convenient access to key amenities while maintaining a private residential feel. The development is within easy reach of top shopping destinations such as The Hub Karen, Karen Crossroads, and Galleria Mall, with a variety of retail, dining, and entertainment options. Residents also benefit from proximity to reputable schools and quality healthcare facilities like Nairobi Hospital Karen Branch and Karen Hospital. With good road connections, the development allows for smooth access to Nairobi's central business areas and surrounding suburbs.";
+    private const BROOKSIDE_DESCRIPTION = 'Sandalwood Brookside offers a calm and inviting living experience, with thoughtfully designed spaces that create a sense of comfort and balance within the energy of city life. Nestled in the heart of Brookside, it blends modern urban living with a peaceful atmosphere that makes coming home feel refreshing and grounding.';
+    private const BROOKSIDE_IDEAL_DESCRIPTION = 'Strategically located in the secure neighbourhood of Brookside Gardens, Westlands, Sandalwood Brookside offers convenient access to shopping malls, schools, hospitals, and key business hubs within Westlands and the wider Nairobi area. Its close proximity to Spring Valley and other upscale suburbs further enhances its appeal, placing residents within reach of premium lifestyle amenities while maintaining a calm residential setting.';
+    private const BROOKSIDE_TRANQUIL_DESCRIPTION = 'Surrounded by lush greenery and beautifully landscaped gardens, Sandalwood Brookside offers a calm, private escape within the city. Winding garden paths and mature trees create a peaceful setting where nature becomes part of everyday living.';
+    private const COLOSSEUM_DESCRIPTION = 'Overlooking the lush greenery of Muthaiga and moments away from Karura Forest, this exclusive residential development comprising elegantly designed apartments embodies a bespoke sense of urban luxury. High-end finishes, thoughtful design, and contemporary architecture come together to create an atmosphere of understated opulence, offering residents a private retreat within the city where sophistication, comfort, and refined living are seamlessly woven into every detail.';
+    private const COLOSSEUM_IDEAL_DESCRIPTION = "The Colosseum enjoys exceptional connectivity within one of Nairobi's most established urban neighbourhoods. It offers quick access to Westlands, a major commercial and lifestyle hub, as well as the CBD. Residents are also within close reach of key institutions such as Aga Khan Hospital, reputable schools, and a variety of shopping and dining destinations scattered across Parklands and nearby areas. With well-linked roads and multiple transport options, the location ensures effortless movement.";
 
     /**
      * Display a listing of all projects.
      */
     public function index()
     {
-        $projects = Cache::remember('all_projects_list_v7', 3600, function () {
+        $projects = Cache::remember('all_projects_list_v8', 3600, function () {
             return Project::with('media')
                 ->orderBy('is_featured', 'desc')
                 ->orderBy('created_at', 'desc')
@@ -119,6 +124,8 @@ class ProjectController extends Controller
                 'sandalwood-kitisuru' => '/images/projects/sandalwood-kitisuru/1.JPG',
                 'sandalwood-othaya' => '/images/projects/sandalwood-othaya/3I9A8204.JPG',
                 'sandalwood-waterfront' => '/images/projects/sandalwood-waterfront/3I9A8425.JPG',
+                'sandalwood-brookside' => '/images/projects/sandalwood-brookside/3I9A7558.JPG.jpeg',
+                'the-colosseum-residences' => '/images/projects/the-colosseum-residences/3I9A7797.JPG',
                 default => $referenceProject['images'][0],
             };
             $idealImage = match ($slug) {
@@ -126,6 +133,8 @@ class ProjectController extends Controller
                 'sandalwood-kitisuru' => '/images/projects/sandalwood-kitisuru/2.JPG',
                 'sandalwood-othaya' => '/images/projects/sandalwood-othaya/3I9A8056-2.JPG',
                 'sandalwood-waterfront' => '/images/projects/sandalwood-waterfront/3I9A8351.JPG',
+                'sandalwood-brookside' => '/images/projects/sandalwood-brookside/3I9A7580.JPG.jpeg',
+                'the-colosseum-residences' => '/images/projects/the-colosseum-residences/1.png',
                 default => $referenceProject['images'][0],
             };
 
@@ -140,6 +149,8 @@ class ProjectController extends Controller
                         'sandalwood-kitisuru' => 'Kitisuru, Nairobi, Kenya',
                         'sandalwood-othaya' => 'Othaya Road, Lavington, Nairobi',
                         'sandalwood-waterfront' => 'Karen, Nairobi, Kenya',
+                        'sandalwood-brookside' => 'Brookside Gardens, Westlands, Nairobi',
+                        'the-colosseum-residences' => 'Westlands, Nairobi, Kenya',
                         default => '',
                     },
                     'location_url' => match ($slug) {
@@ -147,6 +158,8 @@ class ProjectController extends Controller
                         'sandalwood-kitisuru' => Project::KITISURU_MAPS_URL,
                         'sandalwood-othaya' => 'https://www.google.com/maps/search/?api=1&query=Sandalwood+Othaya%2C+Othaya+Road%2C+Lavington%2C+Nairobi',
                         'sandalwood-waterfront' => 'https://www.google.com/maps/search/?api=1&query=Sandalwood+Waterfront%2C+Karen%2C+Nairobi%2C+Kenya',
+                        'sandalwood-brookside' => 'https://www.google.com/maps/search/?api=1&query=Sandalwood+Brookside+Gardens%2C+Westlands%2C+Nairobi%2C+Kenya',
+                        'the-colosseum-residences' => 'https://www.google.com/maps/search/?api=1&query=The+Colosseum+Residences%2C+Westlands%2C+Nairobi%2C+Kenya',
                         default => null,
                     },
                     'specifications' => match ($slug) {
@@ -154,6 +167,8 @@ class ProjectController extends Controller
                         'sandalwood-kitisuru' => '5 BEDROOM VILLAS',
                         'sandalwood-othaya' => '3 BEDROOM APARTMENTS',
                         'sandalwood-waterfront' => '5 BEDROOM APARTMENTS',
+                        'sandalwood-brookside' => '3 BEDROOM APARTMENTS',
+                        'the-colosseum-residences' => '2, 3 & 4 BEDROOM APARTMENTS',
                         default => null,
                     },
                     'status' => $referenceProject['status'],
@@ -163,6 +178,8 @@ class ProjectController extends Controller
                         'sandalwood-kitisuru' => self::KITISURU_DESCRIPTION,
                         'sandalwood-othaya' => self::OTHAYA_DESCRIPTION,
                         'sandalwood-waterfront' => self::WATERFRONT_DESCRIPTION,
+                        'sandalwood-brookside' => self::BROOKSIDE_DESCRIPTION,
+                        'the-colosseum-residences' => self::COLOSSEUM_DESCRIPTION,
                         default => 'Project information will be updated soon.',
                     },
                     'image' => $coverImage,
@@ -173,14 +190,22 @@ class ProjectController extends Controller
                         'sandalwood-kitisuru' => self::KITISURU_IDEAL_DESCRIPTION,
                         'sandalwood-othaya' => self::OTHAYA_IDEAL_DESCRIPTION,
                         'sandalwood-waterfront' => self::WATERFRONT_IDEAL_DESCRIPTION,
+                        'sandalwood-brookside' => self::BROOKSIDE_IDEAL_DESCRIPTION,
+                        'the-colosseum-residences' => self::COLOSSEUM_IDEAL_DESCRIPTION,
                         default => null,
                     },
                     'ideal_image' => $idealImage,
                     'tranquil_title' => 'A TRANQUIL RETREAT',
-                    'tranquil_description' => $slug === 'sandalwood-kitisuru' ? self::KITISURU_TRANQUIL_DESCRIPTION : null,
-                    'tranquil_image' => $slug === 'sandalwood-kitisuru'
-                        ? '/images/projects/sandalwood-kitisuru/3.JPG'
-                        : $referenceProject['images'][0],
+                    'tranquil_description' => match ($slug) {
+                        'sandalwood-kitisuru' => self::KITISURU_TRANQUIL_DESCRIPTION,
+                        'sandalwood-brookside' => self::BROOKSIDE_TRANQUIL_DESCRIPTION,
+                        default => null,
+                    },
+                    'tranquil_image' => match ($slug) {
+                        'sandalwood-kitisuru' => '/images/projects/sandalwood-kitisuru/3.JPG',
+                        'sandalwood-brookside' => '/images/projects/sandalwood-brookside/3I9A7574.JPG.jpeg',
+                        default => $referenceProject['images'][0],
+                    },
                     'gallery' => $gallery,
                     'amenities' => [],
                     'created_at' => now()->toISOString(),
@@ -189,7 +214,7 @@ class ProjectController extends Controller
             ]);
         }
 
-        $project = Cache::remember("project_v6_{$slug}", 3600, function () use ($slug) {
+        $project = Cache::remember("project_v7_{$slug}", 3600, function () use ($slug) {
 
             $project = Project::with(['media', 'amenities'])
                 ->where('slug', $slug)
@@ -223,6 +248,21 @@ class ProjectController extends Controller
             $waterfrontIdealImage = $project->slug === 'sandalwood-waterfront'
                 ? $this->projectFolderImage($folderImages, '3I9A8351.JPG')
                 : null;
+            $brooksideHeroImage = $project->slug === 'sandalwood-brookside'
+                ? $this->projectFolderImage($folderImages, '3I9A7558.JPG.jpeg')
+                : null;
+            $brooksideIdealImage = $project->slug === 'sandalwood-brookside'
+                ? $this->projectFolderImage($folderImages, '3I9A7580.JPG.jpeg')
+                : null;
+            $brooksideTranquilImage = $project->slug === 'sandalwood-brookside'
+                ? $this->projectFolderImage($folderImages, '3I9A7574.JPG.jpeg')
+                : null;
+            $colosseumHeroImage = $project->slug === 'the-colosseum-residences'
+                ? $this->projectFolderImage($folderImages, '3I9A7797.JPG')
+                : null;
+            $colosseumIdealImage = $project->slug === 'the-colosseum-residences'
+                ? $this->projectFolderImage($folderImages, '1.png')
+                : null;
 
             /*
             |--------------------------------------------------------------------------
@@ -240,10 +280,6 @@ class ProjectController extends Controller
             */
 
             $idealImage = $project->getFirstMediaUrl('ideal');
-
-            $colosseumImage = $project->slug === 'the-colosseum-residences'
-                ? '/images/projects/the-colosseum-residences/1.png'
-                : null;
 
             /*
             |--------------------------------------------------------------------------
@@ -279,6 +315,10 @@ class ProjectController extends Controller
                 $description = self::OTHAYA_DESCRIPTION;
             } elseif ($project->slug === 'sandalwood-waterfront' && str_word_count((string) $description) < 20) {
                 $description = self::WATERFRONT_DESCRIPTION;
+            } elseif ($project->slug === 'sandalwood-brookside' && str_word_count((string) $description) < 20) {
+                $description = self::BROOKSIDE_DESCRIPTION;
+            } elseif ($project->slug === 'the-colosseum-residences' && str_word_count((string) $description) < 20) {
+                $description = self::COLOSSEUM_DESCRIPTION;
             }
             if ($folderImages) {
                 $gallery = collect($folderImages)
@@ -309,7 +349,9 @@ class ProjectController extends Controller
 
                 'location' => $project->slug === 'sandalwood-othaya'
                     ? 'Othaya Road, Lavington, Nairobi'
-                    : ($project->slug === 'sandalwood-waterfront' ? 'Karen, Nairobi, Kenya' : $project->location),
+                    : ($project->slug === 'sandalwood-waterfront'
+                        ? 'Karen, Nairobi, Kenya'
+                        : ($project->slug === 'sandalwood-brookside' ? 'Brookside Gardens, Westlands, Nairobi' : $project->location)),
 
                 'location_url' => $project->location_url
                     ?: match ($project->slug) {
@@ -317,6 +359,8 @@ class ProjectController extends Controller
                         'sandalwood-kitisuru' => Project::KITISURU_MAPS_URL,
                         'sandalwood-othaya' => 'https://www.google.com/maps/search/?api=1&query=Sandalwood+Othaya%2C+Othaya+Road%2C+Lavington%2C+Nairobi',
                         'sandalwood-waterfront' => 'https://www.google.com/maps/search/?api=1&query=Sandalwood+Waterfront%2C+Karen%2C+Nairobi%2C+Kenya',
+                        'sandalwood-brookside' => 'https://www.google.com/maps/search/?api=1&query=Sandalwood+Brookside+Gardens%2C+Westlands%2C+Nairobi%2C+Kenya',
+                        'the-colosseum-residences' => 'https://www.google.com/maps/search/?api=1&query=The+Colosseum+Residences%2C+Westlands%2C+Nairobi%2C+Kenya',
                         default => null,
                     },
 
@@ -326,6 +370,8 @@ class ProjectController extends Controller
                         'sandalwood-kitisuru' => '5 BEDROOM VILLAS',
                         'sandalwood-othaya' => '3 BEDROOM APARTMENTS',
                         'sandalwood-waterfront' => '5 BEDROOM APARTMENTS',
+                        'sandalwood-brookside' => '3 BEDROOM APARTMENTS',
+                        'the-colosseum-residences' => '2, 3 & 4 BEDROOM APARTMENTS',
                         default => null,
                     },
 
@@ -349,11 +395,12 @@ class ProjectController extends Controller
                 |--------------------------------------------------------------------------
                 */
 
-                'cover_image' => $colosseumImage
+                'cover_image' => $colosseumHeroImage
                     ?: $loreshoHeroImage
                     ?: $kitisuruHeroImage
                     ?: $othayaHeroImage
                     ?: $waterfrontHeroImage
+                    ?: $brooksideHeroImage
                     ?: $coverImage
                     ?: $projectImage
                     ?: ($folderImages[0] ?? null)
@@ -375,14 +422,17 @@ class ProjectController extends Controller
                         'sandalwood-kitisuru' => self::KITISURU_IDEAL_DESCRIPTION,
                         'sandalwood-othaya' => self::OTHAYA_IDEAL_DESCRIPTION,
                         'sandalwood-waterfront' => self::WATERFRONT_IDEAL_DESCRIPTION,
+                        'sandalwood-brookside' => self::BROOKSIDE_IDEAL_DESCRIPTION,
+                        'the-colosseum-residences' => self::COLOSSEUM_IDEAL_DESCRIPTION,
                         default => null,
                     },
 
-                'ideal_image' => $colosseumImage
+                'ideal_image' => $colosseumIdealImage
                     ?: $loreshoIdealImage
                     ?: $kitisuruIdealImage
                     ?: $othayaIdealImage
                     ?: $waterfrontIdealImage
+                    ?: $brooksideIdealImage
                     ?: $idealImage
                     ?: $coverImage
                     ?: $projectImage
@@ -400,9 +450,14 @@ class ProjectController extends Controller
                     ?: 'A TRANQUIL RETREAT',
 
                 'tranquil_description' => $project->tranquil_description
-                    ?: ($project->slug === 'sandalwood-kitisuru' ? self::KITISURU_TRANQUIL_DESCRIPTION : null),
+                    ?: match ($project->slug) {
+                        'sandalwood-kitisuru' => self::KITISURU_TRANQUIL_DESCRIPTION,
+                        'sandalwood-brookside' => self::BROOKSIDE_TRANQUIL_DESCRIPTION,
+                        default => null,
+                    },
 
                 'tranquil_image' => $kitisuruTranquilImage
+                    ?: $brooksideTranquilImage
                     ?: ($folderImages[2] ?? ($tranquilImage ?: '/images/sandalwood_kyuna.jpg')),
 
 
@@ -520,6 +575,28 @@ class ProjectController extends Controller
                 '3I9A8548.JPG', '3I9A8407.JPG' => 'Sandalwood Waterfront villa and gardens',
                 '3I9A8628.JPG' => 'Sandalwood Waterfront swimming pool',
                 default => 'Sandalwood Waterfront gallery image ' . ($index + 1),
+            };
+        }
+
+        if ($slug === 'sandalwood-brookside') {
+            return match ($filename) {
+                '3I9A7539.JPG.jpeg' => 'Sandalwood Brookside main entrance',
+                '3I9A7660.JPG.jpeg' => 'Sandalwood Brookside driveway',
+                '3I9A7558.JPG.jpeg', '3I9A7580.JPG.jpeg', '3I9A7582.JPG.jpeg' => 'Sandalwood Brookside landscaped garden path',
+                '3I9A7574.JPG.jpeg' => 'Sandalwood Brookside garden and residences',
+                '3I9A7622.JPG.jpeg' => 'Sandalwood Brookside swimming pool',
+                default => 'Sandalwood Brookside gallery image ' . ($index + 1),
+            };
+        }
+
+        if ($slug === 'the-colosseum-residences') {
+            return match ($filename) {
+                '3I9A7797.JPG' => 'The Colosseum residence opening to a garden terrace',
+                '1.png' => 'The Colosseum Residences exterior',
+                '3I9A7849.JPG' => 'The Colosseum balcony overlooking Karura Forest',
+                '3I9A7706.JPG' => 'The Colosseum landscaped courtyard',
+                '3I9A8033.JPG' => 'The Colosseum residents gym',
+                default => 'The Colosseum Residences gallery image ' . ($index + 1),
             };
         }
 
