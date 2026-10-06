@@ -31,13 +31,17 @@ class ProjectController extends Controller
     private const CHILLY_IDEAL_DESCRIPTION = 'Located along Piliplili Way off Rhapta Road in the vibrant city of Westlands, Chilly Breezes places residents within easy reach of schools, hospitals, shopping malls, and popular restaurants, making everyday living both convenient and well-connected. With modern apartment design, impressive amenities, and quick access to key lifestyle amenities, the development offers a comfortable urban setting suited for residents who value both accessibility and contemporary living.';
     private const HAVEN_DESCRIPTION = 'Set in the peaceful neighbourhood of Loresho, this exclusive villa development offers beautifully designed homes surrounded by lush gardens, creating a calm and refined living environment where comfort, privacy, and nature come together effortlessly.';
     private const HAVEN_IDEAL_DESCRIPTION = 'Located in the serene and well-established neighbourhood of Loresho, this villa development enjoys excellent accessibility to key parts of Nairobi. It is well connected via Waiyaki Way and Lower Kabete Road, allowing for smooth travel to Westlands, the CBD, and surrounding suburbs. Residents are also within convenient reach of essential amenities such as reputable schools, shopping centres, healthcare facilities including Lions SightFirst Eye Hospital, and several recreational spots.';
+    private const OAK_IVY_DESCRIPTION = 'Oak & Ivy redefines modern living in Loresho, where refined architecture meets a serene, nature-rich environment designed for balance and connection. The development is home to two distinct villas, each thoughtfully crafted to blend privacy with a strong sense of community. Lush gardens and quiet green pockets weave gently through the property, adding a refreshing rhythm to everyday life. Here, living feels intentional, with comfort, elegance, and a sense of belonging coming together effortlessly.';
+    private const OAK_IVY_IDEAL_DESCRIPTION = "Set within one of Nairobi's most sought-after neighbourhoods, Oak & Ivy places you in the heart of Loresho's green, secure, and well-established community. Residents enjoy being just minutes from Westlands, with easy access to leading international schools such as ISK, Peponi, and Braeburn, as well as premier shopping destinations. Top medical institutions like Aga Khan and MP Shah Hospitals are within convenient reach, while nearby Karura Forest and scenic walking trails offer a refreshing connection to nature.";
+    private const RIVERSIDE_DESCRIPTION = "Sandalwood Riverside brings together refined design, expansive living spaces, and a vibrant urban setting to create a lifestyle that feels both sophisticated and effortless. Surrounded by beautifully landscaped gardens and inviting outdoor spaces, each residence offers a sense of calm within the rhythm of the city. Elegant 2, 3, and 4-bedroom apartments provide the perfect balance of comfort and style, creating an environment where every moment feels elevated. It's a place where modern living finds its natural rhythm, neighbours become community, and everyday life unfolds with ease, elegance, and purpose.";
+    private const RIVERSIDE_IDEAL_DESCRIPTION = "Nestled within the Riverside area, Sandalwood Riverside places residents at the centre of convenience and connectivity. With easy access to Westlands, Lavington, Kilimani, and Nairobi's key business hubs, everyday commutes become effortless. Premier schools, healthcare facilities, shopping destinations, restaurants, and recreational amenities are all just moments away, ensuring work, leisure, and family life remain seamlessly connected.";
 
     /**
      * Display a listing of all projects.
      */
     public function index()
     {
-        $projects = Cache::remember('all_projects_list_v9', 3600, function () {
+        $projects = Cache::remember('all_projects_list_v10', 3600, function () {
             return Project::with('media')
                 ->orderBy('is_featured', 'desc')
                 ->orderBy('created_at', 'desc')
@@ -141,6 +145,8 @@ class ProjectController extends Controller
                 'the-convex' => '/images/projects/the-convex/3I9A0304.JPG',
                 'chilly-breezes' => '/images/projects/chilly-breezes/3I9A9604.JPG',
                 'the-haven' => '/images/projects/the-haven/3I9A7215.JPG',
+                'oak-and-ivy' => '/images/projects/oak%26ivy/3I9A6581.jpg',
+                'sandalwood-riverside' => '/images/projects/sandalwood-riverside/3I9A0478.JPG',
                 default => $referenceProject['images'][0],
             };
             $idealImage = match ($slug) {
@@ -155,6 +161,8 @@ class ProjectController extends Controller
                 'the-convex' => '/images/projects/the-convex/3I9A0335.JPG',
                 'chilly-breezes' => '/images/projects/chilly-breezes/3I9A9764.JPG',
                 'the-haven' => '/images/projects/the-haven/3I9A7217-2.JPG',
+                'oak-and-ivy' => '/images/projects/oak%26ivy/3I9A6652.JPG',
+                'sandalwood-riverside' => '/images/projects/sandalwood-riverside/3I9A0491.JPG',
                 default => $referenceProject['images'][0],
             };
 
@@ -176,6 +184,8 @@ class ProjectController extends Controller
                         'the-convex' => 'Riverside Lane, Westlands, Nairobi',
                         'chilly-breezes' => 'Piliplili Way, Westlands, Nairobi',
                         'the-haven' => 'Loresho, Nairobi, Kenya',
+                        'oak-and-ivy' => 'Loresho, Nairobi, Kenya',
+                        'sandalwood-riverside' => 'Riverside, Nairobi, Kenya',
                         default => '',
                     },
                     'location_url' => match ($slug) {
@@ -190,6 +200,8 @@ class ProjectController extends Controller
                         'the-convex' => 'https://www.google.com/maps/search/?api=1&query=The+Convex%2C+Riverside+Lane%2C+Westlands%2C+Nairobi',
                         'chilly-breezes' => 'https://www.google.com/maps/search/?api=1&query=Chilly+Breezes%2C+Piliplili+Way%2C+Westlands%2C+Nairobi',
                         'the-haven' => 'https://www.google.com/maps/search/?api=1&query=The+Haven%2C+Loresho%2C+Nairobi',
+                        'oak-and-ivy' => 'https://www.google.com/maps/search/?api=1&query=Oak+and+Ivy%2C+Loresho%2C+Nairobi',
+                        'sandalwood-riverside' => 'https://www.google.com/maps/search/?api=1&query=Sandalwood+Riverside%2C+Riverside%2C+Nairobi',
                         default => null,
                     },
                     'specifications' => match ($slug) {
@@ -204,6 +216,8 @@ class ProjectController extends Controller
                         'the-convex' => '11 FLOORS',
                         'chilly-breezes' => '1, 2 & 3 BEDROOM APARTMENTS',
                         'the-haven' => '4 & 5 BEDROOM APARTMENTS',
+                        'oak-and-ivy' => '4 & 5 BEDROOM APARTMENTS',
+                        'sandalwood-riverside' => '2, 3 & 4 BEDROOM APARTMENTS',
                         default => null,
                     },
                     'status' => $referenceProject['status'],
@@ -220,6 +234,8 @@ class ProjectController extends Controller
                         'the-convex' => self::CONVEX_DESCRIPTION,
                         'chilly-breezes' => self::CHILLY_DESCRIPTION,
                         'the-haven' => self::HAVEN_DESCRIPTION,
+                        'oak-and-ivy' => self::OAK_IVY_DESCRIPTION,
+                        'sandalwood-riverside' => self::RIVERSIDE_DESCRIPTION,
                         default => 'Project information will be updated soon.',
                     },
                     'image' => $coverImage,
@@ -237,6 +253,8 @@ class ProjectController extends Controller
                         'the-convex' => self::CONVEX_IDEAL_DESCRIPTION,
                         'chilly-breezes' => self::CHILLY_IDEAL_DESCRIPTION,
                         'the-haven' => self::HAVEN_IDEAL_DESCRIPTION,
+                        'oak-and-ivy' => self::OAK_IVY_IDEAL_DESCRIPTION,
+                        'sandalwood-riverside' => self::RIVERSIDE_IDEAL_DESCRIPTION,
                         default => null,
                     },
                     'ideal_image' => $idealImage,
@@ -259,7 +277,7 @@ class ProjectController extends Controller
             ]);
         }
 
-        $project = Cache::remember("project_v8_{$slug}", 3600, function () use ($slug) {
+        $project = Cache::remember("project_v9_{$slug}", 3600, function () use ($slug) {
 
             $project = Project::with(['media', 'amenities'])
                 ->where('slug', $slug)
@@ -314,6 +332,8 @@ class ProjectController extends Controller
                 'the-convex' => ['hero' => '3I9A0304.JPG', 'ideal' => '3I9A0335.JPG'],
                 'chilly-breezes' => ['hero' => '3I9A9604.JPG', 'ideal' => '3I9A9764.JPG'],
                 'the-haven' => ['hero' => '3I9A7215.JPG', 'ideal' => '3I9A7217-2.JPG'],
+                'oak-and-ivy' => ['hero' => '3I9A6581.jpg', 'ideal' => '3I9A6652.JPG'],
+                'sandalwood-riverside' => ['hero' => '3I9A0478.JPG', 'ideal' => '3I9A0491.JPG'],
             ];
             $projectHeroImage = isset($terraceImages[$project->slug])
                 ? $this->projectFolderImage($folderImages, $terraceImages[$project->slug]['hero'])
@@ -387,6 +407,10 @@ class ProjectController extends Controller
                 $description = self::CHILLY_DESCRIPTION;
             } elseif ($project->slug === 'the-haven' && str_word_count((string) $description) < 20) {
                 $description = self::HAVEN_DESCRIPTION;
+            } elseif ($project->slug === 'oak-and-ivy' && str_word_count((string) $description) < 20) {
+                $description = self::OAK_IVY_DESCRIPTION;
+            } elseif ($project->slug === 'sandalwood-riverside' && str_word_count((string) $description) < 20) {
+                $description = self::RIVERSIDE_DESCRIPTION;
             }
             if ($folderImages) {
                 $gallery = collect($folderImages)
@@ -427,6 +451,8 @@ class ProjectController extends Controller
                                 'the-convex' => 'Riverside Lane, Westlands, Nairobi',
                                 'chilly-breezes' => 'Piliplili Way, Westlands, Nairobi',
                                 'the-haven' => 'Loresho, Nairobi, Kenya',
+                                'oak-and-ivy' => 'Loresho, Nairobi, Kenya',
+                                'sandalwood-riverside' => 'Riverside, Nairobi, Kenya',
                                 default => $project->location,
                             }))),
 
@@ -443,6 +469,8 @@ class ProjectController extends Controller
                         'the-convex' => 'https://www.google.com/maps/search/?api=1&query=The+Convex%2C+Riverside+Lane%2C+Westlands%2C+Nairobi',
                         'chilly-breezes' => 'https://www.google.com/maps/search/?api=1&query=Chilly+Breezes%2C+Piliplili+Way%2C+Westlands%2C+Nairobi',
                         'the-haven' => 'https://www.google.com/maps/search/?api=1&query=The+Haven%2C+Loresho%2C+Nairobi',
+                        'oak-and-ivy' => 'https://www.google.com/maps/search/?api=1&query=Oak+and+Ivy%2C+Loresho%2C+Nairobi',
+                        'sandalwood-riverside' => 'https://www.google.com/maps/search/?api=1&query=Sandalwood+Riverside%2C+Riverside%2C+Nairobi',
                         default => null,
                     },
 
@@ -459,6 +487,8 @@ class ProjectController extends Controller
                         'the-convex' => '11 FLOORS',
                         'chilly-breezes' => '1, 2 & 3 BEDROOM APARTMENTS',
                         'the-haven' => '4 & 5 BEDROOM APARTMENTS',
+                        'oak-and-ivy' => '4 & 5 BEDROOM APARTMENTS',
+                        'sandalwood-riverside' => '2, 3 & 4 BEDROOM APARTMENTS',
                         default => null,
                     },
 
@@ -517,6 +547,8 @@ class ProjectController extends Controller
                         'the-convex' => self::CONVEX_IDEAL_DESCRIPTION,
                         'chilly-breezes' => self::CHILLY_IDEAL_DESCRIPTION,
                         'the-haven' => self::HAVEN_IDEAL_DESCRIPTION,
+                        'oak-and-ivy' => self::OAK_IVY_IDEAL_DESCRIPTION,
+                        'sandalwood-riverside' => self::RIVERSIDE_IDEAL_DESCRIPTION,
                         default => null,
                     },
 
@@ -741,6 +773,30 @@ class ProjectController extends Controller
                 '3I9A7266.JPG' => 'The Haven landscaped entrance path',
                 '3I9A7331.JPG' => 'The Haven swimming pool and garden',
                 default => 'The Haven gallery image ' . ($index + 1),
+            };
+        }
+
+        if ($slug === 'oak-and-ivy') {
+            return match ($filename) {
+                '3I9A6581.jpg' => 'Oak & Ivy living room with garden views',
+                '3I9A6652.JPG' => 'Oak & Ivy grand staircase and entrance',
+                '3I9A6986.jpg' => 'Oak & Ivy Village 2 living room',
+                '3I9A6033.JPG' => 'Oak & Ivy Village 2 bedroom',
+                '3I9A6622.JPG' => 'Oak & Ivy Village 3 living room',
+                '3I9A6704.jpg' => 'Oak & Ivy Village 3 kitchen',
+                '3I9A6381.JPG' => 'Oak & Ivy villa exterior',
+                '3I9A7128.JPG' => 'Oak & Ivy swimming pool and villas',
+                default => 'Oak & Ivy villa gallery image ' . ($index + 1),
+            };
+        }
+
+        if ($slug === 'sandalwood-riverside') {
+            return match ($filename) {
+                '3I9A0478.JPG' => 'Sandalwood Riverside garden paths and apartments',
+                '3I9A0491.JPG' => 'Sandalwood Riverside entrance gate',
+                '3I9A0436.JPG', '3I9A0448.JPG' => 'Sandalwood Riverside landscaped garden path',
+                '3I9A0422.JPG', '3I9A0429.JPG' => 'Sandalwood Riverside swimming pool',
+                default => 'Sandalwood Riverside gallery image ' . ($index + 1),
             };
         }
 

@@ -4,7 +4,7 @@
 
         <main v-else class="min-h-screen bg-white pb-20">
             <section class="w-full">
-                <img :src="project.cover_image" :alt="['sandalwood-kitisuru', 'sandalwood-othaya', 'sandalwood-brookside', 'the-haven'].includes(project.slug) ? `${project.title} landscaped garden` : project.slug === 'sandalwood-waterfront' ? `${project.title} lake and garden bridge` : project.slug === 'the-convex' ? `${project.title} reception lobby` : project.slug === 'chilly-breezes' ? `${project.title} rooftop terrace` : project.slug === 'silver-terraces' ? `${project.title} landscaped entrance` : project.slug === 'ivory-terraces' ? `${project.title} rooftop pool` : `${project.title} living room`" class="h-[min(50.5vw,700px)] min-h-[300px] w-full object-cover md:min-h-[400px]" />
+                <img :src="project.cover_image" :alt="['sandalwood-kitisuru', 'sandalwood-othaya', 'sandalwood-brookside', 'the-haven', 'sandalwood-riverside'].includes(project.slug) ? `${project.title} landscaped garden` : project.slug === 'sandalwood-waterfront' ? `${project.title} lake and garden bridge` : project.slug === 'the-convex' ? `${project.title} reception lobby` : project.slug === 'chilly-breezes' ? `${project.title} rooftop terrace` : project.slug === 'silver-terraces' ? `${project.title} landscaped entrance` : project.slug === 'ivory-terraces' ? `${project.title} rooftop pool` : `${project.title} living room`" class="h-[min(50.5vw,700px)] min-h-[300px] w-full object-cover md:min-h-[400px]" />
             </section>
 
             <section class="mx-auto max-w-6xl px-6 pt-10 pb-5 md:px-10 md:pt-14">
@@ -25,7 +25,7 @@
             <section class="mx-auto max-w-6xl px-6 py-5 md:px-10 md:py-7">
                 <div class="grid grid-cols-1 items-center gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
                     <div class="overflow-hidden">
-                        <img :src="project.ideal_image" :alt="project.slug === 'sandalwood-waterfront' || project.slug === 'sandalwood-brookside' ? `${project.title} landscaped gardens` : project.slug === 'sandalwood-othaya' ? `${project.title} entrance gate` : project.slug === 'sandalwood-kitisuru' ? `${project.title} swimming pool and garden` : `${project.title} pool and residential setting`" class="aspect-[1.24/1] w-full object-cover" />
+                        <img :src="project.ideal_image" :alt="project.slug === 'sandalwood-waterfront' || project.slug === 'sandalwood-brookside' ? `${project.title} landscaped gardens` : project.slug === 'sandalwood-riverside' ? `${project.title} entrance gate` : project.slug === 'oak-and-ivy' ? `${project.title} grand staircase and foyer` : project.slug === 'sandalwood-othaya' ? `${project.title} entrance gate` : project.slug === 'sandalwood-kitisuru' ? `${project.title} swimming pool and garden` : `${project.title} pool and residential setting`" class="aspect-[1.24/1] w-full object-cover" />
                     </div>
                     <div class="space-y-5">
                         <div class="flex items-center gap-3">
@@ -88,7 +88,7 @@
             <!-- =========================================================
                GALLERY
           ========================================================== -->
-            <section class="mx-auto max-w-6xl px-6 py-7 md:px-10 md:py-10">
+            <section v-if="project.slug !== 'oak-and-ivy'" class="mx-auto max-w-6xl px-6 py-7 md:px-10 md:py-10">
                 <div class="mb-4 flex items-center gap-4">
                     <span class="font-cinzel text-3xl tracking-wide text-[#1a365d] uppercase">Gallery</span>
 
@@ -208,6 +208,26 @@
                     <button type="button" @click="nextGallerySlide" class="text-gray-700 transition hover:text-black" aria-label="Next gallery slide">
                         <ArrowRight class="h-5 w-5" />
                     </button>
+                </div>
+            </section>
+
+            <section v-else class="mx-auto max-w-6xl px-6 py-7 md:px-10 md:py-10">
+                <div class="mb-4 flex items-center gap-4">
+                    <span class="font-cinzel text-3xl tracking-wide text-[#1a365d] uppercase">Gallery</span>
+                    <div class="h-px w-12 bg-gray-300"></div>
+                </div>
+                <h2 class="font-cinzel mb-5 text-2xl text-[#1a365d] uppercase md:text-3xl">Exquisite Living Spaces Just for You</h2>
+
+                <div v-for="villa in oakVillaGalleries" :key="villa.title" class="mb-8 last:mb-0">
+                    <h3 class="font-cinzel mb-3 text-lg font-semibold text-[#1a365d] uppercase">{{ villa.title }}</h3>
+                    <div class="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-8">
+                        <button v-for="image in villa.images" :key="image.id" type="button" class="group/image relative overflow-hidden rounded-sm bg-gray-100 text-left shadow-md" @click="openLightbox(getOriginalImageIndex(image.id))">
+                            <img :src="image.url" :alt="image.name" class="aspect-[3/2] w-full object-cover transition-transform duration-1000 group-hover/image:scale-105" />
+                            <div class="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-500 group-hover/image:bg-black/20">
+                                <span class="font-montserrat translate-y-4 text-xs tracking-[0.2em] text-white uppercase opacity-0 transition-all duration-500 group-hover/image:translate-y-0 group-hover/image:opacity-100">View Image</span>
+                            </div>
+                        </button>
+                    </div>
                 </div>
             </section>
 
@@ -446,6 +466,16 @@ const props = defineProps<{
 }>();
 
 const galleryImages = computed(() => props.project.gallery ?? []);
+const oakVillaGalleries = computed(() => [
+    {
+        title: 'Village 2',
+        images: galleryImages.value.filter((image) => image.name.includes('Village 2')),
+    },
+    {
+        title: 'Village 3',
+        images: galleryImages.value.filter((image) => image.name.includes('Village 3')),
+    },
+]);
 
 const referenceAmenityNamesByProject: Record<string, string[]> = {
   'sandalwood-loresho': [
@@ -557,6 +587,23 @@ const referenceAmenityNamesByProject: Record<string, string[]> = {
     '24 Hours CCTV Surveillance',
     'Standby Power Generator',
   ],
+  'oak-and-ivy': [
+    'Lush Gardens',
+    'Sports Bar',
+    '2 Club Houses',
+    'Steam and Sauna',
+    "Indoor Kids' Play Area",
+    'Swimming Pool',
+    'Gym',
+    '24 Hours CCTV Surveillance',
+    'Standby Power Generator',
+  ],
+  'sandalwood-riverside': [
+    'Swimming Pool',
+    'Lush Garden',
+    'High Speed Elevators',
+    'Standby Power Generator',
+  ],
 };
 
 const amenityItems = computed(() => {
@@ -581,7 +628,9 @@ const showAmenitySection = computed(() => props.project.slug !== 'sandalwood-kit
 const isSoldOutProject = computed(() => ['sandalwood-kitisuru', 'sandalwood-othaya', 'sandalwood-brookside', 'the-convex', 'the-haven'].includes(props.project.slug) || props.project.status === 'sold_out');
 const amenityDescription = computed(() => props.project.slug === 'sandalwood-othaya'
     ? 'Elevating your lifestyle through a refined selection of amenities.'
-    : ['sandalwood-waterfront', 'sandalwood-brookside', 'the-colosseum-residences', 'silver-terraces', 'ivory-terraces', 'the-convex', 'chilly-breezes', 'the-haven'].includes(props.project.slug)
+    : props.project.slug === 'oak-and-ivy'
+      ? 'A seamless blend of comfort, convenience, and modern lifestyle amenities.'
+      : ['sandalwood-waterfront', 'sandalwood-brookside', 'the-colosseum-residences', 'silver-terraces', 'ivory-terraces', 'the-convex', 'chilly-breezes', 'the-haven', 'sandalwood-riverside'].includes(props.project.slug)
       ? 'Elevating your lifestyle through a refined selection of amenities.'
       : 'A curated selection of modern amenities brings comfort, convenience, and a refined lifestyle right to your doorstep.');
 
@@ -701,6 +750,7 @@ const goToGallerySlide = (index: number) => {
 let galleryInterval: ReturnType<typeof setInterval> | null = null;
 
 const startGallerySlideshow = () => {
+    if (props.project.slug === 'oak-and-ivy') return;
     stopGallerySlideshow();
 
     if (gallerySlides.value.length <= 1) {

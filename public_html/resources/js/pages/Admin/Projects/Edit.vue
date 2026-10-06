@@ -286,7 +286,11 @@ const form = reactive({
                             ? '1, 2 & 3 BEDROOM APARTMENTS'
                             : props.project.title === 'The Haven'
                               ? '4 & 5 BEDROOM APARTMENTS'
-                              : ''),
+                              : props.project.title === 'Oak and Ivy'
+                                ? '4 & 5 BEDROOM APARTMENTS'
+                                : props.project.title === 'Sandalwood Riverside'
+                                  ? '2, 3 & 4 BEDROOM APARTMENTS'
+                                  : ''),
     location_url: props.project.location_url || '',
     amenity_ids: props.project.amenity_ids || [],
     status: props.project.status || 'ongoing',
