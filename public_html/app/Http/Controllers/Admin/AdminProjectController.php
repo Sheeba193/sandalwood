@@ -219,8 +219,8 @@ class AdminProjectController extends Controller
         }
 
         Cache::forget('all_projects_list_v7');
-        Cache::forget("project_v4_{$previousSlug}");
-        Cache::forget("project_v4_{$project->slug}");
+        Cache::forget("project_v5_{$previousSlug}");
+        Cache::forget("project_v5_{$project->slug}");
         Cache::forget("project_{$previousSlug}");
         Cache::forget("project_{$project->slug}");
 
@@ -232,7 +232,7 @@ class AdminProjectController extends Controller
     public function destroy(Project $project)
     {
         Cache::forget('all_projects_list_v7');
-        Cache::forget("project_v4_{$project->slug}");
+        Cache::forget("project_v5_{$project->slug}");
         Cache::forget("project_{$project->slug}");
         // Deletes the project and all associated Spatie media
         $project->clearMediaCollection('cover');

@@ -4,7 +4,7 @@
 
         <main v-else class="min-h-screen bg-white pb-20">
             <section class="w-full">
-                <img :src="project.cover_image" :alt="project.slug === 'sandalwood-kitisuru' ? `${project.title} garden entrance` : `${project.title} living room`" class="h-[min(50.5vw,700px)] min-h-[300px] w-full object-cover md:min-h-[400px]" />
+                <img :src="project.cover_image" :alt="project.slug === 'sandalwood-kitisuru' || project.slug === 'sandalwood-othaya' ? `${project.title} landscaped garden` : `${project.title} living room`" class="h-[min(50.5vw,700px)] min-h-[300px] w-full object-cover md:min-h-[400px]" />
             </section>
 
             <section class="mx-auto max-w-6xl px-6 pt-10 pb-5 md:px-10 md:pt-14">
@@ -25,7 +25,7 @@
             <section class="mx-auto max-w-6xl px-6 py-5 md:px-10 md:py-7">
                 <div class="grid grid-cols-1 items-center gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
                     <div class="overflow-hidden">
-                        <img :src="project.ideal_image" :alt="project.slug === 'sandalwood-kitisuru' ? `${project.title} swimming pool and garden` : `${project.title} pool and residential setting`" class="aspect-[1.24/1] w-full object-cover" />
+                        <img :src="project.ideal_image" :alt="project.slug === 'sandalwood-othaya' ? `${project.title} entrance gate` : project.slug === 'sandalwood-kitisuru' ? `${project.title} swimming pool and garden` : `${project.title} pool and residential setting`" class="aspect-[1.24/1] w-full object-cover" />
                     </div>
                     <div class="space-y-5">
                         <div class="flex items-center gap-3">
@@ -76,7 +76,7 @@
                     </div>
                 </div>
                 <div class="mt-7 flex justify-center">
-                    <span v-if="project.slug === 'sandalwood-kitisuru'" class="font-montserrat bg-[#001529] px-5 py-2.5 text-xs font-semibold tracking-wide text-white uppercase">Sold Out</span>
+                    <span v-if="isSoldOutProject" class="font-montserrat bg-[#001529] px-5 py-2.5 text-xs font-semibold tracking-wide text-white uppercase">Sold Out</span>
                     <a v-else href="/contact" class="font-montserrat bg-[#001529] px-8 py-2.5 text-xs font-semibold tracking-wide text-white uppercase transition-colors hover:bg-[#00203a]">Enquire</a>
                 </div>
             </section>
@@ -213,7 +213,7 @@
                     <div class="h-px w-12 bg-gray-300"></div>
                 </div>
                 <h2 class="font-cinzel mb-4 text-4xl tracking-wide text-[#1a365d] uppercase">Amenities</h2>
-                <p class="font-cormorant max-w-3xl text-lg leading-relaxed text-gray-600">A curated selection of modern amenities brings comfort and convenience to your doorstep.</p>
+                <p class="font-cormorant max-w-3xl text-lg leading-relaxed text-gray-600">{{ amenityDescription }}</p>
 
 
                 <div class="mt-9 grid grid-cols-2 gap-x-5 gap-y-10 sm:grid-cols-3 md:grid-cols-5 md:gap-x-8 md:gap-y-14">
@@ -348,11 +348,16 @@ import {
     BedDouble,
     BriefcaseBusiness,
     CircleDot,
+    CarFront,
+    Cctv,
+    Droplets,
     Dumbbell,
     Flag,
     Flower2,
     HouseWifi,
     MapPin,
+    ArrowUpDown,
+    Zap,
     Waves,
     WavesLadder,
 } from '@lucide/vue';
@@ -430,7 +435,8 @@ const props = defineProps<{
 
 const galleryImages = computed(() => props.project.gallery ?? []);
 
-const referenceAmenityNames = [
+const referenceAmenityNamesByProject: Record<string, string[]> = {
+  'sandalwood-loresho': [
     'Garden',
     'Padel Court',
     'Office Workspace',
@@ -441,11 +447,23 @@ const referenceAmenityNames = [
     "Residents' Lounge",
     'Golf Simulator',
     'AC Provision in All Rooms',
-];
+  ],
+  'sandalwood-othaya': [
+    'Swimming Pool',
+    'Ample Parking Spaces',
+    'Gym',
+    '24 Hours CCTV Surveillance',
+    'Stand By Power Generator',
+    'Lush Garden',
+    'High Speed Elevators',
+    'Borehole',
+  ],
+};
 
 const amenityItems = computed(() => {
     const projectAmenities = props.project.amenities ?? [];
-    if (props.project.slug !== 'sandalwood-loresho') return projectAmenities;
+    const referenceAmenityNames = referenceAmenityNamesByProject[props.project.slug];
+    if (!referenceAmenityNames) return projectAmenities;
 
     const displayNames = new Set(referenceAmenityNames.map((name) => name.toLowerCase().replace(/[^a-z0-9]/g, '')));
     const matchedReferenceAmenities = referenceAmenityNames.map((name, index) => {
@@ -461,9 +479,18 @@ const amenityItems = computed(() => {
 });
 
 const showAmenitySection = computed(() => props.project.slug !== 'sandalwood-kitisuru' && amenityItems.value.length > 0);
+const isSoldOutProject = computed(() => ['sandalwood-kitisuru', 'sandalwood-othaya'].includes(props.project.slug) || props.project.status === 'sold_out');
+const amenityDescription = computed(() => props.project.slug === 'sandalwood-othaya'
+    ? 'Elevating your lifestyle through a refined selection of amenities.'
+    : 'A curated selection of modern amenities brings comfort, convenience, and a refined lifestyle right to your doorstep.');
 
 const getAmenityIcon = (name: string) => {
     const label = name.toLowerCase();
+    if (label.includes('cctv') || label.includes('surveillance')) return Cctv;
+    if (label.includes('parking')) return CarFront;
+    if (label.includes('power') || label.includes('generator')) return Zap;
+    if (label.includes('borehole')) return Droplets;
+    if (label.includes('elevator') || label.includes('lift')) return ArrowUpDown;
     if (label.includes('garden')) return Flower2;
     if (label.includes('padel')) return CircleDot;
     if (label.includes('office') || label.includes('workspace')) return BriefcaseBusiness;

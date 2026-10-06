@@ -52,6 +52,17 @@ class ProjectImageFolders
             '2.JPG',
             '1.JPG',
         ],
+        'sandalwood-othaya' => [
+            '3I9A8078.JPG',
+            '3I9A8066.JPG',
+            '3I9A8056-2.JPG',
+            '3I9A8117-2.JPG',
+            '3I9A8128.JPG',
+            '3I9A8108.JPG',
+            '3I9A8148.JPG',
+            '3I9A8157-2.JPG',
+            '3I9A8204.JPG',
+        ],
         'the-colosseum-residences' => [
             '1.png',
             '3I9A7706.JPG',
