@@ -55,8 +55,8 @@
                             </transition>
                         </div>
 
-                        <div class="font-cinzel mb-8 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-[10px] tracking-[0.16em] uppercase opacity-90 sm:mb-10 sm:gap-x-5 sm:text-xs">
-                            <template v-for="(item, index) in [slides[currentSlide]?.location, slides[currentSlide]?.specifications, formatStatus(slides[currentSlide]?.status)].filter(Boolean)" :key="item">
+                        <div class="font-cinzel mb-8 flex max-w-5xl flex-wrap items-center justify-center gap-x-3 gap-y-2 text-[10px] tracking-[0.16em] uppercase opacity-90 sm:mb-10 sm:gap-x-5 sm:text-xs">
+                            <template v-for="(item, index) in heroDetails" :key="item">
                                 <span v-if="index" class="h-3 w-px bg-white/50"></span>
                                 <span>{{ item }}</span>
                             </template>
@@ -175,6 +175,43 @@ const totalImages = (props.slides?.length || 0) + (props.recent_launches?.length
 const heroProjectName = computed(() => {
     const title = props.slides?.[currentSlide.value]?.title ?? '';
     return title.replace(/^sandalwood\s*/i, '') || title;
+});
+
+const projectDetails: Record<string, { location: string; specifications: string }> = {
+    'sandalwood-loresho': { location: 'Loresho', specifications: '3 & 4 Bedroom Apartments' },
+    'sandalwood-kyuna': { location: 'Kyuna, Nairobi', specifications: 'Residential Development' },
+    'sandalwood-kitisuru': { location: 'Kitisuru, Nairobi', specifications: '5 Bedroom Villas' },
+    'sandalwood-othaya': { location: 'Othaya Road, Lavington', specifications: '3 Bedroom Apartments' },
+    'sandalwood-waterfront': { location: 'Karen, Nairobi', specifications: 'Villas' },
+    'sandalwood-brookside': { location: 'Brookside, Westlands', specifications: '3 Bedroom Apartments' },
+    'the-colosseum-residences': { location: 'Westlands, Nairobi', specifications: '2, 3 & 4 Bedroom Apartments' },
+    'silver-terraces': { location: 'Rhapta Road, Westlands', specifications: '2 & 3 Bedroom Apartments' },
+    'ivory-terraces': { location: 'Rhapta Road, Westlands', specifications: '2 & 3 Bedroom Apartments' },
+    'the-convex': { location: 'Riverside, Westlands', specifications: 'Office Development' },
+    'chilly-breezes': { location: 'Westlands, Nairobi', specifications: '1, 2 & 3 Bedroom Apartments' },
+    'the-haven': { location: 'Loresho, Nairobi', specifications: '4 & 5 Bedroom Homes' },
+    'oak-and-ivy': { location: 'Loresho, Nairobi', specifications: 'Villas' },
+    'sandalwood-riverside': { location: 'Riverside, Nairobi', specifications: '2, 3 & 4 Bedroom Apartments' },
+    'sandalwood-lenana-road': { location: 'Lenana Road, Nairobi', specifications: 'Apartments' },
+    'sandalwood-clyde-gardens': { location: 'Karen, Nairobi', specifications: 'Garden Residences' },
+};
+
+const heroDetails = computed(() => {
+    const slide = props.slides?.[currentSlide.value];
+    if (!slide) return [];
+
+    const fallback = projectDetails[slide.slug] ?? { location: '', specifications: '' };
+    const status = String(slide.status ?? '').toLowerCase();
+    const soldOutSlugs = ['sandalwood-othaya', 'sandalwood-kitisuru', 'the-convex'];
+    const availability = status === 'sold_out' || soldOutSlugs.includes(slide.slug) ? 'Sold Out' : 'Available for Inquiry';
+    const construction = status === 'sold_out' ? 'Completed' : formatStatus(status);
+
+    return [
+        availability,
+        slide.specifications || fallback.specifications,
+        slide.location || fallback.location,
+        construction,
+    ].filter(Boolean);
 });
 
 const formatStatus = (status?: string) => {
