@@ -18,6 +18,8 @@ class ContactSubmission extends Model
         'full_name',
         'email',
         'phone',
+        'subject',
+        'message',
         'keep_updated',
         'ip_address',
         'user_agent',

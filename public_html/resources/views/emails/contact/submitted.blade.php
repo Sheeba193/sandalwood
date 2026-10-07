@@ -8,13 +8,13 @@ You have received a new contact form submission from your website.
 **Phone:** {{ $formData['phone'] }}  
 **Subject:** {{ $formData['subject'] }}  
 **Submitted:** {{ $formData['submitted_at'] }}  
-**IP Address:** {{ $formData['ip_address'] }}
+**IP Address:** {{ $formData['ip_address'] ?? 'Unavailable' }}
 
 ## Message:
 {{ $formData['message'] }}
 
 <x-mail::button :url="'mailto:' . $formData['email']">
-Reply to {{ $formData['firstName'] }}
+Reply to {{ $formData['fullName'] }}
 </x-mail::button>
 
 Thanks,<br>

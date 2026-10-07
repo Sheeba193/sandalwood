@@ -53,9 +53,10 @@ class HandleInertiaRequests extends Middleware
                 'phone' => '+254 725 637456',
                 'phone_link' => '+254725637456',
                 'emails' => [
-                    'info' => 'info@sandalwood.co.ke',
-                    'sales' => 'sales@sandalwood.co.ke',
+                    'info' => 'info@sandalwoodproperties.co.ke',
+                    'sales' => 'sales@sandalwoodproperties.co.ke',
                 ],
+                'hours' => 'Mon–Fri, 8:00 AM–6:00 PM · Sat, 9:00 AM–4:00 PM',
                 'address' => [
                     'full' => 'SANDALWOOD Loresho, off kaptagat rd, past Loresho Lions Eye, loresho, Nairobi, Kenya',
                     'building' => 'SANDALWOOD Loresho',

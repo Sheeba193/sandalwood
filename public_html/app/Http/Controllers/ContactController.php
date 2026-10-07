@@ -129,6 +129,8 @@ class ContactController extends Controller
             'fullName' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'phone' => 'required|string|max:20',
+            'subject' => 'nullable|string|max:255',
+            'message' => 'nullable|string|max:5000',
             'keepUpdated' => 'boolean',
             'countryCode' => 'string|size:2',
             'dialCode' => 'string',
@@ -159,6 +161,8 @@ class ContactController extends Controller
                 'full_name' => $request->fullName,
                 'email' => $request->email,
                 'phone' => $sanitizedPhone,
+                'subject' => $request->input('subject', 'General enquiry'),
+                'message' => $request->input('message', 'A contact request was submitted via the contact form.'),
                 'country_code' => $countryCode,
                 'dial_code' => $request->dialCode ?? $this->getDialCode($countryCode),
                 'keep_updated' => $request->keepUpdated ?? false,
@@ -178,8 +182,15 @@ class ContactController extends Controller
                 'country_code' => $contact->country_code
             ]);
 
-            // Send email to admin (commented out for testing - uncomment when email is configured)
-            // Mail::to('info@sandalwood.co.ke')->send(new ContactFormSubmitted($contact));
+            Mail::to(config('mail.contact_to'))->send(new ContactFormSubmitted([
+                'fullName' => $contact->full_name,
+                'email' => $contact->email,
+                'phone' => $contact->phone,
+                'subject' => $contact->subject,
+                'message' => $contact->message,
+                'submitted_at' => $contact->created_at->toDateTimeString(),
+                'ip_address' => $contact->ip_address,
+            ]));
 
             // Send confirmation email to user (commented out for testing)
             // Mail::to($request->email)->send(new ContactFormConfirmation($contact));
@@ -223,7 +234,7 @@ class ContactController extends Controller
             session()->forget(['success', 'error']);
 
             return redirect()->back()
-                ->with('error', 'Sorry, there was an error submitting your message. Please try again or contact us directly at info@sandalwood.co.ke')
+                ->with('error', 'Sorry, there was an error submitting your message. Please try again or contact us directly at info@sandalwoodproperties.co.ke')
                 ->withInput();
         }
     }
