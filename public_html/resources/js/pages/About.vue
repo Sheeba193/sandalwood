@@ -13,6 +13,42 @@ const props = defineProps({
 const loading = ref(true);
 const currentSlide = ref(0);
 
+const faqCategories = [
+    {
+        name: 'Our properties',
+        questions: [
+            { question: 'What types of properties does Sandalwood develop?', answer: 'Our portfolio includes thoughtfully designed residential and office developments. Visit the Projects page to explore current and completed properties.' },
+            { question: 'Where can I find details about a specific development?', answer: 'Each property page includes available project information, images, location details, and a way to enquire with our team.' },
+            { question: 'How can I compare the available developments?', answer: 'Browse the project pages to review each development’s location and features. If you are deciding between options, tell our team what matters most to you and we can help you explore them.' },
+            { question: 'Does Sandalwood have completed projects I can view?', answer: 'The Projects page highlights both current and completed developments. Contact us if you would like information about a particular property or viewing options.' },
+            { question: 'Where can I learn about a project’s amenities and features?', answer: 'Check the relevant project page for published features and amenities. You can also contact our team with questions about a specific development.' },
+        ],
+    },
+    {
+        name: 'Buying & booking',
+        questions: [
+            { question: 'How do I enquire about or book a unit?', answer: 'Send us an enquiry through the Contact page and select “Book a unit” or ask about the property you have in mind. Our team will follow up with the relevant information.' },
+            { question: 'Can I ask about pricing and payment options?', answer: 'Yes. Contact our team with the development and unit type you are interested in, and we can discuss the applicable pricing and payment information.' },
+            { question: 'What should I include in a property enquiry?', answer: 'Let us know which development interests you, the type of unit you are considering, and any questions you have. Sharing your preferred way and time to be contacted can also help us respond.' },
+            { question: 'Can I check whether a particular unit is available?', answer: 'Availability can change. Contact our team with the development and unit details you are interested in, and we will help you check the latest information.' },
+            { question: 'What happens after I submit an enquiry?', answer: 'Our team reviews your message and gets in touch to discuss your questions and next steps. Include your preferred contact details so we can reach you.' },
+        ],
+    },
+    {
+        name: 'Visits & support',
+        questions: [
+            { question: 'Can I visit a property before making a decision?', answer: 'You can request a site visit through our Contact page. Let us know which development you would like to see and a convenient time, and our team will coordinate with you.' },
+            { question: 'How can I get in touch with Sandalwood Properties?', answer: 'Use the Contact page to call, email, or send an enquiry. Choose the topic that best matches your question so we can direct it to the right team.' },
+            { question: 'Do I need to arrange a site visit in advance?', answer: 'Please contact us to request a visit and agree on a suitable time. This helps our team coordinate access and give you the right information during your visit.' },
+            { question: 'Can I ask a general question if I have not chosen a property yet?', answer: 'Of course. Send us a general enquiry and tell us what you are looking for. Our team can help point you toward developments that may suit your needs.' },
+            { question: 'What if my question is not covered here?', answer: 'Use the Contact Us button to send us your question. You can choose “Other” in the enquiry form and our team will direct it appropriately.' },
+        ],
+    },
+];
+const activeFaqCategory = ref(faqCategories[0].name);
+const activeFaq = ref(0);
+const activeFaqItems = computed(() => faqCategories.find(category => category.name === activeFaqCategory.value)?.questions ?? []);
+
 // Statistics from your branding
 const stats = [
     { value: '20+', label: 'YEARS OF<br>EXPERIENCE' },
@@ -149,6 +185,55 @@ onMounted(() => {
                         </div>
                     </section>
 
+                    <section class="faq-section bg-[#f4f5f7] px-6 py-20 md:px-12 md:py-24 reveal">
+                        <div class="mx-auto max-w-6xl">
+                            <div class="mx-auto mb-12 max-w-2xl text-center">
+                                <span class="font-cinzel text-[11px] tracking-[0.2em] text-gray-600 uppercase">Frequently asked questions</span>
+                                <h3 class="font-cinzel mt-4 text-2xl tracking-[0.12em] text-[#001221] uppercase sm:text-3xl">Questions about Sandalwood?</h3>
+                                <p class="font-cormorant mt-4 text-lg leading-relaxed text-gray-500">Find answers about our properties, the buying process, and arranging a visit.</p>
+                            </div>
+
+                            <div class="grid gap-8 lg:grid-cols-[0.72fr_1.5fr]">
+                                <div class="space-y-2">
+                                    <button
+                                        v-for="category in faqCategories"
+                                        :key="category.name"
+                                        type="button"
+                                        class="faq-category-button flex w-full items-center justify-between border px-5 py-4 text-left transition-colors"
+                                        :class="activeFaqCategory === category.name ? 'is-active border-[#d6b983] shadow-[0_8px_24px_rgba(0,18,33,0.10)]' : 'border-gray-200 hover:border-[#d6b983] hover:shadow-md'"
+                                        @click="activeFaqCategory = category.name; activeFaq = 0"
+                                    >
+                                        <span class="font-cinzel text-xs tracking-[0.12em] uppercase">{{ category.name }}</span>
+                                        <span aria-hidden="true">→</span>
+                                    </button>
+
+                                    <div class="border border-gray-100 border-l-4 border-l-[#d6b983] bg-white p-6 text-[#001221] shadow-[0_8px_24px_rgba(0,18,33,0.08)] sm:p-7">
+                                        <h4 class="font-cinzel text-sm tracking-[0.12em] uppercase">Still have a question?</h4>
+                                        <p class="font-cormorant mt-2 text-lg leading-6 text-gray-600">Our team is happy to help you find the information you need.</p>
+                                        <Link href="/contact" class="mt-5 inline-flex w-full items-center justify-center bg-[#001221] px-5 py-3 text-xs font-semibold tracking-[0.16em] text-white uppercase transition hover:bg-[#1a365d]">Contact us</Link>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-3">
+                                    <article v-for="(item, index) in activeFaqItems" :key="item.question" class="border border-gray-100 bg-white shadow-[0_6px_20px_rgba(0,18,33,0.07)] transition-shadow hover:shadow-[0_10px_28px_rgba(0,18,33,0.11)]">
+                                        <button
+                                            type="button"
+                                            class="faq-question-button flex w-full items-center justify-between gap-6 px-5 py-5 text-left sm:px-6"
+                                            :aria-expanded="activeFaq === index"
+                                            @click="activeFaq = activeFaq === index ? -1 : index"
+                                        >
+                                            <span class="faq-question-text font-cormorant text-lg font-semibold leading-6 text-[#263238] sm:text-xl">{{ item.question }}</span>
+                                            <span class="faq-toggle-icon shrink-0 text-xl font-semibold text-[#8b6d3f]" aria-hidden="true">{{ activeFaq === index ? '−' : '+' }}</span>
+                                        </button>
+                                        <div v-if="activeFaq === index" class="px-5 pb-5 sm:px-6">
+                                            <p class="font-cormorant border-t border-gray-100 pt-4 text-lg leading-7 text-gray-600">{{ item.answer }}</p>
+                                        </div>
+                                    </article>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
 
                 </div>
 
@@ -204,6 +289,15 @@ onMounted(() => {
 <style scoped>
 .reveal { opacity: 0; transform: translateY(40px); transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
 .reveal.active { opacity: 1; transform: translateY(0); }
+.faq-section .faq-category-button,
+.faq-section .faq-question-button { background-color: #fff !important; color: #263238 !important; }
+.faq-section .faq-category-button.is-active { border-color: #d6b983 !important; color: #001221 !important; }
+.faq-section .faq-question-button:hover { background-color: #fff !important; color: #263238 !important; }
+.faq-section .faq-category-button:hover { background-color: #fff !important; color: #001221 !important; }
+.faq-section .faq-category-button span { color: #263238 !important; }
+.faq-section .faq-category-button.is-active span { color: #001221 !important; }
+.faq-section .faq-question-text { color: #263238 !important; }
+.faq-section .faq-toggle-icon { color: #8b6d3f !important; }
 .carousel-pagination button.bg-black,
 .carousel-pagination button.bg-black:active { background-color: #000 !important; }
 .carousel-pagination button.bg-gray-200 { background-color: #e5e7eb !important; }
