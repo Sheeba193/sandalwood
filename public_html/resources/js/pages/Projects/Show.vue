@@ -4,7 +4,7 @@
 
         <main v-else class="min-h-screen bg-white pb-20">
             <section class="w-full">
-                <img :src="project.cover_image" :alt="['sandalwood-kitisuru', 'sandalwood-othaya', 'sandalwood-brookside', 'the-haven', 'sandalwood-riverside'].includes(project.slug) ? `${project.title} landscaped garden` : project.slug === 'sandalwood-waterfront' ? `${project.title} lake and garden bridge` : project.slug === 'the-convex' ? `${project.title} reception lobby` : project.slug === 'chilly-breezes' ? `${project.title} rooftop terrace` : project.slug === 'silver-terraces' ? `${project.title} landscaped entrance` : project.slug === 'ivory-terraces' ? `${project.title} rooftop pool` : `${project.title} living room`" class="h-[min(50.5vw,700px)] min-h-[300px] w-full object-cover md:min-h-[400px]" />
+                <img :src="project.cover_image" :alt="['sandalwood-kitisuru', 'sandalwood-othaya', 'sandalwood-brookside', 'the-haven', 'sandalwood-riverside'].includes(project.slug) ? `${project.title} landscaped garden` : project.slug === 'sandalwood-waterfront' ? `${project.title} lake and garden bridge` : project.slug === 'the-convex' ? `${project.title} reception lobby` : project.slug === 'chilly-breezes' ? `${project.title} rooftop terrace` : project.slug === 'silver-terraces' ? `${project.title} landscaped entrance` : project.slug === 'ivory-terraces' ? `${project.title} rooftop pool` : `${project.title} living room`" class="h-[60vh] w-full object-cover" />
             </section>
 
             <section class="mx-auto max-w-6xl px-6 pt-10 pb-5 md:px-10 md:pt-14">
