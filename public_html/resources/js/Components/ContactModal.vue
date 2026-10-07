@@ -17,9 +17,9 @@
 
                         <!-- Form Card -->
                         <div class="bg-white rounded-xl shadow-2xl">
-                            <div class="p-6 md:p-8">
+                            <div class="p-5 md:p-6">
                                 <!-- Header -->
-                                <div class="flex items-center gap-4 mb-8">
+                                <div class="flex items-center gap-4 mb-5">
                                     <img
                                         src="/images/logo_cropped.png"
                                         alt="Sandalwood"
@@ -33,7 +33,7 @@
                                 <!-- Form -->
                                 <form @submit.prevent="submitForm">
                                     <!-- Full Name -->
-                                    <div class="mb-5">
+                                    <div class="mb-4">
                                         <label class="block text-gray-800 font-cormorant text-sm mb-1">
                                             FULL NAME <span class="text-red-500">*</span>
                                         </label>
@@ -46,8 +46,27 @@
                                         >
                                     </div>
 
+                                    <div class="mb-4">
+                                        <label for="inquiryType" class="block text-gray-800 font-cormorant text-sm mb-1">
+                                            TYPE OF INQUIRY <span class="text-red-500">*</span>
+                                        </label>
+                                        <select id="inquiryType" v-model="form.subject" required class="w-full font-cormorant px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#001221]">
+                                            <option value="" disabled>Select an inquiry type</option>
+                                            <option v-for="option in inquiryOptions" :key="option" :value="option">{{ option }}</option>
+                                        </select>
+                                        <p v-if="form.errors.subject" class="mt-1 text-sm text-red-600">{{ form.errors.subject }}</p>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label for="inquiryMessage" class="block text-gray-800 font-cormorant text-sm mb-1">
+                                            YOUR REQUEST <span class="text-red-500">*</span>
+                                        </label>
+                                        <textarea id="inquiryMessage" v-model="form.message" required maxlength="5000" rows="3" class="w-full font-cormorant px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#001221]" placeholder="Tell us more about what you need..."></textarea>
+                                        <p v-if="form.errors.message" class="mt-1 text-sm text-red-600">{{ form.errors.message }}</p>
+                                    </div>
+
                                     <!-- Email Address -->
-                                    <div class="mb-5">
+                                    <div class="mb-4">
                                         <label class="block text-gray-800 font-cormorant text-sm mb-1">
                                             EMAIL ADDRESS <span class="text-red-500">*</span>
                                         </label>
@@ -61,7 +80,7 @@
                                     </div>
 
                                     <!-- Phone Number with Country Selector -->
-                                    <div class="mb-5">
+                                    <div class="mb-4">
                                         <label class="block text-gray-800 font-cormorant text-sm mb-1">
                                             PHONE NUMBER <span class="text-red-500">*</span>
                                         </label>
@@ -129,7 +148,7 @@
 
                                     <!-- Keep me updated - Toggle Switch -->
                                     <!-- Keep me updated - Toggle Switch -->
-                                    <div class="mb-6 flex items-center justify-start gap-3">
+                                    <div class="mb-4 flex items-center justify-start gap-3">
                                         <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
                                             <input
                                                 type="checkbox"
@@ -160,7 +179,7 @@
                                     <button
                                         type="submit"
                                         :disabled="submitting"
-                                        class="w-full bg-[#001221] text-white font-medium py-3 px-4 rounded-md transition duration-150 hover:bg-[#002a3d] disabled:opacity-50 disabled:cursor-not-allowed"
+                                        class="w-full bg-[#001221] text-white font-medium py-2.5 px-4 rounded-md transition duration-150 hover:bg-[#002a3d] disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         <span v-if="submitting">SUBMITTING...</span>
                                         <span v-else>SUBMIT</span>
@@ -195,6 +214,17 @@ const submitting = ref(false);
 const $toast = useToast();
 const isDropdownOpen = ref(false);
 const searchQuery = ref('');
+const inquiryOptions = [
+    'Ask a question about a property',
+    'Book a unit',
+    'Schedule a site visit',
+    'Explore investment opportunities',
+    'Ask about pricing or payment plans',
+    'Property management enquiry',
+    'Partnership or business enquiry',
+    'Careers enquiry',
+    'Other',
+];
 
 // All countries with their ISO codes and dial codes
 const countries = [
@@ -449,6 +479,8 @@ const form = useForm({
     fullName: '',
     email: '',
     phone: '',
+    subject: '',
+    message: '',
     keepUpdated: false,
     countryCode: 'KE'
 });
@@ -463,7 +495,12 @@ const submitForm = () => {
     submitting.value = true;
 
     const formData = {
-        ...form,
+        fullName: form.fullName,
+        email: form.email,
+        phone: form.phone,
+        subject: form.subject,
+        message: form.message,
+        keepUpdated: form.keepUpdated,
         countryCode: selectedCountry.value.code,
         dialCode: selectedCountry.value.dialCode,
         fullPhoneNumber: `${selectedCountry.value.dialCode}${form.phone}`
@@ -525,6 +562,9 @@ watch(() => props.show, (newVal) => {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 1rem;
+    box-sizing: border-box;
+    overflow-y: auto;
 }
 
 .modal-backdrop {
@@ -541,9 +581,9 @@ watch(() => props.show, (newVal) => {
 
 .modal-container {
     position: relative;
-    width: 100%;
+    width: min(100%, 500px);
     max-width: 500px;
-    margin: 1rem;
+    margin: 0;
     z-index: 10000;
     animation: modalSlideUp 0.3s ease-out;
 }
@@ -551,6 +591,16 @@ watch(() => props.show, (newVal) => {
 .modal-content {
     position: relative;
     width: 100%;
+}
+
+.modal-content input:not([type="checkbox"]),
+.modal-content select,
+.modal-content textarea {
+    font-size: 0.9375rem;
+}
+
+.modal-content label {
+    font-size: 0.8125rem;
 }
 
 .close-button {
@@ -626,12 +676,11 @@ watch(() => props.show, (newVal) => {
 /* Responsive adjustments */
 @media (max-width: 640px) {
     .modal-container {
-        margin: 0.5rem;
-        max-width: 100%;
+        width: 100%;
     }
 
     .modal-content .p-6 {
-        padding: 1.5rem;
+        padding: 1rem;
     }
 }
 </style>
