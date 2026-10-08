@@ -1,43 +1,30 @@
 <template>
     <AppLayout>
         <main class="bg-white text-[#17242a]">
-            <section class="contact-hero relative min-h-[60vh] overflow-visible text-white">
-                <div class="relative z-10 mx-auto flex min-h-[60vh] max-w-6xl flex-col justify-center gap-8 px-5 py-12 sm:px-8 lg:flex-row lg:items-center lg:gap-14 lg:py-0">
-                    <div class="contact-hero-copy max-w-2xl lg:flex-1">
+            <section class="contact-hero relative min-h-[72vh] overflow-visible text-white">
+                <div class="relative z-10 mx-auto flex min-h-[72vh] max-w-6xl flex-col justify-center gap-10 px-5 py-12 sm:px-8 lg:flex-row lg:items-center lg:gap-14 lg:py-14">
+                    <div class="contact-hero-copy max-w-xl lg:flex-1">
                         <p class="font-cinzel text-xs font-semibold uppercase tracking-[0.24em] text-[#d6b983]">Sandalwood Properties</p>
                         <h1 class="font-cinzel mt-4 text-4xl font-medium tracking-[0.08em] uppercase sm:text-5xl">Get in touch</h1>
-                        <p class="font-cormorant mt-4 max-w-xl text-xl leading-7 text-white/75 sm:text-2xl">Whether you’re searching for a home or exploring an investment, our team is here to help you find your next step.</p>
+                    </div>
+                    <div class="contact-hero-info w-full max-w-xl rounded-2xl border border-white/20 bg-[#001529]/55 p-6 shadow-2xl backdrop-blur-xl sm:p-8 lg:flex-1">
+                        <p class="font-cinzel text-xs font-semibold uppercase tracking-[0.2em] text-[#d6b983]">Contact information</p>
+                        <div class="mt-6 grid gap-5 sm:grid-cols-2">
+                            <a :href="`tel:${contact.phone_link}`" class="contact-detail"><span class="contact-icon"><PhoneIcon class="h-5 w-5" /></span><span><span class="contact-kicker">Call our team</span><span class="contact-value">{{ contact.phone }}</span></span></a>
+                            <a :href="`mailto:${contact.emails.info}`" class="contact-detail"><span class="contact-icon"><EnvelopeIcon class="h-5 w-5" /></span><span><span class="contact-kicker">Email us</span><span class="contact-value break-all">{{ contact.emails.info }}</span></span></a>
+                            <div class="contact-detail sm:col-span-2"><span class="contact-icon"><MapPinIcon class="h-5 w-5" /></span><span><span class="contact-kicker">Visit us</span><span class="contact-value">{{ contact.address.full }}</span></span></div>
+                        </div>
+                        <div class="office-hours-row mt-5 border-t border-white/20 pt-5">
+                            <ClockIcon class="h-5 w-5 flex-none text-[#d6b983]" />
+                            <span class="font-cinzel text-xs font-semibold uppercase tracking-[0.12em] text-white/75">Office hours</span>
+                            <span class="font-cormorant text-lg text-white/90">{{ contact.hours }}</span>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <section class="px-5 pb-12 pt-12 sm:px-8 sm:pb-16 sm:pt-16 lg:pb-20 lg:pt-16">
-                <div class="mx-auto max-w-6xl">
-                    <p class="font-cinzel text-xs font-semibold uppercase tracking-[0.2em] text-[#9b8152]">Contact information</p>
-                    <h2 class="font-cinzel mt-2 text-xl font-medium tracking-[0.08em] uppercase sm:text-2xl">We’d love to hear from you</h2>
-                    <p class="font-cormorant mt-2 text-lg text-slate-600">Reach out and a member of our property team will get back to you.</p>
-                    <div class="mt-7 grid gap-5 border-y border-slate-200 py-6 sm:grid-cols-3 sm:gap-6">
-                        <a :href="`tel:${contact.phone_link}`" class="contact-detail">
-                            <span class="contact-icon"><PhoneIcon class="h-5 w-5" /></span>
-                            <span><span class="contact-kicker">Call our team</span><span class="contact-value">{{ contact.phone }}</span></span>
-                        </a>
-                        <a :href="`mailto:${contact.emails.info}`" class="contact-detail">
-                            <span class="contact-icon"><EnvelopeIcon class="h-5 w-5" /></span>
-                            <span><span class="contact-kicker">Email us</span><span class="contact-value break-all">{{ contact.emails.info }}</span></span>
-                        </a>
-                        <div class="contact-detail">
-                            <span class="contact-icon"><MapPinIcon class="h-5 w-5" /></span>
-                            <span><span class="contact-kicker">Visit us</span><span class="contact-value">{{ contact.address.full }}</span></span>
-                        </div>
-                    </div>
-                    <div class="office-hours-row">
-                        <ClockIcon class="h-5 w-5 flex-none text-[#001529]" />
-                        <span class="font-cinzel text-xs font-semibold uppercase tracking-[0.12em] text-slate-700">Office hours</span>
-                        <span class="font-cormorant text-lg text-slate-600">{{ contact.hours }}</span>
-                    </div>
-                </div>
-
-                <div class="mx-auto mt-12 grid max-w-6xl items-stretch gap-10 lg:mt-16 lg:grid-cols-2 lg:gap-12">
+            <section class="px-5 pb-12 pt-12 sm:px-8 sm:pb-16 sm:pt-16 lg:pb-20">
+                <div class="mx-auto grid max-w-6xl items-stretch gap-10 lg:grid-cols-2 lg:gap-12">
                     <section class="contact-panel h-full rounded-xl p-6 shadow-[0_18px_48px_rgba(20,39,44,0.16)] sm:p-9">
                         <p class="font-cinzel text-xs font-semibold uppercase tracking-[0.2em] text-[#d6b983]">Start a conversation</p>
                         <h2 class="font-cinzel mt-3 text-2xl font-medium tracking-[0.08em] uppercase sm:text-3xl">Tell us what you need</h2>
@@ -152,11 +139,11 @@ const submitForm = () => form.post('/contact', {
 .location-panel { background: #fff; }
 .contact-detail { display: flex; align-items: flex-start; gap: 0.85rem; color: inherit; }
 .contact-detail:hover .contact-icon { transform: translateY(-3px); background: #d6b983; color: #001529; }
-.contact-detail:hover .contact-value { color: #9b8152; }
-.contact-icon { display: flex; height: 2.75rem; width: 2.75rem; flex: none; align-items: center; justify-content: center; border-radius: 50%; background: #001529; color: #fff; transition: transform 200ms ease, background 200ms ease, color 200ms ease; }
-.office-hours-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; border-bottom: 1px solid #e2e8f0; padding: 1.25rem 0; }
-.contact-kicker { display: block; font-family: 'Cinzel', 'Times New Roman', serif; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #657276; }
-.contact-value { display: block; margin-top: 0.25rem; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.15rem; line-height: 1.35; color: #001529; transition: color 150ms; }
+.contact-detail:hover .contact-value { color: #d6b983; }
+.contact-icon { display: flex; height: 2.75rem; width: 2.75rem; flex: none; align-items: center; justify-content: center; border-radius: 50%; background: #ffffff1a; color: #d6b983; transition: transform 200ms ease, background 200ms ease, color 200ms ease; }
+.office-hours-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; }
+.contact-kicker { display: block; font-family: 'Cinzel', 'Times New Roman', serif; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #ffffffa8; }
+.contact-value { display: block; margin-top: 0.25rem; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.15rem; line-height: 1.35; color: #fff; transition: color 150ms; }
 .form-label { display: block; margin-bottom: 0.45rem; font-family: 'Cinzel', 'Times New Roman', serif; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #ffffffdd; }
 .form-input { width: 100%; border: 1px solid #ffffff50; border-radius: 0.55rem; background: #ffffff0a; padding: 0.75rem 0.9rem; color: #fff; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.05rem; outline: none; transition: border-color 150ms, box-shadow 150ms; }
 .form-input option { color: #17242a; }

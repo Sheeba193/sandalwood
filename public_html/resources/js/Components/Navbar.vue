@@ -31,7 +31,7 @@
                                     <path fill-rule="evenodd" d="M5.22 7.22a.75.75 0 0 1 1.06 0L10 10.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 8.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
                                 </svg>
                             </Link>
-                            <div class="invisible absolute right-0 top-full z-50 max-h-[70vh] w-[min(34rem,90vw)] overflow-y-auto border border-white/10 bg-[#071a2d] p-5 opacity-0 shadow-xl transition duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                            <div class="projects-dropdown invisible absolute right-0 top-full z-50 max-h-[50vh] w-[min(30rem,90vw)] overflow-y-auto rounded-2xl border border-white/20 bg-[#0b2033]/75 px-3 py-4 sm:px-4 opacity-0 shadow-2xl backdrop-blur-2xl transition duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
                                 <Link href="/projects" class="mb-4 inline-flex border-b border-white/15 pb-2 text-[11px] font-semibold tracking-[0.16em] text-white/65 uppercase transition hover:text-white">All Projects</Link>
                                 <div class="grid grid-cols-2 gap-6">
                                     <div v-for="group in projectGroups" :key="group.title">
@@ -149,3 +149,14 @@ const sendWhatsAppMessage = () => {
 };
 
 </script>
+
+<style scoped>
+.projects-dropdown {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.projects-dropdown::-webkit-scrollbar {
+    display: none;
+}
+</style>
