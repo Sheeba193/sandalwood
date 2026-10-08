@@ -148,6 +148,7 @@ class ProjectController extends Controller
                 'the-haven' => '/images/projects/the-haven/3I9A7215.JPG',
                 'oak-and-ivy' => '/images/projects/oak%26ivy/3I9A6581.jpg',
                 'sandalwood-riverside' => '/images/projects/sandalwood-riverside/3I9A0478.JPG',
+                'sandalwood-clyde-gardens' => '/images/projects/sandalwood-clyde-gardens/clyde1.jpg',
                 default => $referenceProject['images'][0],
             };
             $idealImage = match ($slug) {
@@ -164,6 +165,7 @@ class ProjectController extends Controller
                 'the-haven' => '/images/projects/the-haven/3I9A7217-2.JPG',
                 'oak-and-ivy' => '/images/projects/oak%26ivy/3I9A6652.JPG',
                 'sandalwood-riverside' => '/images/projects/sandalwood-riverside/3I9A0491.JPG',
+                'sandalwood-clyde-gardens' => '/images/projects/sandalwood-clyde-gardens/clyde2.jpg',
                 default => $referenceProject['images'][0],
             };
 
@@ -187,6 +189,7 @@ class ProjectController extends Controller
                         'the-haven' => 'Loresho, Nairobi, Kenya',
                         'oak-and-ivy' => 'Loresho, Nairobi, Kenya',
                         'sandalwood-riverside' => 'Riverside, Nairobi, Kenya',
+                        'sandalwood-clyde-gardens' => 'Gitanga Road, Lavington, Nairobi',
                         default => '',
                     },
                     'location_url' => ProjectLocationLinks::forSlug($slug),
@@ -204,6 +207,7 @@ class ProjectController extends Controller
                         'the-haven' => '4 & 5 BEDROOM APARTMENTS',
                         'oak-and-ivy' => '4 & 5 BEDROOM APARTMENTS',
                         'sandalwood-riverside' => '2, 3 & 4 BEDROOM APARTMENTS',
+                        'sandalwood-clyde-gardens' => '3 BEDROOM APARTMENTS',
                         default => null,
                     },
                     'status' => $referenceProject['status'],
@@ -222,6 +226,7 @@ class ProjectController extends Controller
                         'the-haven' => self::HAVEN_DESCRIPTION,
                         'oak-and-ivy' => self::OAK_IVY_DESCRIPTION,
                         'sandalwood-riverside' => self::RIVERSIDE_DESCRIPTION,
+                        'sandalwood-clyde-gardens' => 'Sandalwood Clyde Gardens offers a calm and uplifting living environment, where modern spaces and a well-balanced atmosphere create a comforting sense of home amidst the rhythm of everyday city life. Located along Gitanga Road in Lavington, it brings together warmth, privacy, and contemporary living in a setting that encourages relaxation and peace of mind.',
                         default => 'Project information will be updated soon.',
                     },
                     'image' => $coverImage,
@@ -241,6 +246,7 @@ class ProjectController extends Controller
                         'the-haven' => self::HAVEN_IDEAL_DESCRIPTION,
                         'oak-and-ivy' => self::OAK_IVY_IDEAL_DESCRIPTION,
                         'sandalwood-riverside' => self::RIVERSIDE_IDEAL_DESCRIPTION,
+                        'sandalwood-clyde-gardens' => 'Sandalwood Clyde Gardens in Lavington offers a beautifully balanced living environment with spacious interiors, high-end finishes, all designed for both comfort and peaceful living. Set within a low-density compound with only a few apartments, a lush central garden, swimming pool, full back-up generator, and excellent security, the development creates a calm and exclusive atmosphere that feels both warm and refreshing to come home to.',
                         default => null,
                     },
                     'ideal_image' => $idealImage,

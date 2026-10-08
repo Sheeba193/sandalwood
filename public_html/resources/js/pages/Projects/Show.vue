@@ -4,7 +4,7 @@
 
         <main v-else class="min-h-screen bg-white pb-20">
             <section class="w-full">
-                <img :src="project.cover_image" :alt="['sandalwood-kitisuru', 'sandalwood-othaya', 'sandalwood-brookside', 'the-haven', 'sandalwood-riverside'].includes(project.slug) ? `${project.title} landscaped garden` : project.slug === 'sandalwood-waterfront' ? `${project.title} lake and garden bridge` : project.slug === 'the-convex' ? `${project.title} reception lobby` : project.slug === 'chilly-breezes' ? `${project.title} rooftop terrace` : project.slug === 'silver-terraces' ? `${project.title} landscaped entrance` : project.slug === 'ivory-terraces' ? `${project.title} rooftop pool` : `${project.title} living room`" class="h-[60vh] w-full object-cover" />
+                <img :src="project.cover_image" :alt="project.slug === 'sandalwood-clyde-gardens' ? `${project.title} landscaped entrance and gardens` : ['sandalwood-kitisuru', 'sandalwood-othaya', 'sandalwood-brookside', 'the-haven', 'sandalwood-riverside'].includes(project.slug) ? `${project.title} landscaped garden` : project.slug === 'sandalwood-waterfront' ? `${project.title} lake and garden bridge` : project.slug === 'the-convex' ? `${project.title} reception lobby` : project.slug === 'chilly-breezes' ? `${project.title} rooftop terrace` : project.slug === 'silver-terraces' ? `${project.title} landscaped entrance` : project.slug === 'ivory-terraces' ? `${project.title} rooftop pool` : `${project.title} living room`" class="h-[60vh] w-full object-cover" />
             </section>
 
             <section class="mx-auto max-w-6xl px-6 pt-10 pb-5 md:px-10 md:pt-14">
@@ -624,6 +624,10 @@ const amenityItems = computed(() => {
     const projectAmenities = props.project.amenities ?? [];
     const referenceAmenityNames = referenceAmenityNamesByProject[props.project.slug];
     if (!referenceAmenityNames) return projectAmenities;
+
+    if (props.project.slug === 'sandalwood-clyde-gardens') {
+        return referenceAmenityNames.map((name, index) => ({ id: `reference-${index}`, name, image: null }));
+    }
 
     const displayNames = new Set(referenceAmenityNames.map((name) => name.toLowerCase().replace(/[^a-z0-9]/g, '')));
     const matchedReferenceAmenities = referenceAmenityNames.map((name, index) => {
