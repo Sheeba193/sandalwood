@@ -21,6 +21,51 @@
     font-family: "Montserrat", sans-serif;
 }
 
+/* Shared, low-motion interactions for property and content cards. */
+.motion-card {
+    transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 300ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .motion-card:hover,
+    .motion-card:focus-visible {
+        transform: translateY(-5px);
+        box-shadow: 0 14px 30px rgb(0 18 33 / 10%);
+    }
+}
+
+.motion-card-image {
+    transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .motion-card:hover .motion-card-image,
+    .motion-card:focus-visible .motion-card-image {
+        transform: scale(1.04);
+    }
+}
+
+.motion-card-cta svg,
+.motion-card-cta [data-arrow] {
+    transition: transform 250ms ease;
+}
+
+.motion-card:hover .motion-card-cta svg,
+.motion-card:hover .motion-card-cta [data-arrow],
+.motion-card:focus-visible .motion-card-cta svg,
+.motion-card:focus-visible .motion-card-cta [data-arrow] {
+    transform: translateX(3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .motion-card,
+    .motion-card-image,
+    .motion-card-cta svg,
+    .motion-card-cta [data-arrow] {
+        transition-duration: 0.01ms !important;
+    }
+}
+
 
 @font-face {
     font-family: 'Optima';

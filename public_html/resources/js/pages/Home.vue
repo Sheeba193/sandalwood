@@ -108,13 +108,13 @@
                                 embody sophistication and comfort.
                         </p>
                         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
-                            <Link v-for="proj in recent_launches.slice(0, 2)" :key="proj.id" :href="`/projects/${proj.slug}`" class="group block">
+                            <Link v-for="proj in recent_launches.slice(0, 2)" :key="proj.id" :href="`/projects/${proj.slug}`" class="group motion-card block">
                                 <div class="aspect-[4/3] overflow-hidden bg-gray-100">
                                     <img
                                         :src="proj.image"
                                         :alt="proj.title"
                                         @load="handleImageLoad"
-                                        class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                        class="motion-card-image h-full w-full object-cover"
                                     />
                                 </div>
                                 <h4 class="mt-2 text-center font-serif text-[10px] tracking-wide text-gray-500 uppercase sm:text-xs">{{ proj.title }}</h4>
@@ -135,9 +135,9 @@
                             Each finished project stands as an expression of vision realized, where superior craftsmanship meets timeless design. Delivered to the highest standards, these properties embody enduring quality, elevated living, and the trust we have consistently earned in the real estate space.
                         </p>
                         <div class="grid grid-cols-1 gap-x-6 gap-y-7 sm:grid-cols-2 lg:auto-rows-[210px] lg:grid-cols-3">
-                            <Link v-for="(proj, index) in completed_projects.slice(0, 5)" :key="proj.id" :href="`/projects/${proj.slug}`" class="group flex h-full flex-col" :class="index === 0 ? 'lg:row-span-2' : ''">
+                            <Link v-for="(proj, index) in completed_projects.slice(0, 5)" :key="proj.id" :href="`/projects/${proj.slug}`" class="group motion-card flex h-full flex-col" :class="index === 0 ? 'lg:row-span-2' : ''">
                                 <div class="min-h-0 flex-1 overflow-hidden bg-gray-100" :class="index === 0 ? 'aspect-[4/3] lg:aspect-auto' : 'aspect-[4/3] lg:aspect-auto'">
-                                    <img :src="proj.image" :alt="proj.title" @load="handleImageLoad" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                                    <img :src="proj.image" :alt="proj.title" @load="handleImageLoad" class="motion-card-image h-full w-full object-cover" />
                                 </div>
                                 <h4 class="mt-2 text-center font-serif text-[10px] tracking-wide text-gray-500 uppercase sm:text-xs">{{ proj.title }}</h4>
                             </Link>
@@ -153,7 +153,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, nextTick } from 'vue';
+import { computed, onMounted, ref, nextTick, watch } from 'vue';
 import Lenis from 'lenis';
 import { Link } from '@inertiajs/vue3';
 import SandalWoodLoader from '@/Components/SandalWoodLoader.vue';
@@ -257,9 +257,10 @@ const initSmoothScroll = () => {
 const initScrollReveal = () => {
     const observer = new IntersectionObserver(
         (entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('active');
+                            observer.unobserve(entry.target);
                 }
             });
         },
@@ -301,6 +302,13 @@ onMounted(async () => {
         setInterval(nextSlide, 6000);
     }
 });
+
+watch(loading, async (isLoading) => {
+    if (!isLoading) {
+        await nextTick();
+        initScrollReveal();
+    }
+}, { flush: 'post' });
 </script>
 
 <style scoped>
@@ -308,12 +316,20 @@ onMounted(async () => {
 .reveal {
     opacity: 0;
     transform: translateY(30px);
-    transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: opacity 650ms cubic-bezier(0.22, 1, 0.36, 1), transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .reveal.active {
     opacity: 1;
     transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
 }
 
 /* Hero Text Transition */

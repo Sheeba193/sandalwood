@@ -42,15 +42,16 @@
 
                     <div class="space-y-10">
                         <section
-                            v-for="project in filteredProjects"
+                            v-for="(project, index) in filteredProjects"
                             :key="project.id"
-                            class="reveal-on-scroll grid grid-cols-1 items-center gap-4 sm:grid-cols-[minmax(0,2fr)_minmax(12rem,1fr)] sm:gap-6 lg:gap-10"
+                            class="reveal-on-scroll motion-card grid grid-cols-1 items-center gap-4 sm:grid-cols-[minmax(0,2fr)_minmax(12rem,1fr)] sm:gap-6 lg:gap-10"
+                            :style="{ '--reveal-delay': `${(index % 4) * 80}ms` }"
                         >
                             <div class="group/card relative aspect-[16/10] overflow-hidden bg-gray-100 sm:aspect-video">
                                 <img
                                     :src="project.image"
                                     :alt="project.title"
-                                    class="h-full w-full object-cover transition-transform duration-700 group-hover/card:scale-[1.02]"
+                                    class="motion-card-image h-full w-full object-cover"
                                 />
                             </div>
 
@@ -60,7 +61,7 @@
                                 </h2>
                                 <Link
                                     :href="`/projects/${project.slug}`"
-                                    class="font-montserrat inline-flex min-h-10 items-center bg-[#001221] px-5 py-2 text-[10px] tracking-[0.15em] text-white uppercase transition-colors hover:bg-[#1a365d]"
+                                    class="motion-card-cta font-montserrat inline-flex min-h-10 items-center bg-[#001221] px-5 py-2 text-[10px] tracking-[0.15em] text-white uppercase transition-colors hover:bg-[#1a365d]"
                                 >
                                     Get More Details
                                 </Link>
@@ -314,11 +315,17 @@ const filteredProjects = computed<Project[]>(() => {
 });
 
 const initObserver = () => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.querySelectorAll('.reveal-on-scroll').forEach((el) => el.classList.add('active'));
+        return;
+    }
+
     const observer = new IntersectionObserver(
         (entries) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
                 }
             });
         },
@@ -352,11 +359,14 @@ onMounted(() => {
 .reveal-on-scroll {
     opacity: 0;
     transform: translateY(30px);
-    transition: all 1s ease-out;
+    transition: opacity 650ms cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms), transform 650ms cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms);
 }
 .reveal-on-scroll.active {
     opacity: 1;
     transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+    .reveal-on-scroll { opacity: 1; transform: none; transition: none; }
 }
 .project-filters button[aria-pressed="true"],
 .project-filters button[aria-pressed="true"]:hover,
