@@ -110,7 +110,7 @@ const referenceProjects: Project[] = [
     { id: 4, title: 'The Haven', status: 'completed', slug: 'the-haven', image: '/images/IMG-20251113-WA0018.jpg' },
     { id: 5, title: 'Sandalwood Waterfront', status: 'completed', slug: 'sandalwood-waterfront', image: '/images/IMG-20251113-WA0025.jpg' },
     { id: 6, title: 'Sandalwood Kitisuru', status: 'completed', slug: 'sandalwood-kitisuru', image: '/images/IMG-20251113-WA0027.jpg' },
-    { id: 7, title: 'Sandalwood Clyde Gardens', status: 'completed', slug: 'sandalwood-clyde-gardens', image: '/images/IMG-20251113-WA0012.jpg' },
+    { id: 7, title: 'Sandalwood Clyde Gardens', status: 'completed', slug: 'sandalwood-clyde-gardens', image: '/images/projects/sandalwood-clyde-gardens/clyde1.jpg' },
     { id: 8, title: 'Sandalwood Lenana Road', status: 'completed', slug: 'sandalwood-lenana-road', image: '/images/IMG-20251113-WA0024.jpg' },
     { id: 9, title: 'Sandalwood Riverside', status: 'completed', slug: 'sandalwood-riverside', image: '/images/IMG-20251113-WA0019.jpg' },
     { id: 10, title: 'Sandalwood Brookside', status: 'completed', slug: 'sandalwood-brookside', image: '/images/IMG-20251113-WA0026.jpg' },

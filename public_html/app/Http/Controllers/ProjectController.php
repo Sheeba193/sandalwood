@@ -42,7 +42,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Cache::remember('all_projects_list_v10', 3600, function () {
+        $projects = Cache::remember('all_projects_list_v11', 3600, function () {
             return Project::with('media')
                 ->orderBy('is_featured', 'desc')
                 ->orderBy('created_at', 'desc')
@@ -263,7 +263,7 @@ class ProjectController extends Controller
             ]);
         }
 
-        $project = Cache::remember("project_v9_{$slug}", 3600, function () use ($slug) {
+        $project = Cache::remember("project_v10_{$slug}", 3600, function () use ($slug) {
 
             $project = Project::with(['media', 'amenities'])
                 ->where('slug', $slug)
@@ -305,6 +305,12 @@ class ProjectController extends Controller
                 : null;
             $brooksideTranquilImage = $project->slug === 'sandalwood-brookside'
                 ? $this->projectFolderImage($folderImages, '3I9A7574.JPG.jpeg')
+                : null;
+            $clydeHeroImage = $project->slug === 'sandalwood-clyde-gardens'
+                ? $this->projectFolderImage($folderImages, 'clyde1.jpg')
+                : null;
+            $clydeIdealImage = $project->slug === 'sandalwood-clyde-gardens'
+                ? $this->projectFolderImage($folderImages, 'clyde2.jpg')
                 : null;
             $colosseumHeroImage = $project->slug === 'the-colosseum-residences'
                 ? $this->projectFolderImage($folderImages, '3I9A7797.JPG')
@@ -371,7 +377,9 @@ class ProjectController extends Controller
             $loreshoDescription = 'An exclusive collection of residential apartments set within the tranquil and serene surroundings of Loresho, Nairobi. Designed to offer a perfect balance of serenity and modern convenience, the development features thoughtfully planned living spaces complemented by a selection of recreational and functional amenities.';
             $loreshoIdealDescription = "Sandalwood Loresho is just a 2-minute drive from Lions SightFirst Eye Hospital. The development ensures access to quality healthcare, while nearby retail centers, international schools, and lifestyle hubs in Westlands and the wider Nairobi area are all within a short drive. Seamless connectivity via Waiyaki Way and Lower Kabete Road allows for easy access to Nairobi's key destinations, all while preserving the calm, green charm that defines Loresho.";
             $description = $project->description;
-            if ($project->slug === 'sandalwood-loresho' && str_word_count((string) $description) < 20) {
+            if ($project->slug === 'sandalwood-clyde-gardens') {
+                $description = 'Sandalwood Clyde Gardens offers a calm and uplifting living environment, where modern spaces and a well-balanced atmosphere create a comforting sense of home amidst the rhythm of everyday city life. Located along Gitanga Road in Lavington, it brings together warmth, privacy, and contemporary living in a setting that encourages relaxation and peace of mind.';
+            } elseif ($project->slug === 'sandalwood-loresho' && str_word_count((string) $description) < 20) {
                 $description = $loreshoDescription;
             } elseif ($project->slug === 'sandalwood-kitisuru' && str_word_count((string) $description) < 20) {
                 $description = self::KITISURU_DESCRIPTION;
@@ -439,13 +447,15 @@ class ProjectController extends Controller
                                 'the-haven' => 'Loresho, Nairobi, Kenya',
                                 'oak-and-ivy' => 'Loresho, Nairobi, Kenya',
                                 'sandalwood-riverside' => 'Riverside, Nairobi, Kenya',
+                                'sandalwood-clyde-gardens' => 'Gitanga Road, Lavington, Nairobi',
                                 default => $project->location,
                             }))),
 
                 'location_url' => $project->location_url ?: ProjectLocationLinks::forSlug($project->slug),
 
-                'specifications' => $project->specifications
-                    ?: match ($project->slug) {
+                'specifications' => $project->slug === 'sandalwood-clyde-gardens'
+                    ? '3 BEDROOM APARTMENTS'
+                    : ($project->specifications ?: match ($project->slug) {
                         'sandalwood-loresho' => '3 & 4 BEDROOM APARTMENTS',
                         'sandalwood-kitisuru' => '5 BEDROOM VILLAS',
                         'sandalwood-othaya' => '3 BEDROOM APARTMENTS',
@@ -459,8 +469,9 @@ class ProjectController extends Controller
                         'the-haven' => '4 & 5 BEDROOM APARTMENTS',
                         'oak-and-ivy' => '4 & 5 BEDROOM APARTMENTS',
                         'sandalwood-riverside' => '2, 3 & 4 BEDROOM APARTMENTS',
+                        'sandalwood-clyde-gardens' => '3 BEDROOM APARTMENTS',
                         default => null,
-                    },
+                    }),
 
                 'status' => $project->status,
 
@@ -483,6 +494,7 @@ class ProjectController extends Controller
                 */
 
                 'cover_image' => $colosseumHeroImage
+                    ?: $clydeHeroImage
                     ?: $projectHeroImage
                     ?: $loreshoHeroImage
                     ?: $kitisuruHeroImage
@@ -501,10 +513,13 @@ class ProjectController extends Controller
                 |--------------------------------------------------------------------------
                 */
 
-                'ideal_title' => $project->ideal_title
-                    ?: 'THE IDEAL SETTING',
+                'ideal_title' => $project->slug === 'sandalwood-clyde-gardens'
+                    ? 'THE IDEAL SETTING'
+                    : ($project->ideal_title ?: 'THE IDEAL SETTING'),
 
-                'ideal_description' => $project->ideal_description
+                'ideal_description' => $project->slug === 'sandalwood-clyde-gardens'
+                    ? 'Sandalwood Clyde Gardens in Lavington offers a beautifully balanced living environment with spacious interiors, high-end finishes, all designed for both comfort and peaceful living. Set within a low-density compound with only a few apartments, a lush central garden, swimming pool, full back-up generator, and excellent security, the development creates a calm and exclusive atmosphere that feels both warm and refreshing to come home to.'
+                    : ($project->ideal_description
                     ?: match ($project->slug) {
                         'sandalwood-loresho' => $loreshoIdealDescription,
                         'sandalwood-kitisuru' => self::KITISURU_IDEAL_DESCRIPTION,
@@ -520,9 +535,10 @@ class ProjectController extends Controller
                         'oak-and-ivy' => self::OAK_IVY_IDEAL_DESCRIPTION,
                         'sandalwood-riverside' => self::RIVERSIDE_IDEAL_DESCRIPTION,
                         default => null,
-                    },
+                    }),
 
                 'ideal_image' => $colosseumIdealImage
+                    ?: $clydeIdealImage
                     ?: $projectIdealImage
                     ?: $loreshoIdealImage
                     ?: $kitisuruIdealImage

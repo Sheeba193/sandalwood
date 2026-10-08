@@ -11,6 +11,15 @@ class ProjectImageFolders
     ];
 
     private const ORDERED_FILES = [
+        'sandalwood-clyde-gardens' => [
+            'clyde1.jpg',
+            'clyde2.jpg',
+            'clyde3.jpg',
+            'clyde4.jpg',
+            'clyde5.jpg',
+            'clyde6.jpg',
+            'clyde7.jpg',
+        ],
         'sandalwood-kyuna' => [
             'WhatsApp Image 2026-10-03 at 09.53.10 (2).jpeg',
             'WhatsApp Image 2026-10-03 at 09.53.07 (1).jpeg',

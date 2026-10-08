@@ -610,6 +610,14 @@ const referenceAmenityNamesByProject: Record<string, string[]> = {
     'High Speed Elevators',
     'Standby Power Generator',
   ],
+  'sandalwood-clyde-gardens': [
+    'Lush Gardens',
+    'Ample Parking Spaces',
+    'Gym',
+    '24 Hours CCTV Surveillance',
+    'Standby Power Generator',
+    'Swimming Pool',
+  ],
 };
 
 const amenityItems = computed(() => {
@@ -631,8 +639,10 @@ const amenityItems = computed(() => {
 });
 
 const showAmenitySection = computed(() => props.project.slug !== 'sandalwood-kitisuru' && amenityItems.value.length > 0);
-const isSoldOutProject = computed(() => ['sandalwood-kitisuru', 'sandalwood-othaya', 'sandalwood-brookside', 'the-convex', 'the-haven'].includes(props.project.slug) || props.project.status === 'sold_out');
-const amenityDescription = computed(() => props.project.slug === 'sandalwood-othaya'
+const isSoldOutProject = computed(() => ['sandalwood-kitisuru', 'sandalwood-othaya', 'sandalwood-brookside', 'the-convex', 'the-haven', 'sandalwood-clyde-gardens'].includes(props.project.slug) || props.project.status === 'sold_out');
+const amenityDescription = computed(() => props.project.slug === 'sandalwood-clyde-gardens'
+    ? 'Elevating your lifestyle through a refined selection of amenities.'
+    : props.project.slug === 'sandalwood-othaya'
     ? 'Elevating your lifestyle through a refined selection of amenities.'
     : props.project.slug === 'oak-and-ivy'
       ? 'A seamless blend of comfort, convenience, and modern lifestyle amenities.'

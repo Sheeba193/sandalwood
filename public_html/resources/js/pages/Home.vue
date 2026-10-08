@@ -193,7 +193,7 @@ const projectDetails: Record<string, { location: string; specifications: string 
     'oak-and-ivy': { location: 'Loresho, Nairobi', specifications: 'Villas' },
     'sandalwood-riverside': { location: 'Riverside, Nairobi', specifications: '2, 3 & 4 Bedroom Apartments' },
     'sandalwood-lenana-road': { location: 'Lenana Road, Nairobi', specifications: 'Apartments' },
-    'sandalwood-clyde-gardens': { location: 'Karen, Nairobi', specifications: 'Garden Residences' },
+    'sandalwood-clyde-gardens': { location: 'Lavington, Nairobi', specifications: '3 Bedroom Apartments' },
 };
 
 const heroDetails = computed(() => {
@@ -202,7 +202,7 @@ const heroDetails = computed(() => {
 
     const fallback = projectDetails[slide.slug] ?? { location: '', specifications: '' };
     const status = String(slide.status ?? '').toLowerCase();
-    const soldOutSlugs = ['sandalwood-othaya', 'sandalwood-kitisuru', 'the-convex'];
+    const soldOutSlugs = ['sandalwood-othaya', 'sandalwood-kitisuru', 'the-convex', 'sandalwood-clyde-gardens'];
     const availability = status === 'sold_out' || soldOutSlugs.includes(slide.slug) ? 'Sold Out' : 'Available for Inquiry';
     const construction = status === 'sold_out' ? 'Completed' : formatStatus(status);
 

@@ -14,7 +14,7 @@ class PageController extends Controller
      */
     public function home()
     {
-        $projects = Cache::remember('home_projects_with_images_v4', 3600, function () {
+        $projects = Cache::remember('home_projects_with_images_v5', 3600, function () {
 
             return Project::with('media')
                 ->orderBy('is_featured', 'desc')
@@ -36,6 +36,8 @@ class PageController extends Controller
                     $tranquilImage = $project->getFirstMediaUrl('tranquil');
                     $folderImages = ProjectImageFolders::images($project->slug);
                     $folderImage = $folderImages[0] ?? '/images/default-project.jpg';
+                    $clydeHeroImage = $project->slug === 'sandalwood-clyde-gardens' ? ($folderImages[0] ?? null) : null;
+                    $clydeIdealImage = $project->slug === 'sandalwood-clyde-gardens' ? ($folderImages[1] ?? null) : null;
 
                     // The supplied exterior photo is the preferred homepage image for Colosseum.
                     $colosseumImage = $project->slug === 'the-colosseum-residences'
@@ -94,11 +96,13 @@ class PageController extends Controller
                         |--------------------------------------------------------------------------
                         */
 
-                        'cover_image' => $colosseumImage
+                        'cover_image' => $clydeHeroImage
+                            ?: $colosseumImage
                             ?: $coverImage
                             ?: $folderImage,
 
-                        'ideal_image' => $colosseumImage
+                        'ideal_image' => $clydeIdealImage
+                            ?: $colosseumImage
                             ?: $idealImage
                             ?: $coverImage
                             ?: $folderImage,
@@ -180,6 +184,11 @@ class PageController extends Controller
             ->filter(function ($project) {
                 return $project['status'] === 'completed';
             })
+            ->values();
+
+        // Keep Clyde Gardens visible among the limited number of homepage project badges.
+        $completedProjects = $completedProjects
+            ->sortBy(fn ($project) => $project['slug'] === 'sandalwood-clyde-gardens' ? 0 : 1)
             ->values();
 
 
@@ -395,7 +404,7 @@ class PageController extends Controller
      */
     public function about()
     {
-        $projects = Cache::remember('about_projects_with_images_v2', 3600, function () {
+        $projects = Cache::remember('about_projects_with_images_v3', 3600, function () {
 
             return Project::with('media')
                 ->orderBy('is_featured', 'desc')

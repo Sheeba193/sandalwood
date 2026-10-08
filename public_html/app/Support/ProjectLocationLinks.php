@@ -22,6 +22,7 @@ class ProjectLocationLinks
         'the-haven' => 'https://www.google.com/maps/search/?api=1&query=The+Haven%2C+Loresho%2C+Nairobi',
         'oak-and-ivy' => 'https://www.google.com/maps/search/?api=1&query=Oak+and+Ivy%2C+off+Loresho+Ridge%2C+Loresho%2C+Nairobi',
         'sandalwood-riverside' => 'https://www.google.com/maps/search/?api=1&query=Sandalwood+Riverside%2C+Sandalwood+Lane%2C+off+Riverside+Drive%2C+Nairobi',
+        'sandalwood-clyde-gardens' => 'https://www.google.com/maps/search/?api=1&query=Sandalwood+Clyde+Gardens%2C+Gitanga+Road%2C+Lavington%2C+Nairobi',
     ];
 
     public static function forSlug(string $slug): ?string

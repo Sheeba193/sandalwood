@@ -112,6 +112,9 @@ class AdminProjectController extends Controller
         });
 
         Cache::forget('all_projects_list_v3');
+        Cache::forget('all_projects_list_v11');
+        Cache::forget('home_projects_with_images_v5');
+        Cache::forget('about_projects_with_images_v3');
 
         return redirect()
             ->route('admin.projects.index')
@@ -215,8 +218,13 @@ class AdminProjectController extends Controller
         }
 
         Cache::forget('all_projects_list_v10');
+        Cache::forget('all_projects_list_v11');
+        Cache::forget('home_projects_with_images_v5');
+        Cache::forget('about_projects_with_images_v3');
         Cache::forget("project_v9_{$previousSlug}");
         Cache::forget("project_v9_{$project->slug}");
+        Cache::forget("project_v10_{$previousSlug}");
+        Cache::forget("project_v10_{$project->slug}");
         Cache::forget("project_{$previousSlug}");
         Cache::forget("project_{$project->slug}");
 
@@ -228,7 +236,11 @@ class AdminProjectController extends Controller
     public function destroy(Project $project)
     {
         Cache::forget('all_projects_list_v10');
+        Cache::forget('all_projects_list_v11');
+        Cache::forget('home_projects_with_images_v5');
+        Cache::forget('about_projects_with_images_v3');
         Cache::forget("project_v9_{$project->slug}");
+        Cache::forget("project_v10_{$project->slug}");
         Cache::forget("project_{$project->slug}");
         // Deletes the project and all associated Spatie media
         $project->clearMediaCollection('cover');
