@@ -1,22 +1,11 @@
 <template>
     <AppLayout>
         <main class="bg-white text-slate-900">
-            <section class="contact-hero relative overflow-hidden px-5 pb-16 pt-16 text-center sm:pb-20 sm:pt-20">
-                <div class="relative mx-auto max-w-5xl">
-                    <p class="font-cinzel mb-4 text-xs font-semibold uppercase tracking-[0.28em] text-[#001221]">Sandalwood Properties</p>
-                    <h1 class="font-cinzel text-4xl font-medium tracking-[0.08em] uppercase sm:text-6xl">Let’s talk property</h1>
-                    <p class="font-cormorant mx-auto mt-5 max-w-2xl text-lg leading-7 text-slate-600 sm:text-xl">
-                        Whether you’re finding a home, exploring an investment, or just have a question, our team is ready to help.
-                    </p>
-                    <nav class="mt-7 flex items-center justify-center gap-2 text-sm text-slate-500" aria-label="Breadcrumb">
-                        <Link href="/" class="transition hover:text-[#001221]">Home</Link>
-                        <span aria-hidden="true">/</span>
-                        <span class="text-slate-800">Contact</span>
-                    </nav>
-                </div>
+            <section class="contact-map-hero" aria-label="Sandalwood Properties location">
+                <iframe title="Map showing Sandalwood Properties office" class="h-[60vh] min-h-[360px] w-full" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=Sandalwood%20Loresho%2C%20Nairobi%2C%20Kenya&t=&z=14&ie=UTF8&iwloc=&output=embed"></iframe>
             </section>
 
-            <section class="px-5 py-12 sm:py-16">
+            <section class="px-5 py-10 sm:py-14">
                 <div class="mx-auto grid max-w-6xl gap-7 lg:grid-cols-[0.85fr_1.4fr]">
                     <aside class="rounded-2xl border border-slate-100 bg-white p-6 shadow-[0_12px_40px_rgba(15,23,42,0.07)] sm:p-8">
                         <span class="inline-flex items-center gap-2 rounded-full bg-[#001221]/5 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-[#001221]">
@@ -96,23 +85,13 @@
                 </div>
             </section>
 
-            <section class="px-5 pb-16 pt-5 sm:pb-20">
-                <div class="mx-auto max-w-6xl text-center">
-                    <span class="font-cinzel inline-flex items-center gap-2 rounded-full bg-[#001221]/5 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-[#001221]"><MapPinIcon class="h-4 w-4" /> Our location</span>
-                    <h2 class="font-cinzel mx-auto mt-5 max-w-2xl text-xl font-medium tracking-[0.1em] uppercase sm:text-2xl">Visit us for a personal conversation</h2>
-                    <p class="font-cormorant mt-3 text-lg text-slate-500">{{ contact.address.full }}</p>
-                    <div class="mt-8 overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
-                        <iframe title="Map showing Sandalwood Properties office" class="h-[320px] w-full sm:h-[390px]" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=Sandalwood%20Loresho%2C%20Nairobi%2C%20Kenya&t=&z=14&ie=UTF8&iwloc=&output=embed"></iframe>
-                    </div>
-                </div>
-            </section>
         </main>
     </AppLayout>
 </template>
 
 <script setup lang="ts">
 import AppLayout from '@/Layouts/AppLayout.vue';
-import { Link, useForm, usePage } from '@inertiajs/vue3';
+import { useForm, usePage } from '@inertiajs/vue3';
 import { useToast } from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-sugar.css';
 import { ClockIcon, EnvelopeIcon, MapPinIcon, PhoneIcon } from '@heroicons/vue/24/outline';
@@ -144,7 +123,7 @@ const submitForm = () => form.post('/contact', {
 </script>
 
 <style scoped>
-.contact-hero { background: radial-gradient(ellipse at 50% -5%, #d6b98355, transparent 70%), linear-gradient(180deg, #f8f6f2 0%, #fff 100%); }
+.contact-map-hero { line-height: 0; }
 .contact-panel { background: #001221; color: #fff; }
 .contact-icon { display: flex; height: 2.75rem; width: 2.75rem; flex: none; align-items: center; justify-content: center; border-radius: 0.85rem; background: #0012210d; color: #001221; }
 .form-label { display: block; margin-bottom: 0.45rem; font-family: 'Cinzel', 'Times New Roman', serif; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #ffffffdd; }
