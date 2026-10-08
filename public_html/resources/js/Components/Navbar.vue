@@ -151,12 +151,4 @@ const sendWhatsAppMessage = () => {
 </script>
 
 <style scoped>
-.projects-dropdown {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-
-.projects-dropdown::-webkit-scrollbar {
-    display: none;
-}
 </style>
